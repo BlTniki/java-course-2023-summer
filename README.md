@@ -2,8 +2,9 @@
 ![Scrapper](https://github.com/sanyarnd/java-course-2023-backend-template/actions/workflows/scrapper.yml/badge.svg)
 
 # Link Tracker
+![Logo](logo.jpg)
 
-ФИО: Шакаримов Дмитрий Даулетович
+ФИО: `Шакаримов Дмитрий Даулетович`
 
 Бот: https://t.me/Scrapper9000Bot
 
