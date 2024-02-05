@@ -1,5 +1,6 @@
 app:
-  telegram-token: unset
+  telegram-token: "6335507598:AAGVYfl4UzoHcz6AQbIn12OSe9Z0BhiEvV0"
+  threads-Per-Executor: 6
 
 spring:
   application:
