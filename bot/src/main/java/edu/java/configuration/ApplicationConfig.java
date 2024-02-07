@@ -1,6 +1,8 @@
 package edu.java.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
+import edu.java.bot.commandParser.CommandParser;
+import edu.java.bot.commandParser.StartCommandParser;
 import edu.java.bot.exception.BotExceptionHandler;
 import edu.java.bot.listener.BotUpdatesListener;
 import edu.java.bot.sender.BotSender;
@@ -43,8 +45,13 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public UpdatesService updatesService(BotSender botSender) {
-        return new UpdatesServiceImpl(botSender);
+    public CommandParser commandParser() {
+        return new StartCommandParser();
+    }
+
+    @Bean
+    public UpdatesService updatesService(BotSender botSender, CommandParser commandParser) {
+        return new UpdatesServiceImpl(botSender, commandParser);
     }
 
     @Bean
