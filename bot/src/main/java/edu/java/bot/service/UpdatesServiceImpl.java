@@ -2,10 +2,13 @@ package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.BotSender;
+import edu.java.bot.sender.BotSender;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+/**
+ * Реализует {@link UpdatesService}
+ */
 @Service
 public class UpdatesServiceImpl implements UpdatesService {
     private final BotSender botSender;

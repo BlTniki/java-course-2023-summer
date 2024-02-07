@@ -1,4 +1,4 @@
-package edu.java.bot;
+package edu.java.bot.sender;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
@@ -7,6 +7,10 @@ import java.util.concurrent.Executor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Класс, отвечающий за отправку AbstractSendRequest.
+ * Реализует отправку в асинхронном виде
+ */
 public class BotSender {
     private static final Logger LOGGER = LogManager.getLogger();
 

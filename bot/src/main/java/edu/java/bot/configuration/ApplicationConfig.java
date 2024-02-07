@@ -1,9 +1,9 @@
 package edu.java.bot.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
-import edu.java.bot.BotExceptionHandler;
-import edu.java.bot.BotSender;
-import edu.java.bot.BotUpdatesListener;
+import edu.java.bot.exception.BotExceptionHandler;
+import edu.java.bot.listener.BotUpdatesListener;
+import edu.java.bot.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
 import jakarta.validation.constraints.NotEmpty;

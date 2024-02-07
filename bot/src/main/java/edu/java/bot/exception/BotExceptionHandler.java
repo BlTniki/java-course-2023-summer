@@ -1,4 +1,4 @@
-package edu.java.bot;
+package edu.java.bot.exception;
 
 import com.pengrad.telegrambot.ExceptionHandler;
 import com.pengrad.telegrambot.TelegramException;
