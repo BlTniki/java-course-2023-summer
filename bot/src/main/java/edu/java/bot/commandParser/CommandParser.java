@@ -4,9 +4,9 @@ import com.pengrad.telegrambot.model.Message;
 import edu.java.bot.command.Command;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
+import edu.java.bot.exception.CommandParseFailedException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import edu.java.bot.exception.CommandParseFailedException;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandParser {
@@ -15,8 +15,8 @@ public class CommandParser {
     public CommandParser() {
     }
 
+    @SuppressWarnings("RedundantLabeledSwitchRuleCodeBlock")
     public Command parse(@NotNull Message message) throws BadMessageException {
-        long chatId = message.chat().id();
         String text = message.text();
 
         if (text == null) {

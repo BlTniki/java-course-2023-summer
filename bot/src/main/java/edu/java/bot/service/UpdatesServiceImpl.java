@@ -31,11 +31,6 @@ public class UpdatesServiceImpl implements UpdatesService {
         long chatId = update.message().chat().id();
 
         try {
-            if (update.message().text() == null) {
-                throw new BadMessageException(MessageDict.BAD_INPUT_NO_TEXT.msg);
-            }
-            String text = update.message().text();
-
             AbstractSendRequest<?> sendRequest = commandParser.parse(update.message()).doCommand();
             botSender.send(sendRequest);
         } catch (BadMessageException e) {
