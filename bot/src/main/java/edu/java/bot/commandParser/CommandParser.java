@@ -1,35 +1,45 @@
 package edu.java.bot.commandParser;
 
+import com.pengrad.telegrambot.model.Message;
 import edu.java.bot.command.Command;
+import edu.java.bot.dict.MessageDict;
+import edu.java.bot.exception.BadMessageException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import edu.java.bot.exception.CommandParseFailedException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/**
- * Определяет команду из сообщения.
- * Реализует паттерн "Цепочка обязанностей"
- * и при реализации новой команды следует его добавлять в общую цепь
- */
-public abstract class CommandParser {
-    @Nullable CommandParser nextParser;
+public class CommandParser {
+    private static final Pattern PATTERN = Pattern.compile("^/(\\w+)( .*)*$");
 
-    /**
-     * Парсит текст и создаёт на его основе {@link Command}.
-     * @param input текст.
-     * @return команду на выполнение.
-     * @throws CommandParseFailedException если определить команду не удалось.
-     */
-    public abstract Command parse(@NotNull String input) throws CommandParseFailedException;
-
-    public CommandParser link(@NotNull CommandParser parser) {
-        this.nextParser = parser;
-        return this;
+    public CommandParser() {
     }
 
-    Command parseByNext(@NotNull String input) throws CommandParseFailedException {
-        if (nextParser == null) {
-            throw new CommandParseFailedException("Unrecognized command: " + input);
+    public Command parse(@NotNull Message message) throws BadMessageException {
+        long chatId = message.chat().id();
+        String text = message.text();
+
+        if (text == null) {
+            throw new BadMessageException(MessageDict.BAD_INPUT_NO_TEXT.msg);
         }
-        return nextParser.parse(input);
+
+        Matcher matcher = PATTERN.matcher(text);
+
+        if (!matcher.matches()) {
+            throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));
+        }
+
+        CommandDict commandName = CommandDict.byName(matcher.group(1));
+        Command command;
+        switch (commandName) {
+            case START -> {
+                command = new Command.Start(message);
+            }
+            case null, default -> {
+                throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));
+            }
+        }
+
+        return command;
     }
 }

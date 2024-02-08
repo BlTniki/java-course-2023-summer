@@ -2,10 +2,11 @@ package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
-import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commandParser.CommandParser;
+import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.sender.BotSender;
+import edu.java.bot.utils.SendMessageUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,18 +32,18 @@ public class UpdatesServiceImpl implements UpdatesService {
 
         try {
             if (update.message().text() == null) {
-                throw new BadMessageException("Message does not contain any text");
+                throw new BadMessageException(MessageDict.BAD_INPUT_NO_TEXT.msg);
             }
             String text = update.message().text();
 
-            AbstractSendRequest<?> sendRequest = commandParser.parse(text).doCommand(chatId);
+            AbstractSendRequest<?> sendRequest = commandParser.parse(update.message()).doCommand();
             botSender.send(sendRequest);
         } catch (BadMessageException e) {
             LOGGER.warn(e);
-            botSender.send(new SendMessage(chatId, e.getMessage()));
+            botSender.send(SendMessageUtils.buildM(chatId, e.getMessage()));
         } catch (Exception e) {
             LOGGER.error(e);
-            botSender.send(new SendMessage(chatId, "Internal error occur"));
+            botSender.send(SendMessageUtils.buildM(chatId, MessageDict.INTERNAL_SERVER_ERROR.msg));
         }
     }
 }

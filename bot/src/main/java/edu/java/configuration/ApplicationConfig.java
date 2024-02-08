@@ -1,14 +1,17 @@
 package edu.java.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.BotCommand;
+import com.pengrad.telegrambot.request.SetMyCommands;
+import edu.java.bot.commandParser.CommandDict;
 import edu.java.bot.commandParser.CommandParser;
-import edu.java.bot.commandParser.StartCommandParser;
 import edu.java.bot.exception.BotExceptionHandler;
 import edu.java.bot.listener.BotUpdatesListener;
 import edu.java.bot.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -25,6 +28,10 @@ public record ApplicationConfig(
 ) {
     @Bean
     public TelegramBot telegramBot() {
+        var bot = new TelegramBot(telegramToken);
+        bot.execute(new SetMyCommands(
+            Arrays.stream(CommandDict.values()).map(CommandDict::toBotCommand).toList().toArray(new BotCommand[0])
+        ));
         return new TelegramBot(telegramToken);
     }
 
@@ -46,7 +53,7 @@ public record ApplicationConfig(
 
     @Bean
     public CommandParser commandParser() {
-        return new StartCommandParser();
+        return new CommandParser();
     }
 
     @Bean
