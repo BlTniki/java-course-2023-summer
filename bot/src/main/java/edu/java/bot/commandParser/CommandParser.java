@@ -64,6 +64,9 @@ public class CommandParser {
             case UNTRACK -> {
                 command = new Command.Untrack(scrapperSdk, message);
             }
+            case LIST -> {
+                command = new Command.List(scrapperSdk, message);
+            }
             case null, default -> {
                 throw new CommandParseFailedException(
                     MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(message.text())

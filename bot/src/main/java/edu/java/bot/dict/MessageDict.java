@@ -10,6 +10,9 @@ public enum MessageDict {
     URL_ALREADY_EXIST("_Этот url уже отслеживается_"),
     ALIAS_ALREADY_EXIST("_Этот alias уже занят для другого url_"),
     LINK_NOT_FOUND("_Не смог найти url с таким alias_"),
+    LINK_LIST_HEADER("_Вот отслеживаемые для тебя url:_\n"),
+    LINK_LIST_FORMAT("*%s* -- %s"),
+    LINK_LIST_EMPTY("_Ты ещё ничего не отслеживаешь_"),
     BAD_INPUT_NO_TEXT("_В сообщении нет теста.\nЯ взаимодействую только с текстом >:[_"),
     BAD_INPUT_UNRECOGNIZED_COMMAND("_Не смог распознать команду:_ `%s`"),
     BAD_INPUT_WRONG_COMMAND_ARGUMENTS(

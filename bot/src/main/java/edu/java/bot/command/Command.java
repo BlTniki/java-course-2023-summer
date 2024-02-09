@@ -41,9 +41,9 @@ public sealed interface Command {
             try {
                 scrapperSdk.registerUser(message.from().id());
             } catch (UserAlreadyExistException e) {
-                return SendMessageUtils.buildM(message.from().id(), MessageDict.USER_ALREADY_SIGN_UP.msg);
+                return SendMessageUtils.buildM(message, MessageDict.USER_ALREADY_SIGN_UP.msg);
             }
-            return SendMessageUtils.buildM(message.from().id(), MessageDict.SUCCESSFUL_SIGN_UP.msg);
+            return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_SIGN_UP.msg);
         }
     }
 
@@ -57,7 +57,7 @@ public sealed interface Command {
         @Override
         public AbstractSendRequest<?> doCommand() {
             return SendMessageUtils.buildM(
-                message.from().id(),
+                message,
                 Arrays.stream(CommandDict.values())
                     .map(c -> MessageDict.HELP_COMMANDS_BUILDER.msg.formatted(c.name, c.usage, c.description))
                     .collect(Collectors.joining("\n"))
@@ -98,14 +98,14 @@ public sealed interface Command {
                     scrapperSdk.trackNewUrl(message.from().id(), url, alias);
                 }
             } catch (UserNotExistException e) {
-                return SendMessageUtils.buildM(message.from().id(), MessageDict.USER_NOT_EXIST.msg);
+                return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
             } catch (UrlAlreadyExistException e) {
-                return SendMessageUtils.buildM(message.from().id(), MessageDict.URL_ALREADY_EXIST.msg);
+                return SendMessageUtils.buildM(message, MessageDict.URL_ALREADY_EXIST.msg);
             } catch (AliasAlreadyExistException e) {
-                return SendMessageUtils.buildM(message.from().id(), MessageDict.ALIAS_ALREADY_EXIST.msg);
+                return SendMessageUtils.buildM(message, MessageDict.ALIAS_ALREADY_EXIST.msg);
             }
 
-            return SendMessageUtils.buildM(message.from().id(), MessageDict.SUCCESSFUL_TRACK.msg);
+            return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
         }
     }
 
@@ -137,12 +137,44 @@ public sealed interface Command {
             try {
                 scrapperSdk.untrackUrl(message.from().id(), alias);
             } catch (UserNotExistException e) {
-                return SendMessageUtils.buildM(message.from().id(), MessageDict.USER_NOT_EXIST.msg);
+                return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
             } catch (LinkNotExistException e) {
-                return SendMessageUtils.buildM(message.from().id(), MessageDict.LINK_NOT_FOUND.msg);
+                return SendMessageUtils.buildM(message, MessageDict.LINK_NOT_FOUND.msg);
             }
 
-            return SendMessageUtils.buildM(message.from().id(), MessageDict.SUCCESSFUL_UNTRACK.msg);
+            return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
+        }
+    }
+
+    final class List implements Command {
+        private final ScrapperSdk scrapperSdk;
+        private final Message message;
+
+        public List(ScrapperSdk scrapperSdk, Message message) {
+            this.scrapperSdk = scrapperSdk;
+            this.message = message;
+        }
+
+        @Override
+        public AbstractSendRequest<?> doCommand() {
+            try {
+                var links = scrapperSdk.getAllUserTracks(message.from().id());
+
+                if (links.isEmpty()) {
+                    return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
+                }
+
+                String linksMessage = links.stream()
+                    .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.url()))
+                    .collect(Collectors.joining("\n"));
+
+                return SendMessageUtils.buildM(
+                    message, MessageDict.LINK_LIST_HEADER.msg + linksMessage
+                );
+
+            } catch (UserNotExistException e) {
+                return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+            }
         }
     }
 }

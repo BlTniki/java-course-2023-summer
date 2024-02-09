@@ -35,10 +35,10 @@ public class UpdatesServiceImpl implements UpdatesService {
             botSender.send(sendRequest);
         } catch (BadMessageException e) {
             LOGGER.warn(e);
-            botSender.send(SendMessageUtils.buildM(chatId, e.getMessage()));
+            botSender.send(SendMessageUtils.buildM(update.message(), e.getMessage()));
         } catch (Exception e) {
             LOGGER.error(e);
-            botSender.send(SendMessageUtils.buildM(chatId, MessageDict.INTERNAL_SERVER_ERROR.msg));
+            botSender.send(SendMessageUtils.buildM(update.message(), MessageDict.INTERNAL_SERVER_ERROR.msg));
         }
     }
 }
