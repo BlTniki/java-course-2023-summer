@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Объект, реализующий функционал команды бота.
+ * Класс, реализующий функционал команды бота.
  */
 public sealed interface Command {
     /**
