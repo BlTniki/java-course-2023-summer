@@ -43,12 +43,12 @@ public class CommandParser {
 
         CommandDict commandName = CommandDict.byName(matcher.group(1));
 
-        return getCommand(message, commandName, text);
+        return getCommand(message, commandName);
     }
 
     @NotNull
     @SuppressWarnings("RedundantLabeledSwitchRuleCodeBlock")
-    private Command getCommand(@NotNull Message message, CommandDict commandName, String text)
+    private Command getCommand(@NotNull Message message, CommandDict commandName)
         throws CommandParseFailedException {
         Command command;
         switch (commandName) {
@@ -61,8 +61,13 @@ public class CommandParser {
             case TRACK -> {
                 command = new Command.Track(scrapperSdk, message);
             }
+            case UNTRACK -> {
+                command = new Command.Untrack(scrapperSdk, message);
+            }
             case null, default -> {
-                throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));
+                throw new CommandParseFailedException(
+                    MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(message.text())
+                );
             }
         }
         return command;

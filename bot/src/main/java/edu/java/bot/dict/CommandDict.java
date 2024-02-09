@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public enum CommandDict {
     START("start", "", "Регистрирует нового пользователя"),
     HELP("help", "", "Перечисление и использование доступных команд"),
-    TRACK("track", "<url> <alias(optional)>", "Начать отслеживать новый url");
+    TRACK("track", "<url> <alias(optional)>", "Начать отслеживать новый url"),
+    UNTRACK("untrack", "<alias>", "Прекратить отслеживать url");
 
     public final String name;
     public final String usage;

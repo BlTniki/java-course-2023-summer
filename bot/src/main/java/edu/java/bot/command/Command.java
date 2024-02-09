@@ -8,6 +8,7 @@ import edu.java.bot.exception.CommandParseFailedException;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
+import edu.java.scrapperSdk.exception.LinkNotExistException;
 import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
@@ -65,7 +66,7 @@ public sealed interface Command {
     }
 
     final class Track implements Command {
-        private static final Pattern TRACK_ARGUMENTS = Pattern.compile("^/track\\s+(\\S+)\\s?(\\S*)$");
+        private static final Pattern TRACK_ARGUMENTS = Pattern.compile("^/track\\s(\\S+)\\s?(\\S*)$");
 
         private final ScrapperSdk scrapperSdk;
         private final Message message;
@@ -105,6 +106,43 @@ public sealed interface Command {
             }
 
             return SendMessageUtils.buildM(message.from().id(), MessageDict.SUCCESSFUL_TRACK.msg);
+        }
+    }
+
+    final class Untrack implements Command {
+        private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s(\\S+)$");
+
+        private final ScrapperSdk scrapperSdk;
+        private final Message message;
+
+        private final String alias;
+
+        public Untrack(ScrapperSdk scrapperSdk, Message message) throws CommandParseFailedException {
+            this.scrapperSdk = scrapperSdk;
+            this.message = message;
+
+            Matcher matcher = UNTRACK_ARGUMENTS.matcher(message.text());
+            if (!matcher.matches()) {
+                throw new CommandParseFailedException(
+                    MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
+                        CommandDict.UNTRACK.name, CommandDict.UNTRACK.usage
+                    )
+                );
+            }
+            this.alias = matcher.group(1);
+        }
+
+        @Override
+        public AbstractSendRequest<?> doCommand() {
+            try {
+                scrapperSdk.untrackUrl(message.from().id(), alias);
+            } catch (UserNotExistException e) {
+                return SendMessageUtils.buildM(message.from().id(), MessageDict.USER_NOT_EXIST.msg);
+            } catch (LinkNotExistException e) {
+                return SendMessageUtils.buildM(message.from().id(), MessageDict.LINK_NOT_FOUND.msg);
+            }
+
+            return SendMessageUtils.buildM(message.from().id(), MessageDict.SUCCESSFUL_UNTRACK.msg);
         }
     }
 }
