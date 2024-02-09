@@ -10,6 +10,8 @@ import edu.java.bot.listener.BotUpdatesListener;
 import edu.java.bot.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
+import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.scrapperSdk.ScrapperSdkStub;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
@@ -26,6 +28,11 @@ public record ApplicationConfig(
     String telegramToken,
     int threadsPerExecutor
 ) {
+    @Bean
+    public ScrapperSdk scrapperSdk() {
+        return new ScrapperSdkStub();
+    }
+
     @Bean
     public TelegramBot telegramBot() {
         var bot = new TelegramBot(telegramToken);
