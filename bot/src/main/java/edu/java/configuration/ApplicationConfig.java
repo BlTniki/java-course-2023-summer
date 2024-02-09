@@ -3,8 +3,8 @@ package edu.java.configuration;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.request.SetMyCommands;
-import edu.java.bot.command.CommandDict;
 import edu.java.bot.commandParser.CommandParser;
+import edu.java.bot.dict.CommandDict;
 import edu.java.bot.exception.BotExceptionHandler;
 import edu.java.bot.listener.BotUpdatesListener;
 import edu.java.bot.sender.BotSender;
@@ -59,8 +59,8 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public CommandParser commandParser() {
-        return new CommandParser();
+    public CommandParser commandParser(ScrapperSdk scrapperSdk) {
+        return new CommandParser(scrapperSdk);
     }
 
     @Bean

@@ -2,10 +2,11 @@ package edu.java.bot.commandParser;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.bot.command.Command;
-import edu.java.bot.command.CommandDict;
+import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.exception.CommandParseFailedException;
+import edu.java.scrapperSdk.ScrapperSdk;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +16,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CommandParser {
     private static final Pattern PATTERN = Pattern.compile("^/(\\w+)( .*)*$");
+    private final ScrapperSdk scrapperSdk;
 
-    public CommandParser() {
+    public CommandParser(ScrapperSdk scrapperSdk) {
+        this.scrapperSdk = scrapperSdk;
     }
 
     /**
@@ -25,7 +28,6 @@ public class CommandParser {
      * @return {@link Command} что следует выполнить.
      * @throws BadMessageException если сообщение не имеет текста или команда не распознана.
      */
-    @SuppressWarnings("RedundantLabeledSwitchRuleCodeBlock")
     public Command parse(@NotNull Message message) throws BadMessageException {
         String text = message.text();
 
@@ -40,19 +42,29 @@ public class CommandParser {
         }
 
         CommandDict commandName = CommandDict.byName(matcher.group(1));
+
+        return getCommand(message, commandName, text);
+    }
+
+    @NotNull
+    @SuppressWarnings("RedundantLabeledSwitchRuleCodeBlock")
+    private Command getCommand(@NotNull Message message, CommandDict commandName, String text)
+        throws CommandParseFailedException {
         Command command;
         switch (commandName) {
             case START -> {
-                command = new Command.Start(message);
+                command = new Command.Start(scrapperSdk, message);
             }
             case HELP -> {
                 command = new Command.Help(message);
+            }
+            case TRACK -> {
+                command = new Command.Track(scrapperSdk, message);
             }
             case null, default -> {
                 throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));
             }
         }
-
         return command;
     }
 }

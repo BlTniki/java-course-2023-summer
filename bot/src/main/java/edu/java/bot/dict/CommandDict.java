@@ -1,4 +1,4 @@
-package edu.java.bot.command;
+package edu.java.bot.dict;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import java.util.Arrays;
@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public enum CommandDict {
     START("start", "", "Регистрирует нового пользователя"),
-    HELP("help", "", "Перечисление и использование доступных команд");
-//    TRACK("track", "<url> <alias(optional)>", "Начать отслеживать новый url");
+    HELP("help", "", "Перечисление и использование доступных команд"),
+    TRACK("track", "<url> <alias(optional)>", "Начать отслеживать новый url");
 
     public final String name;
     public final String usage;
