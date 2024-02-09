@@ -28,7 +28,7 @@ public class CommandParser {
      * @return {@link Command} что следует выполнить.
      * @throws BadMessageException если сообщение не имеет текста или команда не распознана.
      */
-    public Command parse(@NotNull Message message) throws BadMessageException {
+    public Command parse(@NotNull Message message) {
         String text = message.text();
 
         if (text == null) {
@@ -48,8 +48,7 @@ public class CommandParser {
 
     @NotNull
     @SuppressWarnings("RedundantLabeledSwitchRuleCodeBlock")
-    private Command getCommand(@NotNull Message message, CommandDict commandName)
-        throws CommandParseFailedException {
+    private Command getCommand(@NotNull Message message, CommandDict commandName) {
         Command command;
         switch (commandName) {
             case START -> {

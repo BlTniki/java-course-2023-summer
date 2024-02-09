@@ -4,14 +4,10 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
-import edu.java.bot.exception.CommandParseFailedException;
+import edu.java.bot.exception.CommandArgsParseFailedException;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
-import edu.java.scrapperSdk.exception.LinkNotExistException;
-import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
-import edu.java.scrapperSdk.exception.UserNotExistException;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,17 +69,13 @@ public sealed interface Command {
         private final String url;
         private final String alias;
 
-        public Track(ScrapperSdk scrapperSdk, Message message) throws CommandParseFailedException {
+        public Track(ScrapperSdk scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
             this.message = message;
 
             Matcher matcher = TRACK_ARGUMENTS.matcher(message.text());
             if (!matcher.matches()) {
-                throw new CommandParseFailedException(
-                    MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
-                        CommandDict.TRACK.name, CommandDict.TRACK.usage
-                    )
-                );
+                throw new  CommandArgsParseFailedException("Bad /track agrs: " + message.text(), CommandDict.TRACK);
             }
             this.url = matcher.group(1);
             this.alias = matcher.group(2);
@@ -91,18 +83,10 @@ public sealed interface Command {
 
         @Override
         public AbstractSendRequest<?> doCommand() {
-            try {
-                if (alias.isEmpty()) {
-                    scrapperSdk.trackNewUrl(message.from().id(), url);
-                } else {
-                    scrapperSdk.trackNewUrl(message.from().id(), url, alias);
-                }
-            } catch (UserNotExistException e) {
-                return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
-            } catch (UrlAlreadyExistException e) {
-                return SendMessageUtils.buildM(message, MessageDict.URL_ALREADY_EXIST.msg);
-            } catch (AliasAlreadyExistException e) {
-                return SendMessageUtils.buildM(message, MessageDict.ALIAS_ALREADY_EXIST.msg);
+            if (alias.isEmpty()) {
+                scrapperSdk.trackNewUrl(message.from().id(), url);
+            } else {
+                scrapperSdk.trackNewUrl(message.from().id(), url, alias);
             }
 
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
@@ -117,31 +101,24 @@ public sealed interface Command {
 
         private final String alias;
 
-        public Untrack(ScrapperSdk scrapperSdk, Message message) throws CommandParseFailedException {
+        public Untrack(ScrapperSdk scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
             this.message = message;
 
             Matcher matcher = UNTRACK_ARGUMENTS.matcher(message.text());
             if (!matcher.matches()) {
-                throw new CommandParseFailedException(
-                    MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
-                        CommandDict.UNTRACK.name, CommandDict.UNTRACK.usage
-                    )
-                );
+                if (!matcher.matches()) {
+                    throw new  CommandArgsParseFailedException(
+                        "Bad /untrack agrs: " + message.text(), CommandDict.UNTRACK
+                    );
+                }
             }
             this.alias = matcher.group(1);
         }
 
         @Override
         public AbstractSendRequest<?> doCommand() {
-            try {
-                scrapperSdk.untrackUrl(message.from().id(), alias);
-            } catch (UserNotExistException e) {
-                return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
-            } catch (LinkNotExistException e) {
-                return SendMessageUtils.buildM(message, MessageDict.LINK_NOT_FOUND.msg);
-            }
-
+            scrapperSdk.untrackUrl(message.from().id(), alias);
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
         }
     }
@@ -157,24 +134,19 @@ public sealed interface Command {
 
         @Override
         public AbstractSendRequest<?> doCommand() {
-            try {
-                var links = scrapperSdk.getAllUserTracks(message.from().id());
+            var links = scrapperSdk.getAllUserTracks(message.from().id());
 
-                if (links.isEmpty()) {
-                    return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
-                }
-
-                String linksMessage = links.stream()
-                    .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.url()))
-                    .collect(Collectors.joining("\n"));
-
-                return SendMessageUtils.buildM(
-                    message, MessageDict.LINK_LIST_HEADER.msg + linksMessage
-                );
-
-            } catch (UserNotExistException e) {
-                return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+            if (links.isEmpty()) {
+                return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
             }
+
+            String linksMessage = links.stream()
+                .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.url()))
+                .collect(Collectors.joining("\n"));
+
+            return SendMessageUtils.buildM(
+                message, MessageDict.LINK_LIST_HEADER.msg + linksMessage
+            );
         }
     }
 }
