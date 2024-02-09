@@ -24,8 +24,11 @@ public class BotSender {
 
     public void send(AbstractSendRequest<?> sendRequest) {
         executor.execute(() -> {
-            SendResponse sendResponse = bot.execute(sendRequest);
             LOGGER.info("execute " + sendRequest);
+            SendResponse sendResponse = bot.execute(sendRequest);
+            if (!sendResponse.isOk()) {
+                LOGGER.error("Error From Telegram API:" + sendResponse.description());
+            }
         });
     }
 }
