@@ -28,8 +28,6 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     public void processUpdate(@NotNull Update update) {
-        long chatId = update.message().chat().id();
-
         try {
             AbstractSendRequest<?> sendRequest = commandParser.parse(update.message()).doCommand();
             botSender.send(sendRequest);
