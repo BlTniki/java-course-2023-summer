@@ -4,6 +4,9 @@ import com.pengrad.telegrambot.model.BotCommand;
 import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Словарь существующих команд. Каждую новую команду следует внести в этот словарь.
+ */
 public enum CommandDict {
     START("start", "Регистрирует нового пользователя");
 
@@ -15,6 +18,11 @@ public enum CommandDict {
         this.description = description;
     }
 
+    /**
+     * Возвращает команду по полю name.
+     * @param command name команды.
+     * @return команда.
+     */
     public static CommandDict byName(@NotNull String command) {
         return Arrays.stream(CommandDict.values())
             .filter(c -> c.name.equals(command))
@@ -22,6 +30,10 @@ public enum CommandDict {
             .orElse(null);
     }
 
+    /**
+     * Приводит команду к Telegram API формату.
+     * @return Telegram API BotCommand формат.
+     */
     public BotCommand toBotCommand() {
         return new BotCommand("/" + name, description);
     }

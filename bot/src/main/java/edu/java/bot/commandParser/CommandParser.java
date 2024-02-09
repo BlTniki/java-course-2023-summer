@@ -9,12 +9,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Определяет какую команду следует выполнить на основе сообщения.
+ */
 public class CommandParser {
     private static final Pattern PATTERN = Pattern.compile("^/(\\w+)( .*)*$");
 
     public CommandParser() {
     }
 
+    /**
+     * Парсит команду в сообщении и возвращает {@link Command}.
+     * @param message сообщение.
+     * @return {@link Command} что следует выполнить.
+     * @throws BadMessageException если сообщение не имеет текста или команда не распознана.
+     */
     @SuppressWarnings("RedundantLabeledSwitchRuleCodeBlock")
     public Command parse(@NotNull Message message) throws BadMessageException {
         String text = message.text();
