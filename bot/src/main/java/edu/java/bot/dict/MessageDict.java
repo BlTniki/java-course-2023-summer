@@ -2,8 +2,9 @@ package edu.java.bot.dict;
 
 public enum MessageDict {
     SUCCESSFUL_SIGN_UP("_Регистрация прошла успешно!_"),
+    HELP_COMMANDS_BUILDER("```command\n/%s %s\n```_%s_\n"),
     BAD_INPUT_NO_TEXT("_В сообщении нет теста.\nЯ взаимодействую только с текстом >:[_"),
-    BAD_INPUT_UNRECOGNIZED_COMMAND("_Не смог распознать команду: `%s`_"),
+    BAD_INPUT_UNRECOGNIZED_COMMAND("_Не смог распознать команду:_ `%s`"),
     INTERNAL_SERVER_ERROR("*О нет, похоже что я сломался(*");
 
     public final String msg;

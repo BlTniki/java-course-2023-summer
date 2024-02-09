@@ -2,6 +2,7 @@ package edu.java.bot.commandParser;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.bot.command.Command;
+import edu.java.bot.command.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.exception.CommandParseFailedException;
@@ -43,6 +44,9 @@ public class CommandParser {
         switch (commandName) {
             case START -> {
                 command = new Command.Start(message);
+            }
+            case HELP -> {
+                command = new Command.Help(message);
             }
             case null, default -> {
                 throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));

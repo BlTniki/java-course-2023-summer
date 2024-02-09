@@ -1,4 +1,4 @@
-package edu.java.bot.commandParser;
+package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import java.util.Arrays;
@@ -8,13 +8,17 @@ import org.jetbrains.annotations.NotNull;
  * Словарь существующих команд. Каждую новую команду следует внести в этот словарь.
  */
 public enum CommandDict {
-    START("start", "Регистрирует нового пользователя");
+    START("start", "", "Регистрирует нового пользователя"),
+    HELP("help", "", "Перечисление и использования доступных команд");
+//    TRACK("track", "<url> <alias(optional)>", "Начать отслеживать новый url");
 
-    private final String name;
-    private final String description;
+    public final String name;
+    public final String usage;
+    public final String description;
 
-    CommandDict(String name, String description) {
+    CommandDict(String name, String usage, String description) {
         this.name = name;
+        this.usage = usage;
         this.description = description;
     }
 
