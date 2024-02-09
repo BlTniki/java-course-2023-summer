@@ -1,12 +1,14 @@
 package edu.java.scrapperSdk;
 
-import edu.java.scrapperSdk.exception.LinkAlreadyExistException;
+import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
 import edu.java.scrapperSdk.exception.LinkNotExistException;
+import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
 import edu.java.scrapperSdk.model.Link;
 import edu.java.scrapperSdk.model.User;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,9 @@ public class ScrapperSdkStub implements ScrapperSdk {
         if (users.containsKey(userTelegramId)) {
             throw new UserAlreadyExistException("User already registered in db");
         }
-        users.put(userTelegramId, new User(userTelegramId));
+        var user = new User(userTelegramId);
+        users.put(userTelegramId, user);
+        linksByUser.put(user, new ArrayList<>());
     }
 
     @Override
@@ -44,24 +48,23 @@ public class ScrapperSdkStub implements ScrapperSdk {
 
     @Override
     public void trackNewUrl(long userTelegramId, String url, String alias)
-            throws UserNotExistException, LinkAlreadyExistException {
+            throws UserNotExistException, UrlAlreadyExistException, AliasAlreadyExistException {
         var user = getUser(userTelegramId);
         var userLinks = getAllUserTracks(user.telegramId());
 
         if (userLinks.stream().anyMatch(link -> link.url().equals(url))) {
-            throw new LinkAlreadyExistException("This url already exist");
+            throw new UrlAlreadyExistException("This url already exist");
         }
         if (userLinks.stream().anyMatch(link -> link.alias().equals(alias))) {
-            throw new LinkAlreadyExistException("This alias already exist");
+            throw new AliasAlreadyExistException("This alias already exist");
         }
 
-        linksByUser.computeIfAbsent(user, (key) -> new ArrayList<Link>())
-            .add(new Link(url, alias, user));
+        linksByUser.get(user).add(new Link(url, alias, user));
     }
 
     @Override
     public void trackNewUrl(long userTelegramId, String url)
-            throws UserNotExistException, LinkAlreadyExistException {
+        throws UserNotExistException, UrlAlreadyExistException, AliasAlreadyExistException {
         trackNewUrl(userTelegramId, url, url);
     }
 
@@ -73,10 +76,11 @@ public class ScrapperSdkStub implements ScrapperSdk {
             .findAny()
             .orElseThrow(() -> new LinkNotExistException("Failed to find link with this alias"));
 
+        linksByUser.get(getUser(userTelegramId)).remove(link);
     }
 
     @Override
-    public List<Link> getAllUserTracks(long userTelegramId) throws UserNotExistException {
+    public @NotNull List<Link> getAllUserTracks(long userTelegramId) throws UserNotExistException {
         var user = getUser(userTelegramId);
         return linksByUser.get(user);
     }

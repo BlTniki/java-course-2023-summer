@@ -1,7 +1,8 @@
 package edu.java.scrapperSdk;
 
-import edu.java.scrapperSdk.exception.LinkAlreadyExistException;
+import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
 import edu.java.scrapperSdk.exception.LinkNotExistException;
+import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
 import edu.java.scrapperSdk.model.Link;
@@ -18,11 +19,11 @@ public interface ScrapperSdk {
 
     @NotNull User getUser(long userTelegramId) throws UserNotExistException;
 
-    void trackNewUrl(long userTelegramId, @NotEmpty String url)
-        throws UserNotExistException, LinkAlreadyExistException;
-
     void trackNewUrl(long userTelegramId, @NotEmpty String url, @NotEmpty String alias)
-        throws UserNotExistException, LinkAlreadyExistException;
+    throws UserNotExistException, UrlAlreadyExistException, AliasAlreadyExistException;
+
+    void trackNewUrl(long userTelegramId, @NotEmpty String url)
+        throws UserNotExistException, UrlAlreadyExistException, AliasAlreadyExistException;
 
     void untrackUrl(long userTelegramId, @NotEmpty String alias) throws UserNotExistException, LinkNotExistException;
 
