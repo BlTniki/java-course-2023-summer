@@ -28,6 +28,11 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     public void processUpdate(@NotNull Update update) {
+        if (update.message() == null) {
+            LOGGER.warn("Got update with no message...");
+            return;
+        }
+
         try {
             AbstractSendRequest<?> sendRequest = commandParser.parse(update.message()).doCommand();
             botSender.send(sendRequest);
