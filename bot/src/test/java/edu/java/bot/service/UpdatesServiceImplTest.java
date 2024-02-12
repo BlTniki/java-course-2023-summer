@@ -8,7 +8,6 @@ import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
 import edu.java.bot.commandParser.CommandParser;
 import edu.java.bot.sender.BotSender;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -27,10 +24,6 @@ import static org.mockito.Mockito.when;
 public class UpdatesServiceImplTest extends BotApplicationTests {
     @TestConfiguration
     static class UpdatesServiceImplTestConfig {
-        @MockBean
-        public BotSender botSender;
-        @MockBean
-        public CommandParser commandParser;
         @Bean
         public UpdatesServiceImpl updatesService(BotSender botSender, CommandParser commandParser) {
             return new UpdatesServiceImpl(botSender, commandParser);
@@ -39,9 +32,9 @@ public class UpdatesServiceImplTest extends BotApplicationTests {
 
     @Autowired
     private UpdatesServiceImpl updatesService;
-    @Autowired
+    @MockBean
     private BotSender botSender;
-    @Autowired
+    @MockBean
     CommandParser commandParser;
 
     @BeforeEach
