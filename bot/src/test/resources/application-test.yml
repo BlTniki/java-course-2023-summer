@@ -1,0 +1,12 @@
+app:
+  telegram-token: "6335507598:AAG9f_UTVP8Ig0867J8Oh6CAWL9llxtM7dU"
+  threads-Per-Executor: 6
+
+spring:
+  application:
+    name: bot
+  jackson:
+    time-zone: UTC
+
+logging:
+  config: classpath:log4j2-plain.xml
