@@ -16,12 +16,10 @@ import edu.java.scrapperSdk.exception.UserNotExistException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
 
 /**
  * Реализует {@link UpdatesService}
  */
-@Service
 public class UpdatesServiceImpl implements UpdatesService {
     private static final Logger LOGGER = LogManager.getLogger();
     private final BotSender botSender;
