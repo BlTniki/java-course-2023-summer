@@ -40,6 +40,12 @@ class BotSenderTest extends BotApplicationTests {
 
         botSender.send(sendMessage);
 
+        // дождёмся выполнения задачи
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         verify(bot).execute(any());
     }
 
