@@ -5,14 +5,11 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.BotApplicationTests;
 import edu.java.bot.dict.CommandDict;
-import edu.java.scrapperSdk.ScrapperSdk;
+import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class HelpCommandTest extends BotApplicationTests {

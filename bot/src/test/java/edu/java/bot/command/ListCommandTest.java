@@ -7,14 +7,11 @@ import edu.java.BotApplicationTests;
 import edu.java.bot.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.model.Link;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

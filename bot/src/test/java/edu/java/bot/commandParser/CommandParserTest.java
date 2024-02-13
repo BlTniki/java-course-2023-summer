@@ -29,6 +29,7 @@ class CommandParserTest extends BotApplicationTests {
 
     @Autowired
     private CommandParser commandParser;
+    @SuppressWarnings("unused")
     @MockBean
     private ScrapperSdk scrapperSdk;
 
