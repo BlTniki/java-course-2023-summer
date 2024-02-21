@@ -1,5 +1,13 @@
 app:
-  url: "datr"
+  scheduler:
+    enable: true
+    interval: 10s
+    force-check-delay: 10s
+
+client:
+  github:
+    token: ${GITHUB_TOKEN}
+    base-url: "datr"
 
 spring:
   application:
