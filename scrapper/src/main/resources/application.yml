@@ -7,7 +7,7 @@ app:
 client:
   github:
     token: ${GITHUB_TOKEN}
-    base-url: "datr"
+  stackoverflow:
 
 spring:
   application:
