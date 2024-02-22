@@ -1,0 +1,24 @@
+app:
+  scheduler:
+    enable: true
+    interval: 10s
+    force-check-delay: 10s
+
+client:
+  github:
+    token: "IHATEINTELIDEA"
+    base-url: "http://localhost:8085"
+  stackoverflow:
+    base-url: "http://localhost:8085"
+
+spring:
+  application:
+    name: scrapper
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-plain.xml
