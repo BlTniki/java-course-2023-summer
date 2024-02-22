@@ -30,12 +30,14 @@ public class GitHubClientWebClient implements GitHubClient {
                                             .build(owner, repo)
                 )
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(String.class)
-                    .flatMap(errorBody -> {
-                        throw new HttpClientErrorException(response.statusCode(), errorBody);
-                    }))
+                .onStatus(HttpStatusCode::isError, response -> response.createException()
+                    .flatMap(error -> {
+                        throw new HttpClientErrorException(response.statusCode(), error.getResponseBodyAsString());
+                    })
+                )
                 .bodyToMono(RepositoryResponse.class)
-                .block();
+                .blockOptional()
+                .orElseThrow();
         } catch (HttpClientErrorException e) {
             logger.error(ERROR_HEADER + e);
             throw ClientException.wrapException(e);
@@ -52,10 +54,11 @@ public class GitHubClientWebClient implements GitHubClient {
                     .build(owner, repo)
                 )
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(String.class)
-                    .flatMap(errorBody -> {
-                        throw new HttpClientErrorException(response.statusCode(), errorBody);
-                    }))
+                .onStatus(HttpStatusCode::isError, response -> response.createException()
+                    .flatMap(error -> {
+                        throw new HttpClientErrorException(response.statusCode(), error.getResponseBodyAsString());
+                    })
+                )
                 .bodyToFlux(RepositoryIssueResponse.class)
                 .collectList()
                 .block();
@@ -75,10 +78,11 @@ public class GitHubClientWebClient implements GitHubClient {
                     .build(owner, repo)
                 )
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(String.class)
-                    .flatMap(errorBody -> {
-                        throw new HttpClientErrorException(response.statusCode(), errorBody);
-                    }))
+                .onStatus(HttpStatusCode::isError, response -> response.createException()
+                    .flatMap(error -> {
+                        throw new HttpClientErrorException(response.statusCode(), error.getResponseBodyAsString());
+                    })
+                )
                 .bodyToFlux(RepositoryActivityResponse.class)
                 .collectList()
                 .block();
