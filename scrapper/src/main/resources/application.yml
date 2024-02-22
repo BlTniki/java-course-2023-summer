@@ -12,6 +12,8 @@ client:
 spring:
   application:
     name: scrapper
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 server:
   port: 8080
