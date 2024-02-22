@@ -1,0 +1,70 @@
+{
+    "items": [
+        {
+            "tags": [
+                "c++",
+                "c",
+                "operators",
+                "code-formatting",
+                "standards-compliance"
+            ],
+            "owner": {
+                "account_id": 31692,
+                "reputation": 498186,
+                "user_id": 87234,
+                "user_type": "registered",
+                "accept_rate": 100,
+                "profile_image": "https://i.stack.imgur.com/FkjBe.png?s=256&g=1",
+                "display_name": "GManNickG",
+                "link": "https://stackoverflow.com/users/87234/gmannickg"
+            },
+            "post_state": "Published",
+            "is_answered": true,
+            "view_count": 1004136,
+            "protected_date": 1297320482,
+            "accepted_answer_id": 1642035,
+            "answer_count": 26,
+            "community_owned_date": 1262233068,
+            "score": 10140,
+            "last_activity_date": 1705410153,
+            "creation_date": 1256799465,
+            "last_edit_date": 1680185464,
+            "question_id": 1642028,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c-c",
+            "title": "What is the &#39;--&gt;&#39; operator in C/C++?"
+        },
+        {
+            "tags": [
+                "java",
+                "jackson",
+                "spring-webclient"
+            ],
+            "owner": {
+                "account_id": 2842958,
+                "reputation": 986,
+                "user_id": 2442149,
+                "user_type": "registered",
+                "accept_rate": 80,
+                "profile_image": "https://www.gravatar.com/avatar/3922f09cad32b8fa452bbed21421eca0?s=256&d=identicon&r=PG&f=y&so-version=2",
+                "display_name": "bpereira",
+                "link": "https://stackoverflow.com/users/2442149/bpereira"
+            },
+            "post_state": "Published",
+            "is_answered": true,
+            "view_count": 11212,
+            "accepted_answer_id": 59535836,
+            "answer_count": 3,
+            "score": 6,
+            "last_activity_date": 1652526628,
+            "creation_date": 1577731737,
+            "question_id": 59535522,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/59535522/webclient-jackson-how-to-setup-deserialization-to-convert-snake-case-into-cam",
+            "title": "Webclient + Jackson: how to setup deserialization to convert snake_case into camelCase?"
+        }
+    ],
+    "has_more": false,
+    "quota_max": 300,
+    "quota_remaining": 293
+}
