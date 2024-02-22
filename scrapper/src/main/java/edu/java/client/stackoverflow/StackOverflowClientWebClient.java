@@ -32,10 +32,11 @@ public class StackOverflowClientWebClient implements StackOverflowClient {
                     )
                 )
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(String.class)
-                    .flatMap(errorBody -> {
-                        throw new HttpClientErrorException(response.statusCode(), errorBody);
-                    }))
+                .onStatus(HttpStatusCode::isError, response -> response.createException()
+                    .flatMap(error -> {
+                        throw new HttpClientErrorException(response.statusCode(), error.getResponseBodyAsString());
+                    })
+                )
                 .bodyToMono(QuestionsResponse.class)
                 .block();
         } catch (HttpClientErrorException e) {
