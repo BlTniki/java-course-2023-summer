@@ -12,7 +12,6 @@ public class ClientException extends Exception {
     public static ClientException wrapException(HttpClientErrorException e) {
 
         HttpStatusCode statusCode = e.getStatusCode();
-        String msg = e.getMessage();
 
         ClientException exception;
         switch (statusCode.value()) {
