@@ -6,6 +6,6 @@ public record RepositoryIssueResponse(
     long id,
     String title,
     OffsetDateTime updatedAt,
-    String pullRequest
+    PullRequestResponse pullRequest
 ) {
 }
