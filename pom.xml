@@ -43,6 +43,9 @@
         <!-- Linters -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <checkstyle.version>10.12.7</checkstyle.version>
+
+<!--        Open API-->
+        <openapi.version>2.3.0</openapi.version>
     </properties>
 
     <modules>
@@ -101,6 +104,12 @@
             <groupId>me.paulschwarz</groupId>
             <artifactId>spring-dotenv</artifactId>
             <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${openapi.version}</version>
         </dependency>
 
         <!-- Tests -->
