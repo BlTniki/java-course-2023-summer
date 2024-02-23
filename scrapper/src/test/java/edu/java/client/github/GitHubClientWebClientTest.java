@@ -33,7 +33,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
                 aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
-                .withBodyFile("/client/github/get_repo_success.json")
+                .withBodyFile("client/github/get_repo_success.json")
             )
         );
         RepositoryResponse expected = new RepositoryResponse(
@@ -80,7 +80,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
                     aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("/client/github/get_repo_activities_success.json")
+                        .withBodyFile("client/github/get_repo_activities_success.json")
                 )
         );
         List<RepositoryActivityResponse> expected = List.of(
@@ -114,7 +114,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
                     aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("/client/github/get_repo_activities_empty.json")
+                        .withBodyFile("client/github/get_repo_activities_empty.json")
                 )
         );
         List<RepositoryActivityResponse> expected = List.of();
@@ -157,7 +157,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
                     aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("/client/github/get_repo_issues_success.json")
+                        .withBodyFile("client/github/get_repo_issues_success.json")
                 )
         );
         List<RepositoryIssueResponse> expected = List.of(
@@ -196,7 +196,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
                     aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("/client/github/get_repo_issues_empty.json")
+                        .withBodyFile("client/github/get_repo_issues_empty.json")
                 )
         );
         List<RepositoryIssueResponse> expected = List.of();
