@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -19,6 +20,7 @@ public class ExceptionControllerHandler {
     public static final String ERROR_DES = "error";
 
     @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> entityNotFound(EntityNotFoundException e) {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
@@ -32,6 +34,7 @@ public class ExceptionControllerHandler {
     }
 
     @ExceptionHandler(EntityAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> entityAlreadyExist(EntityAlreadyExistException e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
