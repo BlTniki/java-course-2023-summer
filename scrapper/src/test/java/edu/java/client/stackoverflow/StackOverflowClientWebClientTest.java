@@ -35,7 +35,7 @@ class StackOverflowClientWebClientTest extends ScrapperApplicationTests {
                     aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("/client/stackoverflow/get_questions_success.json")
+                        .withBodyFile("client/stackoverflow/get_questions_success.json")
                 )
         );
         QuestionsResponse expected = new QuestionsResponse(List.of(
