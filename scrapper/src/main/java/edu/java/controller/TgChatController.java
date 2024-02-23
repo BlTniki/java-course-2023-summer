@@ -1,6 +1,5 @@
 package edu.java.controller;
 
-import edu.java.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +20,7 @@ public class TgChatController {
      *         or Некорректные параметры запроса (status code 400)
      */
     @PostMapping("/{id}")
-    public ResponseEntity<String> registerChat(@PathVariable long id) throws Exception {
+    public ResponseEntity<String> registerChat(@PathVariable long id) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("wololo");
     }
 
