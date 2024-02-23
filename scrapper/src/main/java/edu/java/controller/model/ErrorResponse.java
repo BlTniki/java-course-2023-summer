@@ -1,9 +1,11 @@
 package edu.java.controller.model;
 
+import java.util.List;
+
 public record ErrorResponse(
     String description,
     String code,
     String exceptionName,
     String exceptionMessage,
-    String[] stacktrace
+    List<String> stacktrace
 ) {}
