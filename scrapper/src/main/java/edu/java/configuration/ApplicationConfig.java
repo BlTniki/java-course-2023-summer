@@ -1,5 +1,6 @@
 package edu.java.configuration;
 
+import edu.java.LinkUpdaterScheduler;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,11 @@ public record ApplicationConfig(
     @Bean
     public Logger logger() {
         return LogManager.getLogger("app");
+    }
+
+    @Bean
+    public LinkUpdaterScheduler linkUpdateScheduler(Logger logger) {
+        return new LinkUpdaterScheduler(logger);
     }
 
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
