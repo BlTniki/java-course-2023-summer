@@ -1,5 +1,5 @@
 app:
-  telegram-token: "1337"
+  telegram-token: ${BOT_TOKEN}
   threads-Per-Executor: 6
 
 spring:
