@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
 import edu.java.bot.dict.MessageDict;
-import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,7 +22,7 @@ class CommandParserTest extends BotApplicationTests {
     @TestConfiguration
     static class CommandParserTestConfig {
         @Bean
-        public CommandParser commandParser(ScrapperSdk scrapperSdk) {
+        public CommandParser commandParser(ScrapperClient scrapperSdk) {
             return new CommandParser(scrapperSdk);
         }
     }
@@ -31,7 +31,7 @@ class CommandParserTest extends BotApplicationTests {
     private CommandParser commandParser;
     @SuppressWarnings("unused")
     @MockBean
-    private ScrapperSdk scrapperSdk;
+    private ScrapperClient scrapperSdk;
 
     public static Arguments[] validCommands() {
         return new Arguments[] {

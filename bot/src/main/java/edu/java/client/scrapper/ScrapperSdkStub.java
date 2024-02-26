@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScrapperSdkStub implements ScrapperSdk {
+public class ScrapperSdkStub implements ScrapperClient {
     private final Map<Long, User> users;
     private final Map<User, List<Link>> linksByUser;
 

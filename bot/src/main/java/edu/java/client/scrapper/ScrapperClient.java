@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Класс для общения со скраппером.
  */
-public interface ScrapperSdk {
+public interface ScrapperClient {
     void registerUser(long userTelegramId) throws UserAlreadyExistException;
 
     @NotNull User getUser(long userTelegramId) throws UserNotExistException;

@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
-import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 class StartCommandTest extends BotApplicationTests {
     @MockBean
-    private ScrapperSdk scrapperSdk;
+    private ScrapperClient scrapperSdk;
     @MockBean
     private Message message;
     @MockBean

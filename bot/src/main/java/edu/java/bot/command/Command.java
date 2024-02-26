@@ -6,7 +6,7 @@ import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.CommandArgsParseFailedException;
 import edu.java.bot.utils.SendMessageUtils;
-import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import edu.java.client.scrapper.exception.UserAlreadyExistException;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -24,10 +24,10 @@ public sealed interface Command {
     AbstractSendRequest<?> doCommand();
 
     final class Start implements Command {
-        private final ScrapperSdk scrapperSdk;
+        private final ScrapperClient scrapperSdk;
         private final Message message;
 
-        public Start(ScrapperSdk scrapperSdk, Message message) {
+        public Start(ScrapperClient scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
             this.message = message;
         }
@@ -64,12 +64,12 @@ public sealed interface Command {
     final class Track implements Command {
         private static final Pattern TRACK_ARGUMENTS = Pattern.compile("^/track\\s(\\S+)\\s?(\\S*)$");
 
-        private final ScrapperSdk scrapperSdk;
+        private final ScrapperClient scrapperSdk;
         private final Message message;
         private final String url;
         private final String alias;
 
-        public Track(ScrapperSdk scrapperSdk, Message message) {
+        public Track(ScrapperClient scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
             this.message = message;
 
@@ -96,12 +96,12 @@ public sealed interface Command {
     final class Untrack implements Command {
         private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s(\\S+)$");
 
-        private final ScrapperSdk scrapperSdk;
+        private final ScrapperClient scrapperSdk;
         private final Message message;
 
         private final String alias;
 
-        public Untrack(ScrapperSdk scrapperSdk, Message message) {
+        public Untrack(ScrapperClient scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
             this.message = message;
 
@@ -124,10 +124,10 @@ public sealed interface Command {
     }
 
     final class List implements Command {
-        private final ScrapperSdk scrapperSdk;
+        private final ScrapperClient scrapperSdk;
         private final Message message;
 
-        public List(ScrapperSdk scrapperSdk, Message message) {
+        public List(ScrapperClient scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
             this.message = message;
         }

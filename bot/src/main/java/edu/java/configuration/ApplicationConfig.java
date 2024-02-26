@@ -10,7 +10,7 @@ import edu.java.bot.listener.BotUpdatesListener;
 import edu.java.bot.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
-import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import edu.java.client.scrapper.ScrapperSdkStub;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public record ApplicationConfig(
     int threadsPerExecutor
 ) {
     @Bean
-    public ScrapperSdk scrapperSdk() {
+    public ScrapperClient scrapperSdk() {
         return new ScrapperSdkStub();
     }
 
@@ -59,7 +59,7 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public CommandParser commandParser(ScrapperSdk scrapperSdk) {
+    public CommandParser commandParser(ScrapperClient scrapperSdk) {
         return new CommandParser(scrapperSdk);
     }
 

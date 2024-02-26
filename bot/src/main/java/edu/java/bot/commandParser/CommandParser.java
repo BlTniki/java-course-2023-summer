@@ -6,7 +6,7 @@ import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.exception.CommandParseFailedException;
-import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CommandParser {
     private static final Pattern PATTERN = Pattern.compile("^/(\\w+)( .*)*$");
-    private final ScrapperSdk scrapperSdk;
+    private final ScrapperClient scrapperSdk;
 
-    public CommandParser(ScrapperSdk scrapperSdk) {
+    public CommandParser(ScrapperClient scrapperSdk) {
         this.scrapperSdk = scrapperSdk;
     }
 
