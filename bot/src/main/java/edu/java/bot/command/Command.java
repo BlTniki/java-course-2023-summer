@@ -95,7 +95,7 @@ public sealed interface Command {
     }
 
     final class Untrack implements Command {
-        private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s(\\S+)$");
+        private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s((http.+)|(\\S+))$");
         private static final int URL_IDX = 2;
         private static final int ALIAS_IDX = 3;
 
