@@ -20,7 +20,5 @@ public interface ScrapperClient {
 
     void untrackLink(long tgChatId, @NotEmpty String alias) throws ClientException;
 
-    void untrackLink(long tgChatId, @NotEmpty String url, @NotEmpty String alias) throws ClientException;
-
     @NotNull ListLinksResponse getAllUserTracks(long userTelegramId) throws ClientException;
 }
