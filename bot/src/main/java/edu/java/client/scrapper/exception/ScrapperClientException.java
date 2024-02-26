@@ -1,6 +1,8 @@
 package edu.java.client.scrapper.exception;
 
 import edu.java.client.exception.ClientException;
+import edu.java.client.scrapper.exception.chat.ChatAlreadyExistException;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
 import edu.java.client.scrapper.exception.link.AliasAlreadyExistException;
 import edu.java.client.scrapper.exception.link.AliasNotExistException;
 import edu.java.client.scrapper.exception.link.BadAliasException;
