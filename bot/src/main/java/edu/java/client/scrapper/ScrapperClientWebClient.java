@@ -15,11 +15,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 public class ScrapperClientWebClient implements ScrapperClient {
-    public static final String ERROR_HEADER = "Got an error from scrapper API: ";
     public static final String TG_ID_PATH = "/tg-chat/{id}";
     public static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
     public static final String LINKS_PATH = "/links";
-    public static final String CHAT_NOT_EXIST = "Chat not exist";
     private final Logger logger;
     private final WebClient webClient;
 

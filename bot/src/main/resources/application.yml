@@ -2,6 +2,10 @@ app:
   telegram-token: ${BOT_TOKEN}
   threads-Per-Executor: 6
 
+client:
+  scrapper:
+    baseUrl: "none"
+
 spring:
   application:
     name: bot
