@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import edu.java.BotApplicationTests;
 import java.util.concurrent.Executor;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ class BotSenderTest extends BotApplicationTests {
     @TestConfiguration
     static class BotSenderTestConfig {
         @Bean
-        public BotSender botSender(TelegramBot telegramBot, Executor executor) {
-            return new BotSender(telegramBot, executor);
+        public BotSender botSender(Logger logger, TelegramBot telegramBot, Executor executor) {
+            return new BotSender(logger, telegramBot, executor);
         }
     }
     @Autowired

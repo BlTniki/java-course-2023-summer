@@ -8,6 +8,7 @@ import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
 import edu.java.bot.commandParser.CommandParser;
 import edu.java.bot.sender.BotSender;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +26,8 @@ public class UpdatesServiceImplTest extends BotApplicationTests {
     @TestConfiguration
     static class UpdatesServiceImplTestConfig {
         @Bean
-        public UpdatesServiceImpl updatesService(BotSender botSender, CommandParser commandParser) {
-            return new UpdatesServiceImpl(botSender, commandParser);
+        public UpdatesServiceImpl updatesService(BotSender botSender, CommandParser commandParser, Logger logger) {
+            return new UpdatesServiceImpl(logger, botSender, commandParser);
         }
     }
 
