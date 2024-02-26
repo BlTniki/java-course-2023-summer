@@ -1,4 +1,4 @@
-package edu.java.client.scrapper.exception;
+package edu.java.client.exception;
 
 public class ClientException extends RuntimeException {
     public ClientException(String message) {
