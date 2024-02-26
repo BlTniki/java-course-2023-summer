@@ -4,7 +4,7 @@ import java.util.List;
 
 public record ErrorResponse(
     String description,
-    String code,
+    ErrorCode code,
     String exceptionName,
     String exceptionMessage,
     List<String> stacktrace
