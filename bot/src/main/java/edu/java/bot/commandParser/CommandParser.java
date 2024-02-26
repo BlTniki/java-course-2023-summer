@@ -16,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CommandParser {
     private static final Pattern PATTERN = Pattern.compile("^/(\\w+)( .*)*$");
-    private final ScrapperClient scrapperSdk;
+    private final ScrapperClient scrapperClient;
 
-    public CommandParser(ScrapperClient scrapperSdk) {
-        this.scrapperSdk = scrapperSdk;
+    public CommandParser(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     /**
@@ -52,19 +52,19 @@ public class CommandParser {
         Command command;
         switch (commandName) {
             case START -> {
-                command = new Command.Start(scrapperSdk, message);
+                command = new Command.Start(scrapperClient, message);
             }
             case HELP -> {
                 command = new Command.Help(message);
             }
             case TRACK -> {
-                command = new Command.Track(scrapperSdk, message);
+                command = new Command.Track(scrapperClient, message);
             }
             case UNTRACK -> {
-                command = new Command.Untrack(scrapperSdk, message);
+                command = new Command.Untrack(scrapperClient, message);
             }
             case LIST -> {
-                command = new Command.List(scrapperSdk, message);
+                command = new Command.List(scrapperClient, message);
             }
             case null, default -> {
                 throw new CommandParseFailedException(
