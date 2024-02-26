@@ -13,7 +13,6 @@ import edu.java.client.scrapper.exception.chat.ChatNotExistException;
 import edu.java.client.scrapper.exception.link.AliasAlreadyExistException;
 import edu.java.client.scrapper.exception.link.LinkNotExistException;
 import edu.java.client.scrapper.exception.link.UrlAlreadyExistException;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
