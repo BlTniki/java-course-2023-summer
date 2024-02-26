@@ -5,6 +5,7 @@ import edu.java.exception.BadRequestException;
 import edu.java.exception.EntityAlreadyExistException;
 import edu.java.exception.EntityNotFoundException;
 import java.util.Arrays;
+import edu.java.exception.EntityValidationFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -42,6 +43,20 @@ public class ExceptionControllerHandler {
                 ERROR_DES,
                 String.valueOf(HttpStatus.BAD_REQUEST.value()),
                 "Entity already exist",
+                e.getMessage(),
+                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
+            ));
+    }
+
+    @ExceptionHandler(EntityValidationFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> entityValidationFailed(EntityValidationFailedException e) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(
+                ERROR_DES,
+                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                "Entity validation failed",
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));
