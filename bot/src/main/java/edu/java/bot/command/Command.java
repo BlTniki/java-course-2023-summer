@@ -85,9 +85,9 @@ public sealed interface Command {
         @Override
         public AbstractSendRequest<?> doCommand() {
             if (alias.isEmpty()) {
-                scrapperSdk.trackNewLink(message.from().id(), url);
+                scrapperSdk.trackNewLink(message.chat().id(), url);
             } else {
-                scrapperSdk.trackNewLink(message.from().id(), url, alias);
+                scrapperSdk.trackNewLink(message.chat().id(), url, alias);
             }
 
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
@@ -124,9 +124,9 @@ public sealed interface Command {
         @Override
         public AbstractSendRequest<?> doCommand() {
             if (url != null) {
-                scrapperSdk.untrackLink(message.from().id(), url);
+                scrapperSdk.untrackLink(message.chat().id(), url);
             } else {
-                scrapperSdk.untrackLink(message.from().id(), alias);
+                scrapperSdk.untrackLink(message.chat().id(), alias);
             }
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
         }
@@ -143,7 +143,7 @@ public sealed interface Command {
 
         @Override
         public AbstractSendRequest<?> doCommand() {
-            var listLinksResponse = scrapperSdk.getAllUserTracks(message.from().id());
+            var listLinksResponse = scrapperSdk.getAllUserTracks(message.chat().id());
 
             if (listLinksResponse.links().isEmpty()) {
                 return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
