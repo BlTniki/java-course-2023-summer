@@ -7,6 +7,7 @@ import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
+import edu.java.client.scrapper.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

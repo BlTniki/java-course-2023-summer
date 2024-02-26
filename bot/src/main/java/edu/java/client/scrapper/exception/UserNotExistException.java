@@ -1,4 +1,4 @@
-package edu.java.scrapperSdk.exception;
+package edu.java.client.scrapper.exception;
 
 public class UserNotExistException extends ScrapperSDKException {
     public UserNotExistException(String message) {

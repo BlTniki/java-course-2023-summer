@@ -1,4 +1,4 @@
-package edu.java.scrapperSdk.exception;
+package edu.java.client.scrapper.exception;
 
 public class LinkAlreadyExistException extends ScrapperSDKException {
     public LinkAlreadyExistException(String message) {

@@ -9,6 +9,9 @@ import edu.java.bot.service.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.UserNotExistException;
 import edu.java.scrapperSdk.model.Link;
+import edu.java.bot.dict.MessageDict;
+import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.model.Link;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +24,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ListCommandTest extends BotApplicationTests {
-
     @MockBean
     private ScrapperSdk scrapperSdk;
     @MockBean

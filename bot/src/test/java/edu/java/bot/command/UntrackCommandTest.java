@@ -11,6 +11,8 @@ import edu.java.scrapperSdk.exception.LinkNotExistException;
 import edu.java.scrapperSdk.exception.ScrapperSDKException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
 import java.util.Map;
+import edu.java.bot.exception.CommandArgsParseFailedException;
+import edu.java.client.scrapper.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
