@@ -1,7 +1,9 @@
 package edu.java.exception;
 
-public class EntityNotFoundException extends RuntimeException {
-    public EntityNotFoundException(String message) {
-        super(message);
+import edu.java.controller.model.ErrorCode;
+
+public class EntityNotFoundException extends BadRequestException {
+    public EntityNotFoundException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
     }
 }

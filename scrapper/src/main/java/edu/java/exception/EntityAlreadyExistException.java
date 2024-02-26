@@ -1,7 +1,9 @@
 package edu.java.exception;
 
-public class EntityAlreadyExistException extends RuntimeException {
-    public EntityAlreadyExistException(String message) {
-        super(message);
+import edu.java.controller.model.ErrorCode;
+
+public class EntityAlreadyExistException extends BadRequestException {
+    public EntityAlreadyExistException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
     }
 }

@@ -1,11 +1,12 @@
 package edu.java.controller;
 
+import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.ErrorResponse;
 import edu.java.exception.BadRequestException;
 import edu.java.exception.EntityAlreadyExistException;
 import edu.java.exception.EntityNotFoundException;
-import java.util.Arrays;
 import edu.java.exception.EntityValidationFailedException;
+import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -27,8 +28,8 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.NOT_FOUND.value()),
-                "Entity not found",
+                e.getErrorCode(),
+                EntityNotFoundException.class.getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
         ));
@@ -41,8 +42,8 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                "Entity already exist",
+                e.getErrorCode(),
+                EntityAlreadyExistException.class.getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));
@@ -55,8 +56,8 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                "Entity validation failed",
+                e.getErrorCode(),
+                EntityValidationFailedException.class.getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));
@@ -68,8 +69,8 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.BAD_REQUEST.value()),
-                "Bad request",
+                e.getErrorCode(),
+                BadRequestException.class.getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));
@@ -81,7 +82,7 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.NOT_FOUND.value()),
+                ErrorCode.BAD_REQUEST,
                 e.getClass().getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
@@ -94,7 +95,7 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                ErrorCode.BAD_REQUEST,
                 e.getClass().getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
@@ -107,7 +108,7 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                ErrorCode.BAD_REQUEST,
                 e.getClass().getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
@@ -120,7 +121,7 @@ public class ExceptionControllerHandler {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponse(
                 ERROR_DES,
-                String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                ErrorCode.INTERNAL_SERVER_ERROR,
                 e.getClass().getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
