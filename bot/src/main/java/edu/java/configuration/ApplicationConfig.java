@@ -35,6 +35,11 @@ public record ApplicationConfig(
     int threadsPerExecutor
 ) {
     @Bean
+    public Logger logger() {
+        return LogManager.getLogger();
+    }
+
+    @Bean
     public List<Command> commands(ScrapperSdk scrapperSdk) {
         var commandList = new ArrayList<Command>();
 
@@ -66,13 +71,13 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public BotExceptionHandler botExceptionHandler() {
-        return new BotExceptionHandler();
+    public BotExceptionHandler botExceptionHandler(Logger logger) {
+        return new BotExceptionHandler(logger);
     }
 
     @Bean
-    public BotSender botSender(TelegramBot bot) {
-        return new BotSender(bot);
+    public BotSender botSender(Logger logger, TelegramBot bot) {
+        return new BotSender(logger, bot);
     }
 
     @Bean
@@ -81,16 +86,15 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public UpdatesService updatesService(BotSender botSender, CommandParser commandParser) {
-        return new UpdatesServiceImpl(botSender, commandParser);
+    public UpdatesService updatesService(Logger logger, BotSender botSender, CommandParser commandParser) {
+        return new UpdatesServiceImpl(logger, botSender, commandParser);
     }
 
     @Bean
     public BotUpdatesListener botUpdatesListener(
             TelegramBot bot,
             BotExceptionHandler botExceptionHandler,
-            UpdatesService updatesService,
-            Executor executor
+            UpdatesService updatesService
         ) {
         var botUpdatesListener =  new BotUpdatesListener(updatesService);
         bot.setUpdatesListener(botUpdatesListener, botExceptionHandler);
