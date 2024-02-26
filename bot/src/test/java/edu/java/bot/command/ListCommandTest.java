@@ -6,7 +6,9 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.dict.MessageDict;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.model.Link;
+import edu.java.client.scrapper.model.LinkResponse;
+import edu.java.client.scrapper.model.ListLinksResponse;
+import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 class ListCommandTest extends BotApplicationTests {
     @MockBean
-    private ScrapperClient scrapperSdk;
+    private ScrapperClient scrapperClient;
     @MockBean
     private Message message;
     @MockBean
@@ -33,15 +35,20 @@ class ListCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
-        when(scrapperSdk.getAllUserTracks(anyLong())).thenReturn(List.of(
-            new Link("link1", "alias1", null),
-            new Link("link2", "alias2", null),
-            new Link("link3", "alias3", null)
-        ));
+        when(scrapperClient.getAllUserTracks(anyLong())).thenReturn(
+            new ListLinksResponse(
+                List.of(
+                    new LinkResponse(1, URI.create("link1"), "alias1"),
+                    new LinkResponse(2, URI.create("link2"), "alias2"),
+                    new LinkResponse(3, URI.create("link3"), "alias3")
+                ),
+                3
+            )
+        );
 
-        String answer = (String) new Command.List(scrapperSdk, message).doCommand().getParameters().get("text");
+        String answer = (String) new Command.List(scrapperClient, message).doCommand().getParameters().get("text");
 
-        verify(scrapperSdk).getAllUserTracks(1337L);
+        verify(scrapperClient).getAllUserTracks(7331L);
         assertThat(answer).contains(List.of("link1", "link2", "link3"));
     }
 
@@ -52,11 +59,11 @@ class ListCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
-        when(scrapperSdk.getAllUserTracks(anyLong())).thenReturn(List.of());
+        when(scrapperClient.getAllUserTracks(anyLong())).thenReturn(new ListLinksResponse(List.of(), 0));
 
-        String answer = (String) new Command.List(scrapperSdk, message).doCommand().getParameters().get("text");
+        String answer = (String) new Command.List(scrapperClient, message).doCommand().getParameters().get("text");
 
-        verify(scrapperSdk).getAllUserTracks(1337L);
+        verify(scrapperClient).getAllUserTracks(7331L);
         assertThat(answer).isEqualTo(MessageDict.LINK_LIST_EMPTY.msg);
     }
 }

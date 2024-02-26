@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 class StartCommandTest extends BotApplicationTests {
     @MockBean
-    private ScrapperClient scrapperSdk;
+    private ScrapperClient scrapperClient;
     @MockBean
     private Message message;
     @MockBean
@@ -28,10 +28,10 @@ class StartCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.from()).thenReturn(user);
         when(message.chat()).thenReturn(chat);
-        Command command = new Command.Start(scrapperSdk, message);
+        Command command = new Command.Start(scrapperClient, message);
 
         command.doCommand();
 
-        verify(scrapperSdk).registerUser(1337L);
+        verify(scrapperClient).registerChat(7331L);
     }
 }

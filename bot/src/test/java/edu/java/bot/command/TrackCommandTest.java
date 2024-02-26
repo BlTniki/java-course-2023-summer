@@ -37,7 +37,7 @@ class TrackCommandTest extends BotApplicationTests {
 
         new Command.Track(scrapperSdk, message).doCommand();
 
-        verify(scrapperSdk).trackNewUrl(1337L, "http://localhost:123/", "dawd");
+        verify(scrapperSdk).trackNewLink(7331L, "http://localhost:123/", "dawd");
     }
 
     @Test
@@ -51,7 +51,7 @@ class TrackCommandTest extends BotApplicationTests {
 
         new Command.Track(scrapperSdk, message).doCommand();
 
-        verify(scrapperSdk).trackNewUrl(1337L, "http://localhost:123/");
+        verify(scrapperSdk).trackNewLink(7331L, "http://localhost:123/");
     }
 
     public static Arguments[] invalidText() {
