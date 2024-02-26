@@ -22,7 +22,7 @@ public class LinksController implements LinksApi {
     }
 
     @Override
-    public ResponseEntity<String> deleteLink(Long tgChatId, RemoveLinkRequest removeLinkRequest) {
+    public ResponseEntity<LinkResponse> deleteLink(Long tgChatId, RemoveLinkRequest removeLinkRequest) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 }

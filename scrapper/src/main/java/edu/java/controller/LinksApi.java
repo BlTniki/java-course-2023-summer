@@ -58,7 +58,7 @@ public interface LinksApi {
     @RequestMapping(produces = { "application/json" },
                     consumes = { "application/json" },
                     method = RequestMethod.DELETE)
-    ResponseEntity<String> deleteLink(
+    ResponseEntity<LinkResponse> deleteLink(
         @Parameter(in = ParameterIn.HEADER) @RequestHeader(value = "Tg-Chat-Id") Long tgChatId,
         @Parameter(in = ParameterIn.DEFAULT) @Valid @RequestBody RemoveLinkRequest removeLinkRequest
     );
