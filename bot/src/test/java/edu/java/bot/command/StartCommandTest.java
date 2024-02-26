@@ -4,21 +4,19 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
+import edu.java.client.scrapper.ScrapperClient;
 import edu.java.bot.service.command.Command;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
-import edu.java.client.scrapper.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import java.util.Map;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class StartCommandTest extends BotApplicationTests {
     @MockBean
-    private ScrapperSdk scrapperSdk;
+    private ScrapperClient scrapperSdk;
     @MockBean
     private Message message;
     @MockBean

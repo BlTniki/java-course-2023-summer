@@ -12,7 +12,7 @@ import edu.java.scrapperSdk.exception.ScrapperSDKException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
 import java.util.Map;
 import edu.java.bot.exception.CommandArgsParseFailedException;
-import edu.java.client.scrapper.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 class UntrackCommandTest extends BotApplicationTests {
 
     @MockBean
-    private ScrapperSdk scrapperSdk;
+    private ScrapperClient scrapperSdk;
     @MockBean
     private Message message;
     @MockBean

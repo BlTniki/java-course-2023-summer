@@ -7,6 +7,7 @@ import edu.java.bot.controller.listener.BotUpdatesListener;
 import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
+import edu.java.client.scrapper.ScrapperClient;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.command.CommandParser;
 import edu.java.bot.service.command.HelpCommand;
@@ -34,7 +35,7 @@ public record ApplicationConfig(
     int threadsPerExecutor
 ) {
     @Bean
-    public ScrapperSdk scrapperSdk() {
+    public ScrapperClient scrapperSdk() {
         return new ScrapperSdkStub();
     }
 
