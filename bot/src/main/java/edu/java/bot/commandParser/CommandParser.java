@@ -6,7 +6,7 @@ import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.exception.CommandParseFailedException;
-import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperSdk;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;

@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
 import edu.java.bot.dict.MessageDict;
-import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

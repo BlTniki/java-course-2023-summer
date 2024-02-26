@@ -1,12 +1,12 @@
-package edu.java.scrapperSdk;
+package edu.java.client.scrapper;
 
-import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
-import edu.java.scrapperSdk.exception.LinkNotExistException;
-import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
-import edu.java.scrapperSdk.exception.UserAlreadyExistException;
-import edu.java.scrapperSdk.exception.UserNotExistException;
-import edu.java.scrapperSdk.model.Link;
-import edu.java.scrapperSdk.model.User;
+import edu.java.client.scrapper.exception.AliasAlreadyExistException;
+import edu.java.client.scrapper.exception.LinkNotExistException;
+import edu.java.client.scrapper.exception.UrlAlreadyExistException;
+import edu.java.client.scrapper.exception.UserAlreadyExistException;
+import edu.java.client.scrapper.exception.UserNotExistException;
+import edu.java.client.scrapper.model.Link;
+import edu.java.client.scrapper.model.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
