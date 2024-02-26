@@ -1,31 +1,26 @@
 package edu.java.client.scrapper;
 
-import edu.java.client.scrapper.exception.AliasAlreadyExistException;
-import edu.java.client.scrapper.exception.LinkNotExistException;
-import edu.java.client.scrapper.exception.UrlAlreadyExistException;
-import edu.java.client.scrapper.exception.UserAlreadyExistException;
-import edu.java.client.scrapper.exception.UserNotExistException;
-import edu.java.client.scrapper.model.Link;
-import edu.java.client.scrapper.model.User;
+import edu.java.client.exception.ClientException;
+import edu.java.client.scrapper.model.LinkResponse;
+import edu.java.client.scrapper.model.ListLinksResponse;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Класс для общения со скраппером.
  */
 public interface ScrapperClient {
-    void registerUser(long userTelegramId) throws UserAlreadyExistException;
+    void registerChat(long tgChatId) throws ClientException;
 
-    @NotNull User getUser(long userTelegramId) throws UserNotExistException;
+    void deleteChat(long tgChatId) throws ClientException;
 
-    void trackNewUrl(long userTelegramId, @NotEmpty String url, @NotEmpty String alias)
-    throws UserNotExistException, UrlAlreadyExistException, AliasAlreadyExistException;
+    LinkResponse trackNewLink(long userTelegramId, @NotEmpty String url, @NotEmpty String alias) throws ClientException;
 
-    void trackNewUrl(long userTelegramId, @NotEmpty String url)
-        throws UserNotExistException, UrlAlreadyExistException, AliasAlreadyExistException;
+    LinkResponse trackNewLink(long userTelegramId, @NotEmpty String url) throws ClientException;
 
-    void untrackUrl(long userTelegramId, @NotEmpty String alias) throws UserNotExistException, LinkNotExistException;
+    void untrackLink(long userTelegramId, @NotEmpty String alias) throws ClientException;
 
-    @NotNull List<Link> getAllUserTracks(long userTelegramId) throws UserNotExistException;
+    void untrackLink(long userTelegramId, @NotEmpty String url, @NotEmpty String alias) throws ClientException;
+
+    @NotNull ListLinksResponse getAllUserTracks(long userTelegramId) throws ClientException;
 }
