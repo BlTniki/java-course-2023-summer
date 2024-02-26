@@ -36,8 +36,7 @@ public class GitHubClientWebClient implements GitHubClient {
                     })
                 )
                 .bodyToMono(RepositoryResponse.class)
-                .blockOptional()
-                .orElseThrow();
+                .block();
         } catch (HttpClientErrorException e) {
             logger.error(ERROR_HEADER + e);
             throw ClientException.wrapException(e);
