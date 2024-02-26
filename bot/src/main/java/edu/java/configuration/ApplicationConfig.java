@@ -35,11 +35,6 @@ public record ApplicationConfig(
     int threadsPerExecutor
 ) {
     @Bean
-    public ScrapperClient scrapperSdk() {
-        return new ScrapperSdkStub();
-    }
-
-    @Bean
     public List<Command> commands(ScrapperSdk scrapperSdk) {
         var commandList = new ArrayList<Command>();
 
