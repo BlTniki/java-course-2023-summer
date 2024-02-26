@@ -15,6 +15,8 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +29,11 @@ public record ApplicationConfig(
     String telegramToken,
     int threadsPerExecutor
 ) {
+    @Bean
+    public Logger logger() {
+        return LogManager.getLogger();
+    }
+
     @Bean
     public TelegramBot telegramBot() {
         var bot = new TelegramBot(telegramToken);
@@ -43,13 +50,13 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public BotExceptionHandler botExceptionHandler() {
-        return new BotExceptionHandler();
+    public BotExceptionHandler botExceptionHandler(Logger logger) {
+        return new BotExceptionHandler(logger);
     }
 
     @Bean
-    public BotSender botSender(TelegramBot bot, Executor executor) {
-        return new BotSender(bot, executor);
+    public BotSender botSender(Logger logger, TelegramBot bot, Executor executor) {
+        return new BotSender(logger, bot, executor);
     }
 
     @Bean
@@ -58,8 +65,8 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public UpdatesService updatesService(BotSender botSender, CommandParser commandParser) {
-        return new UpdatesServiceImpl(botSender, commandParser);
+    public UpdatesService updatesService(Logger logger, BotSender botSender, CommandParser commandParser) {
+        return new UpdatesServiceImpl(logger, botSender, commandParser);
     }
 
     @Bean

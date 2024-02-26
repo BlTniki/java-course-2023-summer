@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.response.SendResponse;
 import java.util.concurrent.Executor;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -12,22 +11,23 @@ import org.apache.logging.log4j.Logger;
  * Реализует отправку в асинхронном виде
  */
 public class BotSender {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private final Logger logger;
 
     private final TelegramBot bot;
     private final Executor executor;
 
-    public BotSender(TelegramBot bot, Executor executor) {
+    public BotSender(Logger logger, TelegramBot bot, Executor executor) {
+        this.logger = logger;
         this.bot = bot;
         this.executor = executor;
     }
 
     public void send(AbstractSendRequest<?> sendRequest) {
         executor.execute(() -> {
-            LOGGER.info("execute " + sendRequest);
+            logger.info("execute " + sendRequest);
             SendResponse sendResponse = bot.execute(sendRequest);
             if (!sendResponse.isOk()) {
-                LOGGER.error("Error From Telegram API:" + sendResponse.description());
+                logger.error("Error From Telegram API:" + sendResponse.description());
             }
         });
     }
