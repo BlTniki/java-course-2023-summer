@@ -8,7 +8,7 @@ import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.CommandArgsParseFailedException;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.exception.ChatAlreadyExistException;
+import edu.java.client.scrapper.exception.chat.ChatAlreadyExistException;
 import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.regex.Matcher;
