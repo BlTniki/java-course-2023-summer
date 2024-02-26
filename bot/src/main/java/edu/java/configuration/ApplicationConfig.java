@@ -11,7 +11,6 @@ import edu.java.bot.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.ScrapperSdkStub;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
@@ -28,11 +27,6 @@ public record ApplicationConfig(
     String telegramToken,
     int threadsPerExecutor
 ) {
-    @Bean
-    public ScrapperClient scrapperSdk() {
-        return new ScrapperSdkStub();
-    }
-
     @Bean
     public TelegramBot telegramBot() {
         var bot = new TelegramBot(telegramToken);
