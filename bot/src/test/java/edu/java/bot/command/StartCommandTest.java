@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 class StartCommandTest extends BotApplicationTests {
     @MockBean
-    private ScrapperClient scrapperSdk;
+    private ScrapperClient scrapperClient;
     @MockBean
     private Message message;
     @MockBean
@@ -38,6 +38,6 @@ class StartCommandTest extends BotApplicationTests {
 
         command.doCommand(message);
 
-        verify(scrapperSdk).registerUser(1337L);
+        verify(scrapperClient).registerChat(7331L);
     }
 }

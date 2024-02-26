@@ -42,8 +42,22 @@ class UntrackCommandTest extends BotApplicationTests {
     private Map<String, Command> commandDict;
 
     @Test
-    @DisplayName("Проверим чтобы аргумент корректно парсился")
-    void doCommand_valid() throws LinkNotExistException, UserNotExistException {
+    @DisplayName("Проверим чтобы url корректно парсился")
+    void doCommand_url_valid() throws LinkNotExistException, UserNotExistException  {
+        when(user.id()).thenReturn(1337L);
+        when(chat.id()).thenReturn(7331L);
+        when(message.chat()).thenReturn(chat);
+        when(message.from()).thenReturn(user);
+        when(message.text()).thenReturn("/untrack https://www.victorsolkin.ru/chastye-voprosy");
+
+        new Command.Untrack(scrapperSdk, message).doCommand();
+
+        verify(scrapperSdk).untrackLink(7331L, "https://www.victorsolkin.ru/chastye-voprosy");
+    }
+
+    @Test
+    @DisplayName("Проверим чтобы alias корректно парсился")
+    void doCommand_alias_valid() throws LinkNotExistException, UserNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -52,7 +66,7 @@ class UntrackCommandTest extends BotApplicationTests {
 
         commandDict.get("untrack").doCommand(message);
 
-        verify(scrapperSdk).untrackUrl(1337L, "lol");
+        verify(scrapperSdk).untrackLink(7331L, "lol");
     }
 
     public static Arguments[] invalidText() {
