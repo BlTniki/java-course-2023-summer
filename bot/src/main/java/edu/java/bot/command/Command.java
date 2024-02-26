@@ -7,7 +7,8 @@ import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.CommandArgsParseFailedException;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.exception.UserAlreadyExistException;
+import edu.java.client.scrapper.exception.ChatAlreadyExistException;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,8 +36,8 @@ public sealed interface Command {
         @Override
         public AbstractSendRequest<?> doCommand() {
             try {
-                scrapperSdk.registerUser(message.from().id());
-            } catch (UserAlreadyExistException e) {
+                scrapperSdk.registerChat(message.chat().id());
+            } catch (ChatAlreadyExistException e) {
                 return SendMessageUtils.buildM(message, MessageDict.USER_ALREADY_SIGN_UP.msg);
             }
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_SIGN_UP.msg);
@@ -84,9 +85,9 @@ public sealed interface Command {
         @Override
         public AbstractSendRequest<?> doCommand() {
             if (alias.isEmpty()) {
-                scrapperSdk.trackNewUrl(message.from().id(), url);
+                scrapperSdk.trackNewLink(message.from().id(), url);
             } else {
-                scrapperSdk.trackNewUrl(message.from().id(), url, alias);
+                scrapperSdk.trackNewLink(message.from().id(), url, alias);
             }
 
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
@@ -95,11 +96,14 @@ public sealed interface Command {
 
     final class Untrack implements Command {
         private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s(\\S+)$");
+        private static final int URL_IDX = 2;
+        private static final int ALIAS_IDX = 3;
 
         private final ScrapperClient scrapperSdk;
         private final Message message;
 
-        private final String alias;
+        private final @Nullable String url;
+        private final @Nullable String alias;
 
         public Untrack(ScrapperClient scrapperSdk, Message message) {
             this.scrapperSdk = scrapperSdk;
@@ -113,12 +117,17 @@ public sealed interface Command {
                     );
                 }
             }
-            this.alias = matcher.group(1);
+            this.url = matcher.group(URL_IDX);
+            this.alias = matcher.group(ALIAS_IDX);
         }
 
         @Override
         public AbstractSendRequest<?> doCommand() {
-            scrapperSdk.untrackUrl(message.from().id(), alias);
+            if (url != null) {
+                scrapperSdk.untrackLink(message.from().id(), url);
+            } else {
+                scrapperSdk.untrackLink(message.from().id(), alias);
+            }
             return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
         }
     }
@@ -134,14 +143,17 @@ public sealed interface Command {
 
         @Override
         public AbstractSendRequest<?> doCommand() {
-            var links = scrapperSdk.getAllUserTracks(message.from().id());
+            var listLinksResponse = scrapperSdk.getAllUserTracks(message.from().id());
 
-            if (links.isEmpty()) {
+            if (listLinksResponse.links().isEmpty()) {
                 return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
             }
 
-            String linksMessage = links.stream()
-                .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.url()))
+            String linksMessage = listLinksResponse.links().stream()
+                .map(
+                    linkResponse -> MessageDict.LINK_LIST_FORMAT.msg
+                        .formatted(linkResponse.alias(), linkResponse.link())
+                )
                 .collect(Collectors.joining("\n"));
 
             return SendMessageUtils.buildM(

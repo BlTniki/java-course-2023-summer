@@ -11,8 +11,8 @@ import edu.java.bot.utils.SendMessageUtils;
 import edu.java.client.scrapper.exception.AliasAlreadyExistException;
 import edu.java.client.scrapper.exception.LinkNotExistException;
 import edu.java.client.scrapper.exception.UrlAlreadyExistException;
-import edu.java.client.scrapper.exception.UserAlreadyExistException;
-import edu.java.client.scrapper.exception.UserNotExistException;
+import edu.java.client.scrapper.exception.ChatAlreadyExistException;
+import edu.java.client.scrapper.exception.ChatNotExistException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +49,11 @@ public class UpdatesServiceImpl implements UpdatesService {
                     e.command.name, e.command.usage
                 )
             );
-        } catch (UserNotExistException e) {
+        } catch (ChatNotExistException e) {
             LOGGER.warn(e);
             sendRequest = SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
 
-        } catch (UserAlreadyExistException e) {
+        } catch (ChatAlreadyExistException e) {
             LOGGER.warn(e);
             sendRequest = SendMessageUtils.buildM(message, MessageDict.USER_ALREADY_SIGN_UP.msg);
 
