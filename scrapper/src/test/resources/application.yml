@@ -16,6 +16,8 @@ spring:
     name: scrapper
   jackson:
     property-naming-strategy: SNAKE_CASE
+  liquibase:
+    enabled: false
 
 server:
   port: 8080
