@@ -22,4 +22,6 @@ CREATE IF NOT EXISTS TABLE link_subscription {
 
     PRIMARY KEY (id),
     UNIQUE (chat_id, link_id, alias)
+    FOREIGN KEY (chat_id) REFERENCES chat(id),
+    FOREIGN KEY (link_id) REFERENCES link(id)
 };
