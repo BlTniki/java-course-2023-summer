@@ -4,5 +4,13 @@ spring:
   jackson:
     time-zone: UTC
 
+app:
+  telegram-token: "dawdawdaw"
+  threads-Per-Executor: 6
+
+client:
+  scrapper:
+    baseUrl: "none"
+
 logging:
   config: classpath:log4j2-plain.xml
