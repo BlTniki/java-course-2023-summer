@@ -1,4 +1,4 @@
-package edu.java.exception;
+package edu.java.service.exception;
 
 import edu.java.controller.model.ErrorCode;
 
