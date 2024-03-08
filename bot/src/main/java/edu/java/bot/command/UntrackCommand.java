@@ -6,10 +6,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import edu.java.scrapperSdk.exception.LinkNotExistException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
