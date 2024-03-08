@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dict.MessageDict;
-import edu.java.bot.utils.SendMessageUtils;
+import edu.java.bot.utils.SendRequestUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
 import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
@@ -31,7 +31,7 @@ public class TrackCommand implements Command {
     public AbstractSendRequest<?> doCommand(Message message) {
         Matcher matcher = TRACK_ARGUMENTS.matcher(message.text());
         if (!matcher.matches()) {
-            return SendMessageUtils.buildM(
+            return SendRequestUtils.buildMessageMarkdown(
                 message,
                 MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
                     getName(), getUsage()
@@ -48,16 +48,16 @@ public class TrackCommand implements Command {
             } else {
                 scrapperSdk.trackNewUrl(message.from().id(), url, alias);
             }
-            sendMessage = SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.SUCCESSFUL_TRACK.msg);
         } catch (UserNotExistException e) {
             LOGGER.warn(e);
-            sendMessage = SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.USER_NOT_EXIST.msg);
         } catch (UrlAlreadyExistException e) {
             LOGGER.warn(e);
-            sendMessage = SendMessageUtils.buildM(message, MessageDict.URL_ALREADY_EXIST.msg);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.URL_ALREADY_EXIST.msg);
         } catch (AliasAlreadyExistException e) {
             LOGGER.warn(e);
-            sendMessage = SendMessageUtils.buildM(message, MessageDict.ALIAS_ALREADY_EXIST.msg);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.ALIAS_ALREADY_EXIST.msg);
         }
 
         return sendMessage;

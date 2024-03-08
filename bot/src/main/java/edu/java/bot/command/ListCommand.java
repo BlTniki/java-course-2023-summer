@@ -3,7 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.bot.dict.MessageDict;
-import edu.java.bot.utils.SendMessageUtils;
+import edu.java.bot.utils.SendRequestUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.UserNotExistException;
 import edu.java.scrapperSdk.model.Link;
@@ -31,18 +31,18 @@ public class ListCommand implements Command {
             links = scrapperSdk.getAllUserTracks(message.from().id());
         } catch (UserNotExistException e) {
             LOGGER.warn(e);
-            return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+            return SendRequestUtils.buildMessageMarkdown(message, MessageDict.USER_NOT_EXIST.msg);
         }
 
         if (links.isEmpty()) {
-            return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
+            return SendRequestUtils.buildMessageMarkdown(message, MessageDict.LINK_LIST_EMPTY.msg);
         }
 
         String linksMessage = links.stream()
             .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.url()))
             .collect(Collectors.joining("\n"));
 
-        return SendMessageUtils.buildM(
+        return SendRequestUtils.buildMessageMarkdown(
             message, MessageDict.LINK_LIST_HEADER.msg + linksMessage
         );
     }

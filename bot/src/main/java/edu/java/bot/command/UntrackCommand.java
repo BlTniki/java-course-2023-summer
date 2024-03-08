@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dict.MessageDict;
-import edu.java.bot.utils.SendMessageUtils;
+import edu.java.bot.utils.SendRequestUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.LinkNotExistException;
 import edu.java.scrapperSdk.exception.UserNotExistException;
@@ -30,7 +30,7 @@ public class UntrackCommand implements Command {
     public AbstractSendRequest<?> doCommand(Message message) {
         Matcher matcher = UNTRACK_ARGUMENTS.matcher(message.text());
         if (!matcher.matches()) {
-            return SendMessageUtils.buildM(
+            return SendRequestUtils.buildMessageMarkdown(
                 message,
                 MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
                     getName(), getUsage()
@@ -43,14 +43,14 @@ public class UntrackCommand implements Command {
         SendMessage sendMessage;
         try {
             scrapperSdk.untrackUrl(message.from().id(), alias);
-            sendMessage = SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
 
         } catch (UserNotExistException e) {
             LOGGER.warn(e);
-            return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+            return SendRequestUtils.buildMessageMarkdown(message, MessageDict.USER_NOT_EXIST.msg);
         } catch (LinkNotExistException e) {
             LOGGER.warn(e);
-            sendMessage = SendMessageUtils.buildM(message, MessageDict.LINK_NOT_FOUND.msg);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.LINK_NOT_FOUND.msg);
         }
 
         return sendMessage;

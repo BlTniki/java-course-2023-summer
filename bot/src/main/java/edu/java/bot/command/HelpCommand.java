@@ -3,7 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.bot.dict.MessageDict;
-import edu.java.bot.utils.SendMessageUtils;
+import edu.java.bot.utils.SendRequestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ public class HelpCommand implements Command {
 
     @Override
     public AbstractSendRequest<?> doCommand(Message message) {
-        return SendMessageUtils.buildM(
+        return SendRequestUtils.buildMessageMarkdown(
             message,
             commands.stream()
                 .map(
