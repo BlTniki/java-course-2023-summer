@@ -1,4 +1,4 @@
-package edu.java.bot.dict;
+package edu.java.bot.service.dict;
 
 public enum MessageDict {
     SUCCESSFUL_SIGN_UP("_Регистрация прошла успешно!_"),

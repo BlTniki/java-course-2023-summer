@@ -1,8 +1,9 @@
-package edu.java.bot.command;
+package edu.java.bot.service.command;
 
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
+import edu.java.bot.controller.sender.BotSender;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -11,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 public interface Command {
     /**
      * Выполняет функционал команды и генерирует ответ для данного chatId.
-     * @return ответ, который можно отправить через {@link edu.java.bot.sender.BotSender}.
+     * @return ответ, который можно отправить через {@link BotSender}.
      */
     AbstractSendRequest<?> doCommand(@NotNull Message message);
 

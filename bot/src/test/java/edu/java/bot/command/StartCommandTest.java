@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
+import edu.java.bot.service.command.Command;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.UserAlreadyExistException;
 import org.junit.jupiter.api.DisplayName;

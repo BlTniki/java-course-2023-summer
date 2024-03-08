@@ -6,6 +6,8 @@ import edu.java.BotApplicationTests;
 import edu.java.bot.service.UpdatesService;
 import java.util.List;
 import java.util.concurrent.Executor;
+
+import edu.java.bot.controller.listener.BotUpdatesListener;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,8 @@ class BotUpdatesListenerTest extends BotApplicationTests {
     @TestConfiguration
     static class BotUpdatesListenerTestConfig {
         @Bean
-        public BotUpdatesListener botUpdatesListener(UpdatesService updatesService, Executor executor) {
-            return new BotUpdatesListener(updatesService, executor);
+        public BotUpdatesListener botUpdatesListener(UpdatesService updatesService) {
+            return new BotUpdatesListener(updatesService);
         }
     }
 

@@ -1,4 +1,4 @@
-package edu.java.bot.sender;
+package edu.java.bot.controller.sender;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
@@ -15,20 +15,16 @@ public class BotSender {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private final TelegramBot bot;
-    private final Executor executor;
 
-    public BotSender(TelegramBot bot, Executor executor) {
+    public BotSender(TelegramBot bot) {
         this.bot = bot;
-        this.executor = executor;
     }
 
     public void send(AbstractSendRequest<?> sendRequest) {
-        executor.execute(() -> {
-            LOGGER.info("execute " + sendRequest);
-            SendResponse sendResponse = bot.execute(sendRequest);
-            if (!sendResponse.isOk()) {
-                LOGGER.error("Error From Telegram API:" + sendResponse.description());
-            }
-        });
+        LOGGER.info("execute " + sendRequest);
+        SendResponse sendResponse = bot.execute(sendRequest);
+        if (!sendResponse.isOk()) {
+            LOGGER.error("Error From Telegram API:" + sendResponse.description());
+        }
     }
 }

@@ -1,8 +1,8 @@
-package edu.java.bot.command;
+package edu.java.bot.service.command;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
-import edu.java.bot.dict.MessageDict;
+import edu.java.bot.service.dict.MessageDict;
 import edu.java.bot.utils.SendRequestUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.exception.UserNotExistException;

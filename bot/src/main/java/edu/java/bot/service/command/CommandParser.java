@@ -1,9 +1,9 @@
-package edu.java.bot.command;
+package edu.java.bot.service.command;
 
 import com.pengrad.telegrambot.model.Message;
-import edu.java.bot.dict.MessageDict;
-import edu.java.bot.exception.BadMessageException;
-import edu.java.bot.exception.CommandParseFailedException;
+import edu.java.bot.service.dict.MessageDict;
+import edu.java.bot.service.exception.BadMessageException;
+import edu.java.bot.service.exception.CommandParseFailedException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

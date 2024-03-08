@@ -1,4 +1,4 @@
-package edu.java.bot.exception;
+package edu.java.bot.service.exception;
 
 public class CommandParseFailedException extends BadMessageException {
     public CommandParseFailedException(String message) {

@@ -2,7 +2,14 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
-import edu.java.bot.dict.MessageDict;
+import edu.java.bot.service.command.Command;
+import edu.java.bot.service.command.CommandParser;
+import edu.java.bot.service.command.HelpCommand;
+import edu.java.bot.service.command.ListCommand;
+import edu.java.bot.service.command.StartCommand;
+import edu.java.bot.service.command.TrackCommand;
+import edu.java.bot.service.command.UntrackCommand;
+import edu.java.bot.service.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

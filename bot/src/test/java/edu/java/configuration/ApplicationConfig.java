@@ -1,12 +1,12 @@
 package edu.java.configuration;
 
-import edu.java.bot.command.Command;
-import edu.java.bot.command.CommandParser;
-import edu.java.bot.command.HelpCommand;
-import edu.java.bot.command.ListCommand;
-import edu.java.bot.command.StartCommand;
-import edu.java.bot.command.TrackCommand;
-import edu.java.bot.command.UntrackCommand;
+import edu.java.bot.service.command.Command;
+import edu.java.bot.service.command.CommandParser;
+import edu.java.bot.service.command.HelpCommand;
+import edu.java.bot.service.command.ListCommand;
+import edu.java.bot.service.command.StartCommand;
+import edu.java.bot.service.command.TrackCommand;
+import edu.java.bot.service.command.UntrackCommand;
 import edu.java.scrapperSdk.ScrapperSdk;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.ArrayList;

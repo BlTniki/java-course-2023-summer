@@ -3,18 +3,18 @@ package edu.java.configuration;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.request.SetMyCommands;
-import edu.java.bot.command.Command;
-import edu.java.bot.command.CommandParser;
-import edu.java.bot.command.HelpCommand;
-import edu.java.bot.command.ListCommand;
-import edu.java.bot.command.StartCommand;
-import edu.java.bot.command.TrackCommand;
-import edu.java.bot.command.UntrackCommand;
-import edu.java.bot.exception.BotExceptionHandler;
-import edu.java.bot.listener.BotUpdatesListener;
-import edu.java.bot.sender.BotSender;
+import edu.java.bot.controller.listener.BotUpdatesListener;
+import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
+import edu.java.bot.service.command.Command;
+import edu.java.bot.service.command.CommandParser;
+import edu.java.bot.service.command.HelpCommand;
+import edu.java.bot.service.command.ListCommand;
+import edu.java.bot.service.command.StartCommand;
+import edu.java.bot.service.command.TrackCommand;
+import edu.java.bot.service.command.UntrackCommand;
+import edu.java.bot.service.exception.BotExceptionHandler;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.ScrapperSdkStub;
 import jakarta.validation.constraints.NotEmpty;
@@ -24,10 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -74,19 +72,13 @@ public record ApplicationConfig(
     }
 
     @Bean
-    @Scope("prototype")
-    public Executor executor() {
-        return Executors.newFixedThreadPool(threadsPerExecutor);
-    }
-
-    @Bean
     public BotExceptionHandler botExceptionHandler() {
         return new BotExceptionHandler();
     }
 
     @Bean
-    public BotSender botSender(TelegramBot bot, Executor executor) {
-        return new BotSender(bot, executor);
+    public BotSender botSender(TelegramBot bot) {
+        return new BotSender(bot);
     }
 
     @Bean
@@ -106,7 +98,7 @@ public record ApplicationConfig(
             UpdatesService updatesService,
             Executor executor
         ) {
-        var botUpdatesListener =  new BotUpdatesListener(updatesService, executor);
+        var botUpdatesListener =  new BotUpdatesListener(updatesService);
         bot.setUpdatesListener(botUpdatesListener, botExceptionHandler);
         return botUpdatesListener;
     }
