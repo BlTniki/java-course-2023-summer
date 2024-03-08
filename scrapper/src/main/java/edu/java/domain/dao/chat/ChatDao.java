@@ -1,4 +1,4 @@
-package edu.java.domain.dao;
+package edu.java.domain.dao.chat;
 
 import edu.java.domain.dto.ChatDto;
 import jakarta.validation.constraints.NotNull;
