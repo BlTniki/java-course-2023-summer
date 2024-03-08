@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public interface ChatDao {
-    ChatDto findById(long id);
+    @NotNull ChatDto findById(long id);
 
     @NotNull List<ChatDto> findAll();
 
@@ -14,12 +14,12 @@ public interface ChatDao {
      * @param chat новая сущность
      * @return Сохранённая сущность, как она представлена в БД
      */
-    ChatDto add(@NotNull ChatDto chat);
+    @NotNull ChatDto add(@NotNull ChatDto chat);
 
     /**
      * Удаляет сущность из БД.
      * @param id значение id этой сущности
      * @return удалённую сущность в БД
      */
-    ChatDto remove(long id);
+    @NotNull ChatDto remove(long id);
 }
