@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS link (
     last_update TIMESTAMP WITH TIME ZONE,
 
     PRIMARY KEY (id),
+    UNIQUE (id),
     UNIQUE (url)
 );
 
