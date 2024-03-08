@@ -1,4 +1,4 @@
-package edu.java.bot.commandParser;
+package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;

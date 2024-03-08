@@ -8,16 +8,18 @@ import edu.java.scrapperSdk.ScrapperSdk;
 import java.util.stream.Collectors;
 
 public class ListCommand implements Command {
-    private final ScrapperSdk scrapperSdk;
-    private final Message message;
+    private static final String NAME = "list";
+    private static final String USAGE = "";
+    private static final String DESCRIPTION = "Выводит список всех отслеживаемых url";
 
-    public ListCommand(ScrapperSdk scrapperSdk, Message message) {
+    private final ScrapperSdk scrapperSdk;
+
+    public ListCommand(ScrapperSdk scrapperSdk) {
         this.scrapperSdk = scrapperSdk;
-        this.message = message;
     }
 
     @Override
-    public AbstractSendRequest<?> doCommand() {
+    public AbstractSendRequest<?> doCommand(Message message) {
         var links = scrapperSdk.getAllUserTracks(message.from().id());
 
         if (links.isEmpty()) {
@@ -31,5 +33,20 @@ public class ListCommand implements Command {
         return SendMessageUtils.buildM(
             message, MessageDict.LINK_LIST_HEADER.msg + linksMessage
         );
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getUsage() {
+        return USAGE;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
     }
 }

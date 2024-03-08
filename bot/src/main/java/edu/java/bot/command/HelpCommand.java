@@ -2,26 +2,46 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
-import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.utils.SendMessageUtils;
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class HelpCommand implements Command {
-    private final Message message;
+    private static final String NAME = "help";
+    private static final String USAGE = "";
+    private static final String DESCRIPTION = "Перечисление и использование доступных команд";
 
-    public HelpCommand(Message message) {
-        this.message = message;
+    private final List<Command> commands;
+
+    public HelpCommand(List<Command> commands) {
+        this.commands = commands;
     }
 
     @Override
-    public AbstractSendRequest<?> doCommand() {
+    public AbstractSendRequest<?> doCommand(Message message) {
         return SendMessageUtils.buildM(
             message,
-            Arrays.stream(CommandDict.values())
-                .map(c -> MessageDict.HELP_COMMANDS_BUILDER.msg.formatted(c.name, c.usage, c.description))
+            commands.stream()
+                .map(
+                    c -> MessageDict.HELP_COMMANDS_BUILDER.msg.formatted(c.getName(), c.getUsage(), c.getDescription())
+                )
                 .collect(Collectors.joining("\n"))
         );
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getUsage() {
+        return USAGE;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
     }
 }

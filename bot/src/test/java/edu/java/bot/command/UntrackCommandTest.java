@@ -4,15 +4,16 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
-import edu.java.bot.exception.CommandArgsParseFailedException;
 import edu.java.scrapperSdk.ScrapperSdk;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +28,9 @@ class UntrackCommandTest extends BotApplicationTests {
     @MockBean
     private Chat chat;
 
+    @Autowired
+    private Map<String, Command> commandDict;
+
     @Test
     @DisplayName("Проверим чтобы аргумент корректно парсился")
     void doCommand_valid() {
@@ -36,7 +40,7 @@ class UntrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/untrack lol");
 
-        new UntrackCommand(scrapperSdk, message).doCommand();
+        commandDict.get("untrack").doCommand(message);
 
         verify(scrapperSdk).untrackUrl(1337L, "lol");
     }
@@ -61,7 +65,7 @@ class UntrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn(text);
 
-        assertThatThrownBy(() -> new UntrackCommand(scrapperSdk, message).doCommand())
-            .isInstanceOf(CommandArgsParseFailedException.class);
+        assertThat((String) commandDict.get("untrack").doCommand(message).getParameters().get("text"))
+            .contains(text);
     }
 }
