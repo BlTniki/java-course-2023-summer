@@ -2,7 +2,7 @@ package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
-import edu.java.bot.commandParser.CommandParser;
+import edu.java.bot.command.CommandParser;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.exception.CommandArgsParseFailedException;

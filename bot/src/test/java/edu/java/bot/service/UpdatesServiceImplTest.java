@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
-import edu.java.bot.commandParser.CommandParser;
+import edu.java.bot.command.CommandParser;
 import edu.java.bot.sender.BotSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

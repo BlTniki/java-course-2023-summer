@@ -3,6 +3,7 @@ package edu.java.bot.commandParser;
 import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
+import edu.java.bot.command.CommandParser;
 import edu.java.bot.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;

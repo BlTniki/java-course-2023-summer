@@ -1,7 +1,6 @@
-package edu.java.bot.commandParser;
+package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
-import edu.java.bot.command.Command;
 import edu.java.bot.dict.CommandDict;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
