@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.scrapperSdk.exception.UserNotExistException;
 import edu.java.scrapperSdk.model.Link;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,7 +36,7 @@ class ListCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим, что бот выводит все url")
-    void doCommand_some_links() {
+    void doCommand_some_links() throws UserNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -53,7 +55,7 @@ class ListCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим, что бот выводит отдельное сообщение если url нет")
-    void doCommand() {
+    void doCommand() throws UserNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -64,5 +66,19 @@ class ListCommandTest extends BotApplicationTests {
 
         verify(scrapperSdk).getAllUserTracks(1337L);
         assertThat(answer).isEqualTo(MessageDict.LINK_LIST_EMPTY.msg);
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы правильно обрабатываем исключения от scrapper")
+    void doCommand_exception() throws UserNotExistException {
+        when(user.id()).thenReturn(1337L);
+        when(chat.id()).thenReturn(7331L);
+        when(message.chat()).thenReturn(chat);
+        when(message.from()).thenReturn(user);
+        when(scrapperSdk.getAllUserTracks(anyLong())).thenThrow(UserNotExistException.class);
+
+        String answer = (String) commandDict.get("list").doCommand(message).getParameters().get("text");
+
+        assertThat(answer).isEqualTo(MessageDict.USER_NOT_EXIST.msg);
     }
 }

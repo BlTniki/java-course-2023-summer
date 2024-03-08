@@ -2,13 +2,20 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
+import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
+import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
+import edu.java.scrapperSdk.exception.UserNotExistException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TrackCommand implements Command {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final String NAME = "track";
     private static final String USAGE = "<url> <alias(optional)>";
     private static final String DESCRIPTION = "Начать отслеживать новый url";
@@ -34,13 +41,26 @@ public class TrackCommand implements Command {
         var url = matcher.group(1);
         var alias = matcher.group(2);
 
-        if (alias.isEmpty()) {
-            scrapperSdk.trackNewUrl(message.from().id(), url);
-        } else {
-            scrapperSdk.trackNewUrl(message.from().id(), url, alias);
+        SendMessage sendMessage;
+        try {
+            if (alias.isEmpty()) {
+                scrapperSdk.trackNewUrl(message.from().id(), url);
+            } else {
+                scrapperSdk.trackNewUrl(message.from().id(), url, alias);
+            }
+            sendMessage = SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
+        } catch (UserNotExistException e) {
+            LOGGER.warn(e);
+            sendMessage = SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+        } catch (UrlAlreadyExistException e) {
+            LOGGER.warn(e);
+            sendMessage = SendMessageUtils.buildM(message, MessageDict.URL_ALREADY_EXIST.msg);
+        } catch (AliasAlreadyExistException e) {
+            LOGGER.warn(e);
+            sendMessage = SendMessageUtils.buildM(message, MessageDict.ALIAS_ALREADY_EXIST.msg);
         }
 
-        return SendMessageUtils.buildM(message, MessageDict.SUCCESSFUL_TRACK.msg);
+        return sendMessage;
     }
 
     @Override

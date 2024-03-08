@@ -5,9 +5,15 @@ import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.bot.dict.MessageDict;
 import edu.java.bot.utils.SendMessageUtils;
 import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.scrapperSdk.exception.UserNotExistException;
+import edu.java.scrapperSdk.model.Link;
+import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ListCommand implements Command {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final String NAME = "list";
     private static final String USAGE = "";
     private static final String DESCRIPTION = "Выводит список всех отслеживаемых url";
@@ -20,7 +26,13 @@ public class ListCommand implements Command {
 
     @Override
     public AbstractSendRequest<?> doCommand(Message message) {
-        var links = scrapperSdk.getAllUserTracks(message.from().id());
+        List<Link> links;
+        try {
+            links = scrapperSdk.getAllUserTracks(message.from().id());
+        } catch (UserNotExistException e) {
+            LOGGER.warn(e);
+            return SendMessageUtils.buildM(message, MessageDict.USER_NOT_EXIST.msg);
+        }
 
         if (links.isEmpty()) {
             return SendMessageUtils.buildM(message, MessageDict.LINK_LIST_EMPTY.msg);
