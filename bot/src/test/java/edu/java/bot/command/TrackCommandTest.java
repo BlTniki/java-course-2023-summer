@@ -79,6 +79,6 @@ class TrackCommandTest extends BotApplicationTests {
         when(message.text()).thenReturn(text);
 
         assertThat((String) commandDict.get("track").doCommand(message).getParameters().get("text"))
-            .contains(text);
+            .contains(commandDict.get("track").getUsage());
     }
 }

@@ -7,7 +7,9 @@ import edu.java.BotApplicationTests;
 import edu.java.scrapperSdk.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import java.util.Map;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +23,9 @@ class StartCommandTest extends BotApplicationTests {
     @MockBean
     private Chat chat;
 
+    @Autowired
+    private Map<String, Command> commandDict;
+
     @Test
     @DisplayName("Проверим чтобы команда передавала корректный id на регистрацию")
     void doCommand() {
@@ -28,9 +33,9 @@ class StartCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.from()).thenReturn(user);
         when(message.chat()).thenReturn(chat);
-        Command command = new StartCommand(scrapperSdk, message);
+        Command command = commandDict.get("start");
 
-        command.doCommand();
+        command.doCommand(message);
 
         verify(scrapperSdk).registerUser(1337L);
     }

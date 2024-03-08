@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UntrackCommand implements Command {
-    private static final String NAME = "track";
+    private static final String NAME = "untrack";
     private static final String USAGE = "<url> <alias(optional)>";
     private static final String DESCRIPTION = "Начать отслеживать новый url";
     private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s(\\S+)$");
@@ -27,7 +27,7 @@ public class UntrackCommand implements Command {
             return SendMessageUtils.buildM(
                 message,
                 MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
-                    getName(), getDescription()
+                    getName(), getUsage()
                 )
             );
         }

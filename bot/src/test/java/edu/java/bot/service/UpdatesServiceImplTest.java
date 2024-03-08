@@ -42,7 +42,7 @@ public class UpdatesServiceImplTest extends BotApplicationTests {
         var command = mock(StartCommand.class);
         var sendRequest = mock(AbstractSendRequest.class);
         //noinspection unchecked
-        when(command.doCommand()).thenReturn(sendRequest);
+        when(command.doCommand(any())).thenReturn(sendRequest);
         when(commandParser.parse(any())).thenReturn(command);
     }
 

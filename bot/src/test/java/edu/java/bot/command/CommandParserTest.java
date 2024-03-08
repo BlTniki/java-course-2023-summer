@@ -2,13 +2,6 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
-import edu.java.bot.command.Command;
-import edu.java.bot.command.CommandParser;
-import edu.java.bot.command.HelpCommand;
-import edu.java.bot.command.ListCommand;
-import edu.java.bot.command.StartCommand;
-import edu.java.bot.command.TrackCommand;
-import edu.java.bot.command.UntrackCommand;
 import edu.java.bot.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
@@ -16,28 +9,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class CommandParserTest extends BotApplicationTests {
-    @TestConfiguration
-    static class CommandParserTestConfig {
-        @Bean
-        public CommandParser commandParser(ScrapperSdk scrapperSdk) {
-            return new CommandParser(scrapperSdk);
-        }
-    }
-
-    @Autowired
-    private CommandParser commandParser;
     @SuppressWarnings("unused")
     @MockBean
     private ScrapperSdk scrapperSdk;
+    @Autowired
+    private CommandParser commandParser;
 
     public static Arguments[] validCommands() {
         return new Arguments[] {

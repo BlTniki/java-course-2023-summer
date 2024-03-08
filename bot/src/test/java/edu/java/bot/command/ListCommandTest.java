@@ -7,16 +7,24 @@ import edu.java.BotApplicationTests;
 import edu.java.bot.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import edu.java.scrapperSdk.model.Link;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ListCommandTest extends BotApplicationTests {
+
     @MockBean
     private ScrapperSdk scrapperSdk;
     @MockBean
@@ -25,6 +33,9 @@ class ListCommandTest extends BotApplicationTests {
     private User user;
     @MockBean
     private Chat chat;
+
+    @Autowired
+    private Map<String, Command> commandDict;
 
     @Test
     @DisplayName("Проверим, что бот выводит все url")
@@ -39,7 +50,7 @@ class ListCommandTest extends BotApplicationTests {
             new Link("link3", "alias3", null)
         ));
 
-        String answer = (String) new ListCommand(scrapperSdk, message).doCommand().getParameters().get("text");
+        String answer = (String) commandDict.get("list").doCommand(message).getParameters().get("text");
 
         verify(scrapperSdk).getAllUserTracks(1337L);
         assertThat(answer).contains(List.of("link1", "link2", "link3"));
@@ -54,7 +65,7 @@ class ListCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(scrapperSdk.getAllUserTracks(anyLong())).thenReturn(List.of());
 
-        String answer = (String) new ListCommand(scrapperSdk, message).doCommand().getParameters().get("text");
+        String answer = (String) commandDict.get("list").doCommand(message).getParameters().get("text");
 
         verify(scrapperSdk).getAllUserTracks(1337L);
         assertThat(answer).isEqualTo(MessageDict.LINK_LIST_EMPTY.msg);

@@ -66,6 +66,6 @@ class UntrackCommandTest extends BotApplicationTests {
         when(message.text()).thenReturn(text);
 
         assertThat((String) commandDict.get("untrack").doCommand(message).getParameters().get("text"))
-            .contains(text);
+            .contains(commandDict.get("untrack").getUsage());
     }
 }

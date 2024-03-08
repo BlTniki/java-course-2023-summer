@@ -27,7 +27,7 @@ public class TrackCommand implements Command {
             return SendMessageUtils.buildM(
                 message,
                 MessageDict.BAD_INPUT_WRONG_COMMAND_ARGUMENTS.msg.formatted(
-                    getName(), getDescription()
+                    getName(), getUsage()
                 )
             );
         }
