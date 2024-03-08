@@ -62,7 +62,6 @@ class JdbcChatDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим что запись удаляется")
     @Rollback
     void remove() {
-        var expected = List.of();
         chatDao.add(new ChatDto(1L));
 
         chatDao.remove(1L);
