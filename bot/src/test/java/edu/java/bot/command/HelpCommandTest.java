@@ -18,6 +18,7 @@ class HelpCommandTest extends BotApplicationTests {
     private Message message;
     @MockBean
     private Chat chat;
+    @SuppressWarnings("unused")
     @MockBean
     private ScrapperSdk scrapperSdk;
 
