@@ -9,15 +9,16 @@ import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UntrackCommand;
 import edu.java.scrapperSdk.ScrapperSdk;
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.validation.annotation.Validated;
+import static org.mockito.Mockito.mock;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
@@ -27,6 +28,12 @@ public record ApplicationConfig(
     String telegramToken,
     int threadsPerExecutor
 ) {
+    @Bean
+    public ScrapperSdk scrapperSdk() {
+        return mock(ScrapperSdk.class);
+    }
+
+
     @Bean
     public List<Command> commands(ScrapperSdk scrapperSdk) {
         var commandList = new ArrayList<Command>();
