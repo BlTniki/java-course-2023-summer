@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.scrapperSdk.exception.UserAlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ class StartCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим чтобы команда передавала корректный id на регистрацию")
-    void doCommand() {
+    void doCommand() throws UserAlreadyExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.from()).thenReturn(user);
