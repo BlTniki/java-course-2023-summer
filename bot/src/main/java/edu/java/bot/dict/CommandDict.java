@@ -1,8 +1,6 @@
 package edu.java.bot.dict;
 
 import com.pengrad.telegrambot.model.BotCommand;
-import java.util.Arrays;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Словарь существующих команд. Каждую новую команду следует внести в этот словарь.
