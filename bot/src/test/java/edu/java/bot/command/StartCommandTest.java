@@ -28,7 +28,7 @@ class StartCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.from()).thenReturn(user);
         when(message.chat()).thenReturn(chat);
-        Command command = new Command.Start(scrapperSdk, message);
+        Command command = new StartCommand(scrapperSdk, message);
 
         command.doCommand();
 

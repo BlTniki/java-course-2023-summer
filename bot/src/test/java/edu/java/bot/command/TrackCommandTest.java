@@ -35,7 +35,7 @@ class TrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/track http://localhost:123/ dawd");
 
-        new Command.Track(scrapperSdk, message).doCommand();
+        new TrackCommand(scrapperSdk, message).doCommand();
 
         verify(scrapperSdk).trackNewUrl(1337L, "http://localhost:123/", "dawd");
     }
@@ -49,7 +49,7 @@ class TrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/track http://localhost:123/");
 
-        new Command.Track(scrapperSdk, message).doCommand();
+        new TrackCommand(scrapperSdk, message).doCommand();
 
         verify(scrapperSdk).trackNewUrl(1337L, "http://localhost:123/");
     }
@@ -74,7 +74,7 @@ class TrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn(text);
 
-        assertThatThrownBy(() -> new Command.Track(scrapperSdk, message).doCommand())
+        assertThatThrownBy(() -> new TrackCommand(scrapperSdk, message).doCommand())
             .isInstanceOf(CommandArgsParseFailedException.class);
     }
 }

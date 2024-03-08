@@ -4,6 +4,11 @@ import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
 import edu.java.bot.command.Command;
 import edu.java.bot.command.CommandParser;
+import edu.java.bot.command.HelpCommand;
+import edu.java.bot.command.ListCommand;
+import edu.java.bot.command.StartCommand;
+import edu.java.bot.command.TrackCommand;
+import edu.java.bot.command.UntrackCommand;
 import edu.java.bot.dict.MessageDict;
 import edu.java.scrapperSdk.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
@@ -36,11 +41,11 @@ class CommandParserTest extends BotApplicationTests {
 
     public static Arguments[] validCommands() {
         return new Arguments[] {
-            Arguments.of("/start", Command.Start.class),
-            Arguments.of("/help", Command.Help.class),
-            Arguments.of("/track dwad awdaw", Command.Track.class),
-            Arguments.of("/untrack dwwadwa", Command.Untrack.class),
-            Arguments.of("/list", Command.List.class)
+            Arguments.of("/start", StartCommand.class),
+            Arguments.of("/help", HelpCommand.class),
+            Arguments.of("/track dwad awdaw", TrackCommand.class),
+            Arguments.of("/untrack dwwadwa", UntrackCommand.class),
+            Arguments.of("/list", ListCommand.class)
         };
     }
 

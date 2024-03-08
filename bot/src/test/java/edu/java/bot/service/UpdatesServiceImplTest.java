@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.BotApplicationTests;
-import edu.java.bot.command.Command;
 import edu.java.bot.command.CommandParser;
+import edu.java.bot.command.StartCommand;
 import edu.java.bot.sender.BotSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ public class UpdatesServiceImplTest extends BotApplicationTests {
 
     @BeforeEach
     void beforeAll() {
-        var command = mock(Command.Start.class);
+        var command = mock(StartCommand.class);
         var sendRequest = mock(AbstractSendRequest.class);
         //noinspection unchecked
         when(command.doCommand()).thenReturn(sendRequest);

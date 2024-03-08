@@ -23,7 +23,7 @@ class HelpCommandTest extends BotApplicationTests {
     void doCommand() {
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
-        Command command = new Command.Help(message);
+        Command command = new HelpCommand(message);
 
         SendMessage response = (SendMessage) command.doCommand();
         String text = (String) response.getParameters().get("text");

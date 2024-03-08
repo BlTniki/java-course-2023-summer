@@ -36,7 +36,7 @@ class UntrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/untrack lol");
 
-        new Command.Untrack(scrapperSdk, message).doCommand();
+        new UntrackCommand(scrapperSdk, message).doCommand();
 
         verify(scrapperSdk).untrackUrl(1337L, "lol");
     }
@@ -61,7 +61,7 @@ class UntrackCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn(text);
 
-        assertThatThrownBy(() -> new Command.Untrack(scrapperSdk, message).doCommand())
+        assertThatThrownBy(() -> new UntrackCommand(scrapperSdk, message).doCommand())
             .isInstanceOf(CommandArgsParseFailedException.class);
     }
 }

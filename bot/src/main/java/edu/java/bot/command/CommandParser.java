@@ -51,19 +51,19 @@ public class CommandParser {
         Command command;
         switch (commandName) {
             case START -> {
-                command = new Command.Start(scrapperSdk, message);
+                command = new StartCommand(scrapperSdk, message);
             }
             case HELP -> {
-                command = new Command.Help(message);
+                command = new HelpCommand(message);
             }
             case TRACK -> {
-                command = new Command.Track(scrapperSdk, message);
+                command = new TrackCommand(scrapperSdk, message);
             }
             case UNTRACK -> {
-                command = new Command.Untrack(scrapperSdk, message);
+                command = new UntrackCommand(scrapperSdk, message);
             }
             case LIST -> {
-                command = new Command.List(scrapperSdk, message);
+                command = new ListCommand(scrapperSdk, message);
             }
             case null, default -> {
                 throw new CommandParseFailedException(

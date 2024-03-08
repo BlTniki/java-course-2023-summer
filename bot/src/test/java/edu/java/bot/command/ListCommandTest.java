@@ -39,7 +39,7 @@ class ListCommandTest extends BotApplicationTests {
             new Link("link3", "alias3", null)
         ));
 
-        String answer = (String) new Command.List(scrapperSdk, message).doCommand().getParameters().get("text");
+        String answer = (String) new ListCommand(scrapperSdk, message).doCommand().getParameters().get("text");
 
         verify(scrapperSdk).getAllUserTracks(1337L);
         assertThat(answer).contains(List.of("link1", "link2", "link3"));
@@ -54,7 +54,7 @@ class ListCommandTest extends BotApplicationTests {
         when(message.from()).thenReturn(user);
         when(scrapperSdk.getAllUserTracks(anyLong())).thenReturn(List.of());
 
-        String answer = (String) new Command.List(scrapperSdk, message).doCommand().getParameters().get("text");
+        String answer = (String) new ListCommand(scrapperSdk, message).doCommand().getParameters().get("text");
 
         verify(scrapperSdk).getAllUserTracks(1337L);
         assertThat(answer).isEqualTo(MessageDict.LINK_LIST_EMPTY.msg);
