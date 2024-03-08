@@ -6,6 +6,7 @@ import edu.java.bot.dict.MessageDict;
 import edu.java.bot.exception.BadMessageException;
 import edu.java.bot.exception.CommandParseFailedException;
 import edu.java.scrapperSdk.ScrapperSdk;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,18 @@ public class CommandParser {
 
     public CommandParser(ScrapperSdk scrapperSdk) {
         this.scrapperSdk = scrapperSdk;
+    }
+
+    /**
+     * Возвращает команду по полю name.
+     * @param command name команды.
+     * @return команда.
+     */
+    public static CommandDict byName(@NotNull String command) {
+        return Arrays.stream(CommandDict.values())
+            .filter(c -> c.name.equals(command))
+            .findFirst()
+            .orElse(null);
     }
 
     /**
@@ -40,7 +53,7 @@ public class CommandParser {
             throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));
         }
 
-        CommandDict commandName = CommandDict.byName(matcher.group(1));
+        CommandDict commandName = byName(matcher.group(1));
 
         return getCommand(message, commandName);
     }

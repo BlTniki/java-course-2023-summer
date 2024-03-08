@@ -25,18 +25,6 @@ public enum CommandDict {
     }
 
     /**
-     * Возвращает команду по полю name.
-     * @param command name команды.
-     * @return команда.
-     */
-    public static CommandDict byName(@NotNull String command) {
-        return Arrays.stream(CommandDict.values())
-            .filter(c -> c.name.equals(command))
-            .findFirst()
-            .orElse(null);
-    }
-
-    /**
      * Приводит команду к Telegram API формату.
      * @return Telegram API BotCommand формат.
      */
