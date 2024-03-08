@@ -7,6 +7,7 @@ import edu.java.bot.exception.CommandParseFailedException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import edu.java.bot.utils.SendMessageUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,7 +36,7 @@ public class CommandParser {
 
         Matcher matcher = PATTERN.matcher(text);
 
-        if (!matcher.matches()) {
+        if (!matcher.matches() || !commandDict.containsKey(matcher.group(1))) {
             throw new CommandParseFailedException(MessageDict.BAD_INPUT_UNRECOGNIZED_COMMAND.msg.formatted(text));
         }
 
