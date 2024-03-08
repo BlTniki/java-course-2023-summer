@@ -3,11 +3,9 @@ package edu.java.bot.listener;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.BotApplicationTests;
+import edu.java.bot.controller.listener.BotUpdatesListener;
 import edu.java.bot.service.UpdatesService;
 import java.util.List;
-import java.util.concurrent.Executor;
-
-import edu.java.bot.controller.listener.BotUpdatesListener;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,6 @@ package edu.java.bot.controller.sender;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.response.SendResponse;
-import java.util.concurrent.Executor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -2,10 +2,10 @@ package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
+import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.service.command.CommandParser;
 import edu.java.bot.service.dict.MessageDict;
 import edu.java.bot.service.exception.BadMessageException;
-import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.utils.SendRequestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

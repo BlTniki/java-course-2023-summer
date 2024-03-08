@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import edu.java.BotApplicationTests;
-import java.util.concurrent.Executor;
 import edu.java.bot.controller.sender.BotSender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
