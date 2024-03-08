@@ -7,7 +7,6 @@ import edu.java.bot.exception.CommandParseFailedException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import edu.java.bot.utils.SendMessageUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
