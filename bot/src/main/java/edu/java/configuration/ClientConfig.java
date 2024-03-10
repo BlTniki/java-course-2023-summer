@@ -4,7 +4,6 @@ import edu.java.client.scrapper.ScrapperClient;
 import edu.java.client.scrapper.ScrapperClientWebClient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.apache.logging.log4j.Logger;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
@@ -16,9 +15,9 @@ public record ClientConfig(
     @NotNull Scrapper scrapper
 ) {
     @Bean
-    public ScrapperClient scrapperClient(WebClient.Builder builder, Logger logger) {
+    public ScrapperClient scrapperClient(WebClient.Builder builder) {
         builder.baseUrl(scrapper().baseUrl());
-        return new ScrapperClientWebClient(builder, logger);
+        return new ScrapperClientWebClient(builder);
     }
 
     record Scrapper(@NotEmpty String baseUrl) {}
