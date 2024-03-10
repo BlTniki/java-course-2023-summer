@@ -6,6 +6,7 @@ import edu.java.client.github.model.RepositoryIssueResponse;
 import edu.java.client.github.model.RepositoryResponse;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,12 +14,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class GitHubClientWebClient implements GitHubClient {
     public static final String ERROR_HEADER = "Got an error from API: ";
-    private final Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
 
-    public GitHubClientWebClient(WebClient.Builder webClientBuilder, Logger logger) {
+    public GitHubClientWebClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
-        this.logger = logger;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GitHubClientWebClient implements GitHubClient {
                 .bodyToMono(RepositoryResponse.class)
                 .block();
         } catch (HttpClientErrorException e) {
-            logger.error(ERROR_HEADER + e);
+            LOGGER.error(ERROR_HEADER + e);
             throw ClientException.wrapException(e);
         }
     }
@@ -62,7 +62,7 @@ public class GitHubClientWebClient implements GitHubClient {
                 .collectList()
                 .block();
         } catch (HttpClientErrorException e) {
-            logger.error(ERROR_HEADER + e);
+            LOGGER.error(ERROR_HEADER + e);
             throw ClientException.wrapException(e);
         }
     }
@@ -86,7 +86,7 @@ public class GitHubClientWebClient implements GitHubClient {
                 .collectList()
                 .block();
         } catch (HttpClientErrorException e) {
-            logger.error(ERROR_HEADER + e);
+            LOGGER.error(ERROR_HEADER + e);
             throw ClientException.wrapException(e);
         }
     }
