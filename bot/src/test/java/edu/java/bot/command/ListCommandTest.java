@@ -6,12 +6,13 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.dict.MessageDict;
-import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.exception.UserNotExistException;
-import edu.java.scrapperSdk.model.Link;
-import edu.java.bot.dict.MessageDict;
+import edu.java.bot.service.dict.MessageDict;
 import edu.java.client.scrapper.ScrapperClient;
 import edu.java.client.scrapper.model.Link;
+import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.model.LinkResponse;
+import edu.java.client.scrapper.model.ListLinksResponse;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -43,11 +44,16 @@ class ListCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
-        when(scrapperSdk.getAllUserTracks(anyLong())).thenReturn(List.of(
-            new Link("link1", "alias1", null),
-            new Link("link2", "alias2", null),
-            new Link("link3", "alias3", null)
-        ));
+        when(scrapperClient.getAllUserTracks(anyLong())).thenReturn(
+            new ListLinksResponse(
+                List.of(
+                    new LinkResponse(1, URI.create("link1"), "alias1"),
+                    new LinkResponse(2, URI.create("link2"), "alias2"),
+                    new LinkResponse(3, URI.create("link3"), "alias3")
+                ),
+                3
+            )
+        );
 
         String answer = (String) commandDict.get("list").doCommand(message).getParameters().get("text");
 
@@ -77,7 +83,7 @@ class ListCommandTest extends BotApplicationTests {
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
-        when(scrapperSdk.getAllUserTracks(anyLong())).thenThrow(UserNotExistException.class);
+        when(scrapperClient.getAllUserTracks(anyLong())).thenThrow(UserNotExistException.class);
 
         String answer = (String) commandDict.get("list").doCommand(message).getParameters().get("text");
 

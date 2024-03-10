@@ -8,6 +8,7 @@ import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
 import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.ScrapperClient;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.command.CommandParser;
 import edu.java.bot.service.command.HelpCommand;
@@ -16,13 +17,13 @@ import edu.java.bot.service.command.StartCommand;
 import edu.java.bot.service.command.TrackCommand;
 import edu.java.bot.service.command.UntrackCommand;
 import edu.java.bot.service.exception.BotExceptionHandler;
-import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.ScrapperSdkStub;
-import edu.java.client.scrapper.ScrapperSdk;
-import edu.java.client.scrapper.ScrapperSdkStub;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.Executor;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
@@ -35,19 +36,14 @@ public record ApplicationConfig(
     int threadsPerExecutor
 ) {
     @Bean
-    public Logger logger() {
-        return LogManager.getLogger();
-    }
-
-    @Bean
-    public List<Command> commands(ScrapperSdk scrapperSdk) {
+    public List<Command> commands(ScrapperClient scrapperClient) {
         var commandList = new ArrayList<Command>();
 
-        commandList.add(new StartCommand(scrapperSdk));
+        commandList.add(new StartCommand(scrapperClient));
         commandList.add(new HelpCommand(commandList));
-        commandList.add(new TrackCommand(scrapperSdk));
-        commandList.add(new UntrackCommand(scrapperSdk));
-        commandList.add(new ListCommand(scrapperSdk));
+        commandList.add(new TrackCommand(scrapperClient));
+        commandList.add(new UntrackCommand(scrapperClient));
+        commandList.add(new ListCommand(scrapperClient));
 
         return Collections.unmodifiableList(commandList);
     }
@@ -71,13 +67,13 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public BotExceptionHandler botExceptionHandler(Logger logger) {
-        return new BotExceptionHandler(logger);
+    public BotExceptionHandler botExceptionHandler() {
+        return new BotExceptionHandler();
     }
 
     @Bean
-    public BotSender botSender(Logger logger, TelegramBot bot) {
-        return new BotSender(logger, bot);
+    public BotSender botSender(TelegramBot bot) {
+        return new BotSender(bot);
     }
 
     @Bean
@@ -86,8 +82,8 @@ public record ApplicationConfig(
     }
 
     @Bean
-    public UpdatesService updatesService(Logger logger, BotSender botSender, CommandParser commandParser) {
-        return new UpdatesServiceImpl(logger, botSender, commandParser);
+    public UpdatesService updatesService(BotSender botSender, CommandParser commandParser) {
+        return new UpdatesServiceImpl(botSender, commandParser);
     }
 
     @Bean

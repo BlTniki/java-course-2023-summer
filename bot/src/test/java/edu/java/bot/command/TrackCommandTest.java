@@ -6,13 +6,13 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.dict.MessageDict;
-import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
-import edu.java.scrapperSdk.exception.ScrapperSDKException;
-import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
-import edu.java.scrapperSdk.exception.UserNotExistException;
+import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.exception.AliasAlreadyExistException;
+import edu.java.client.scrapper.exception.ScrapperSDKException;
+import edu.java.client.scrapper.exception.UrlAlreadyExistException;
+import edu.java.client.scrapper.exception.UserNotExistException;
 import java.util.Map;
-import edu.java.bot.exception.CommandArgsParseFailedException;
+import edu.java.bot.service.exception.CommandArgsParseFailedException;
 import edu.java.client.scrapper.ScrapperClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,8 +43,7 @@ class TrackCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим чтобы аргументы с alias корректно парсились")
-    void doCommand_valid_with_alias()
-        throws UrlAlreadyExistException, AliasAlreadyExistException, UserNotExistException {
+    void doCommand_valid_with_alias() {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
