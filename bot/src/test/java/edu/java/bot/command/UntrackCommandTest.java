@@ -6,10 +6,11 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.dict.MessageDict;
+import edu.java.client.exception.ClientException;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.exception.LinkNotExistException;
+import edu.java.client.scrapper.exception.link.LinkNotExistException;
 import edu.java.client.scrapper.exception.ScrapperSDKException;
-import edu.java.client.scrapper.exception.UserNotExistException;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,21 +42,21 @@ class UntrackCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим чтобы url корректно парсился")
-    void doCommand_url_valid() throws LinkNotExistException, UserNotExistException  {
+    void doCommand_url_valid() throws LinkNotExistException, ChatNotExistException  {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/untrack https://www.victorsolkin.ru/chastye-voprosy");
 
-        new Command.Untrack(scrapperSdk, message).doCommand();
+        commandDict.get("untrack").doCommand(message);
 
         verify(scrapperSdk).untrackLink(7331L, "https://www.victorsolkin.ru/chastye-voprosy");
     }
 
     @Test
     @DisplayName("Проверим чтобы alias корректно парсился")
-    void doCommand_alias_valid() throws LinkNotExistException, UserNotExistException {
+    void doCommand_alias_valid() throws LinkNotExistException, ChatNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -93,7 +94,7 @@ class UntrackCommandTest extends BotApplicationTests {
 
     public static Arguments[] exceptions() {
         return new Arguments[] {
-            Arguments.of(UserNotExistException.class, MessageDict.USER_NOT_EXIST.msg),
+            Arguments.of(ChatNotExistException.class, MessageDict.USER_NOT_EXIST.msg),
             Arguments.of(LinkNotExistException.class, MessageDict.LINK_NOT_FOUND.msg)
         };
     }
@@ -101,13 +102,14 @@ class UntrackCommandTest extends BotApplicationTests {
     @ParameterizedTest
     @MethodSource("exceptions")
     @DisplayName("Проверим, что мы правильно обрабатываем исключения от scrapper")
-    void doCommand_exception(Class<? extends ScrapperSDKException> exceptionClass, String expectToContain) throws ScrapperSDKException {
+    void doCommand_exception(Class<? extends ScrapperSDKException> exceptionClass, String expectToContain)
+            throws ClientException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/untrack lol");
-        doThrow(exceptionClass).when(scrapperSdk).untrackUrl(anyLong(), anyString());
+        doThrow(exceptionClass).when(scrapperSdk).untrackLink(anyLong(), anyString());
 
 
         String answer = (String) commandDict.get("untrack").doCommand(message).getParameters().get("text");

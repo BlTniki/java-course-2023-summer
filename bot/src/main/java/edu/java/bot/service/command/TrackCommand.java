@@ -5,10 +5,10 @@ import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.service.dict.MessageDict;
 import edu.java.bot.utils.SendRequestUtils;
-import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.exception.AliasAlreadyExistException;
-import edu.java.scrapperSdk.exception.UrlAlreadyExistException;
-import edu.java.scrapperSdk.exception.UserNotExistException;
+import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
+import edu.java.client.scrapper.exception.link.AliasAlreadyExistException;
+import edu.java.client.scrapper.exception.link.UrlAlreadyExistException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +21,10 @@ public class TrackCommand implements Command {
     private static final String DESCRIPTION = "Начать отслеживать новый url";
     private static final Pattern TRACK_ARGUMENTS = Pattern.compile("^/track\\s(\\S+)\\s?(\\S*)$");
 
-    private final ScrapperSdk scrapperSdk;
+    private final ScrapperClient scrapperClient;
 
-    public TrackCommand(ScrapperSdk scrapperSdk) {
-        this.scrapperSdk = scrapperSdk;
+    public TrackCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class TrackCommand implements Command {
         SendMessage sendMessage;
         try {
             if (alias.isEmpty()) {
-                scrapperSdk.trackNewUrl(message.from().id(), url);
+                scrapperClient.trackNewLink(message.chat().id(), url);
             } else {
-                scrapperSdk.trackNewUrl(message.from().id(), url, alias);
+                scrapperClient.trackNewLink(message.chat().id(), url, alias);
             }
             sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.SUCCESSFUL_TRACK.msg);
-        } catch (UserNotExistException e) {
+        } catch (ChatNotExistException e) {
             LOGGER.warn(e);
             sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.USER_NOT_EXIST.msg);
         } catch (UrlAlreadyExistException e) {

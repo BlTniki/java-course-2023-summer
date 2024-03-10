@@ -6,14 +6,13 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.dict.MessageDict;
+import edu.java.client.exception.ClientException;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.exception.AliasAlreadyExistException;
 import edu.java.client.scrapper.exception.ScrapperSDKException;
-import edu.java.client.scrapper.exception.UrlAlreadyExistException;
-import edu.java.client.scrapper.exception.UserNotExistException;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
+import edu.java.client.scrapper.exception.link.AliasAlreadyExistException;
+import edu.java.client.scrapper.exception.link.UrlAlreadyExistException;
 import java.util.Map;
-import edu.java.bot.service.exception.CommandArgsParseFailedException;
-import edu.java.client.scrapper.ScrapperClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,7 +56,7 @@ class TrackCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим чтобы аргументы без alias корректно парсились")
-    void doCommand_valid_no_alias() throws UrlAlreadyExistException, AliasAlreadyExistException, UserNotExistException {
+    void doCommand_valid_no_alias() throws UrlAlreadyExistException, AliasAlreadyExistException, ChatNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -95,7 +94,7 @@ class TrackCommandTest extends BotApplicationTests {
 
     public static Arguments[] exceptions() {
         return new Arguments[] {
-            Arguments.of(UserNotExistException.class, MessageDict.USER_NOT_EXIST.msg),
+            Arguments.of(ChatNotExistException.class, MessageDict.USER_NOT_EXIST.msg),
             Arguments.of(UrlAlreadyExistException.class, MessageDict.URL_ALREADY_EXIST.msg),
             Arguments.of(AliasAlreadyExistException.class, MessageDict.ALIAS_ALREADY_EXIST.msg)
         };
@@ -104,13 +103,14 @@ class TrackCommandTest extends BotApplicationTests {
     @ParameterizedTest
     @MethodSource("exceptions")
     @DisplayName("Проверим, что мы правильно обрабатываем исключения от scrapper")
-    void doCommand_exception(Class<? extends ScrapperSDKException> exceptionClass, String expectToContain) throws ScrapperSDKException {
+    void doCommand_exception(Class<? extends ScrapperSDKException> exceptionClass, String expectToContain)
+            throws ClientException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
         when(message.text()).thenReturn("/track http://localhost:123/");
-        doThrow(exceptionClass).when(scrapperSdk).trackNewUrl(anyLong(), anyString());
+        doThrow(exceptionClass).when(scrapperSdk).trackNewLink(anyLong(), anyString());
 
 
         String answer = (String) commandDict.get("track").doCommand(message).getParameters().get("text");

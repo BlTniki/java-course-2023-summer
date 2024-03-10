@@ -6,10 +6,8 @@ import com.pengrad.telegrambot.model.User;
 import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.dict.MessageDict;
-import edu.java.bot.service.dict.MessageDict;
 import edu.java.client.scrapper.ScrapperClient;
-import edu.java.client.scrapper.model.Link;
-import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
 import edu.java.client.scrapper.model.LinkResponse;
 import edu.java.client.scrapper.model.ListLinksResponse;
 import java.net.URI;
@@ -39,7 +37,7 @@ class ListCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим, что бот выводит все url")
-    void doCommand_some_links() throws UserNotExistException {
+    void doCommand_some_links() throws ChatNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -63,7 +61,7 @@ class ListCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим, что бот выводит отдельное сообщение если url нет")
-    void doCommand() throws UserNotExistException {
+    void doCommand() throws ChatNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
@@ -78,12 +76,12 @@ class ListCommandTest extends BotApplicationTests {
 
     @Test
     @DisplayName("Проверим, что мы правильно обрабатываем исключения от scrapper")
-    void doCommand_exception() throws UserNotExistException {
+    void doCommand_exception() throws ChatNotExistException {
         when(user.id()).thenReturn(1337L);
         when(chat.id()).thenReturn(7331L);
         when(message.chat()).thenReturn(chat);
         when(message.from()).thenReturn(user);
-        when(scrapperClient.getAllUserTracks(anyLong())).thenThrow(UserNotExistException.class);
+        when(scrapperClient.getAllUserTracks(anyLong())).thenThrow(ChatNotExistException.class);
 
         String answer = (String) commandDict.get("list").doCommand(message).getParameters().get("text");
 
