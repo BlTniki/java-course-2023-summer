@@ -8,6 +8,7 @@ import edu.java.client.scrapper.model.ErrorResponse;
 import edu.java.client.scrapper.model.LinkResponse;
 import edu.java.client.scrapper.model.ListLinksResponse;
 import java.net.URI;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
@@ -18,12 +19,11 @@ public class ScrapperClientWebClient implements ScrapperClient {
     public static final String TG_ID_PATH = "/tg-chat/{id}";
     public static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
     public static final String LINKS_PATH = "/links";
-    private final Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
 
-    public ScrapperClientWebClient(WebClient.Builder webClientBuilder, Logger logger) {
+    public ScrapperClientWebClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
-        this.logger = logger;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                 ).bodyToMono(String.class)
                 .block();
         } catch (ErrorResponseException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ScrapperClientException.wrapException(e);
         }
     }
@@ -67,7 +67,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                 ).bodyToMono(String.class)
                 .block();
         } catch (ErrorResponseException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ScrapperClientException.wrapException(e);
         }
     }
@@ -90,7 +90,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                 ).bodyToMono(LinkResponse.class)
                 .block();
         } catch (ErrorResponseException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ScrapperClientException.wrapException(e);
         }
     }
@@ -113,7 +113,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                 ).bodyToMono(LinkResponse.class)
                 .block();
         } catch (ErrorResponseException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ScrapperClientException.wrapException(e);
         }
     }
@@ -136,7 +136,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                 ).bodyToMono(LinkResponse.class)
                 .block();
         } catch (ErrorResponseException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ScrapperClientException.wrapException(e);
         }
     }
@@ -158,7 +158,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                 ).bodyToMono(ListLinksResponse.class)
                 .block();
         } catch (ErrorResponseException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ScrapperClientException.wrapException(e);
         }
     }
