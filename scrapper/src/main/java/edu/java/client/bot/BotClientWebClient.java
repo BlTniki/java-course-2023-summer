@@ -3,6 +3,7 @@ package edu.java.client.bot;
 import edu.java.client.bot.model.LinkUpdate;
 import edu.java.client.exception.ClientException;
 import jakarta.validation.constraints.NotNull;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
@@ -10,12 +11,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 public class BotClientWebClient implements BotClient {
-    private final Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
 
-    public BotClientWebClient(WebClient.Builder webClientBuilder, Logger logger) {
+    public BotClientWebClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
-        this.logger = logger;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class BotClientWebClient implements BotClient {
                 .bodyToMono(String.class)
                 .block();
         } catch (HttpClientErrorException e) {
-            logger.error(e);
+            LOGGER.error(e);
             throw ClientException.wrapException(e);
         }
     }

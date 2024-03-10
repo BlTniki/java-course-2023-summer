@@ -4,18 +4,18 @@ import edu.java.client.exception.ClientException;
 import edu.java.client.stackoverflow.model.QuestionsResponse;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverflowClientWebClient implements StackOverflowClient {
-    private final Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
 
-    public StackOverflowClientWebClient(WebClient.Builder webClientBuilder, Logger logger) {
+    public StackOverflowClientWebClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
-        this.logger = logger;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class StackOverflowClientWebClient implements StackOverflowClient {
                 .bodyToMono(QuestionsResponse.class)
                 .block();
         } catch (HttpClientErrorException e) {
-            logger.error("Got an error from API: " + e);
+            LOGGER.error("Got an error from API: " + e);
             throw ClientException.wrapException(e);
         }
     }
