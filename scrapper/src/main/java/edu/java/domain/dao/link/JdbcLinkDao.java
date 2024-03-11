@@ -30,7 +30,7 @@ public class JdbcLinkDao implements LinkDao {
     }
 
     @Override
-    public List<LinkDto> findByLastUpdate(OffsetDateTime lastUpdate) {
+    public List<LinkDto> findFromLastUpdate(OffsetDateTime lastUpdate) {
         return null;
     }
 

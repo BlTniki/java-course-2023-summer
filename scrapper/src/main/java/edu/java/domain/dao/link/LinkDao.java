@@ -14,11 +14,11 @@ public interface LinkDao {
     @NotNull LinkDto findByUrl(URI uri);
 
     /**
-     * Возвращает все {@link LinkDto} с данным lastUpdate.
+     * Возвращает все {@link LinkDto} у которых lastUpdate равен или больше данного.
      * @param lastUpdate значение lastUpdate
-     * @return все {@link LinkDto} с данным lastUpdate
+     * @return все {@link LinkDto} у которых lastUpdate равен или больше данного
      */
-    @NotNull List<LinkDto> findByLastUpdate(OffsetDateTime lastUpdate);
+    @NotNull List<LinkDto> findFromLastUpdate(OffsetDateTime lastUpdate);
 
     /**
      * Сохраняет сущность в БД.
