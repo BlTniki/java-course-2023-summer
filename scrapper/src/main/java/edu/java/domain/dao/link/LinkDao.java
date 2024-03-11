@@ -22,7 +22,7 @@ public interface LinkDao {
 
     /**
      * Сохраняет сущность в БД.
-     * @param link новая сущность
+     * @param link новая сущность, id может быть null
      * @return Сохранённая сущность, как она представлена в БД
      */
     @NotNull LinkDto add(@NotNull LinkDto link);
