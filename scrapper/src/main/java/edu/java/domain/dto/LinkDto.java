@@ -1,9 +1,10 @@
 package edu.java.domain.dto;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 
 public record LinkDto(
     Long id,
-    String url,
+    URI url,
     OffsetDateTime lastUpdate
 ) {}
