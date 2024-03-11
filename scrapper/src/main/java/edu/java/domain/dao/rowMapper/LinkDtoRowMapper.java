@@ -13,6 +13,6 @@ public class LinkDtoRowMapper implements RowMapper<LinkDto> {
         var id = rs.getLong("id");
         URI url = rs.getObject("url", URI.class);
         OffsetDateTime lastUpdate = rs.getObject("last_update", OffsetDateTime.class);
-        return null;
+        return new LinkDto(id, url, lastUpdate);
     }
 }
