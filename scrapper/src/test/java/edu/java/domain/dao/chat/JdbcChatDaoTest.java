@@ -1,14 +1,13 @@
 package edu.java.domain.dao.chat;
 
 import edu.java.ScrapperApplicationTests;
-import edu.java.domain.dao.chat.JdbcChatDao;
 import edu.java.domain.dto.ChatDto;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
