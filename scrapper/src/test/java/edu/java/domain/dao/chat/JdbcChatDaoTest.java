@@ -1,4 +1,4 @@
-package edu.java.domain.dao;
+package edu.java.domain.dao.chat;
 
 import edu.java.ScrapperApplicationTests;
 import edu.java.domain.dao.chat.JdbcChatDao;
