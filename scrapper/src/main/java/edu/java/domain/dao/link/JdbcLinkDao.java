@@ -40,7 +40,7 @@ public class JdbcLinkDao implements LinkDao {
 
     @Override
     public LinkDto findByUrl(URI uri) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, new LinkDtoRowMapper(), uri);
+        return jdbcTemplate.queryForObject(FIND_BY_URL_QUERY, new LinkDtoRowMapper(), uri.toString());
     }
 
     @Override
