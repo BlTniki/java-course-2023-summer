@@ -3,7 +3,6 @@ package edu.java.domain.dao.chat;
 import edu.java.ScrapperApplicationTests;
 import edu.java.domain.dto.ChatDto;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
