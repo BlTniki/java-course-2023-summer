@@ -1,6 +1,6 @@
 package edu.java.domain.dto;
 
-public record LinkSubscriptionDto(
+public record SubscriptionDto(
     Long id,
     Long chatId,
     Long linkId,
