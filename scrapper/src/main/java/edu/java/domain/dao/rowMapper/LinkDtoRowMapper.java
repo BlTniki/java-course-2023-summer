@@ -11,7 +11,7 @@ public class LinkDtoRowMapper implements RowMapper<LinkDto> {
     @Override
     public LinkDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         var id = rs.getLong("id");
-        URI url = rs.getObject("url", URI.class);
+        URI url = URI.create(rs.getString("url"));
         OffsetDateTime lastUpdate = rs.getObject("last_update", OffsetDateTime.class);
         return new LinkDto(id, url, lastUpdate);
     }
