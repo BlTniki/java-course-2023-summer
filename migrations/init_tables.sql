@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS link (
     UNIQUE (url)
 );
 
-CREATE TABLE IF NOT EXISTS link_subscription (
+CREATE TABLE IF NOT EXISTS subscription (
     id BIGINT GENERATED ALWAYS AS IDENTITY,
     chat_id BIGINT NOT NULL,
     link_id BIGINT NOT NULL,
