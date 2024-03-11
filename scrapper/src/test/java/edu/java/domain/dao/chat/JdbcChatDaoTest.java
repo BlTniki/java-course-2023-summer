@@ -3,6 +3,7 @@ package edu.java.domain.dao.chat;
 import edu.java.ScrapperApplicationTests;
 import edu.java.domain.dto.ChatDto;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,20 @@ class JdbcChatDaoTest extends ScrapperApplicationTests {
 
         var actualDto = chatDao.findById(expectedDto.id());
 
-        assertThat(actualDto).isEqualTo(expectedDto);
+        assertThat(actualDto)
+            .isPresent()
+            .contains(expectedDto);
+    }
+
+    @Test
+    @DisplayName("Проверим что мы не ломаемся если id не существует")
+    @Rollback
+    void findById_notExist() {
+
+        var actualDto = chatDao.findById(1L);
+
+        assertThat(actualDto)
+            .isNotPresent();
     }
 
     @Test

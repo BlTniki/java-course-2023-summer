@@ -3,9 +3,10 @@ package edu.java.domain.dao.chat;
 import edu.java.domain.dto.ChatDto;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatDao {
-    @NotNull ChatDto findById(long id);
+    @NotNull Optional<ChatDto> findById(long id);
 
     @NotNull List<ChatDto> findAll();
 

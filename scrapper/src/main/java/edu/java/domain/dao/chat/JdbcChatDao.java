@@ -3,6 +3,7 @@ package edu.java.domain.dao.chat;
 import edu.java.domain.dao.rowMapper.ChatDtoRowMapper;
 import edu.java.domain.dto.ChatDto;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +23,12 @@ public class JdbcChatDao implements ChatDao {
     }
 
     @Override
-    public ChatDto findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, new ChatDtoRowMapper(), id);
+    public Optional<ChatDto> findById(long id) {
+        var result = jdbcTemplate.query(FIND_BY_ID_QUERY, new ChatDtoRowMapper(), id);
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.getFirst());
     }
 
     @Override
