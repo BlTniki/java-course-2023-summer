@@ -5,6 +5,7 @@ import edu.java.domain.dto.LinkDto;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +35,21 @@ public class JdbcLinkDao implements LinkDao {
     }
 
     @Override
-    public LinkDto findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, new LinkDtoRowMapper(), id);
+    public Optional<LinkDto> findById(long id) {
+        var result = jdbcTemplate.query(FIND_BY_ID_QUERY, new LinkDtoRowMapper(), id);
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.getFirst());
     }
 
     @Override
-    public LinkDto findByUrl(URI uri) {
-        return jdbcTemplate.queryForObject(FIND_BY_URL_QUERY, new LinkDtoRowMapper(), uri.toString());
+    public Optional<LinkDto> findByUrl(URI uri) {
+        var result = jdbcTemplate.query(FIND_BY_URL_QUERY, new LinkDtoRowMapper(), uri.toString());
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.getFirst());
     }
 
     @Override

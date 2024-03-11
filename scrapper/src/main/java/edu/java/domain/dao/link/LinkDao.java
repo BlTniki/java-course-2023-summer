@@ -5,13 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface LinkDao {
     @NotNull List<LinkDto> findAll();
 
-    @NotNull LinkDto findById(long id);
+    @NotNull Optional<LinkDto> findById(long id);
 
-    @NotNull LinkDto findByUrl(URI uri);
+    @NotNull Optional<LinkDto> findByUrl(URI uri);
 
     /**
      * Возвращает все {@link LinkDto} у которых lastUpdate равен или больше данного.

@@ -48,9 +48,19 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
 
         var actualDto = jdbcLinkDao.findById(expectedDto.id());
 
-        assertThat(actualDto.id()).isEqualTo(expectedDto.id());
-        assertThat(actualDto.url()).isEqualTo(expectedDto.url());
-        assertThat(actualDto.lastUpdate()).isEqualTo(expectedDto.lastUpdate());
+        assertThat(actualDto)
+            .isPresent()
+            .contains(expectedDto);
+    }
+
+    @Test
+    @DisplayName("Проверим что мы не ломаемся если id не существует")
+    @Rollback
+    void findById_notExist() {
+        var actualDto = jdbcLinkDao.findById(1L);
+
+        assertThat(actualDto)
+            .isNotPresent();
     }
 
     @Test
@@ -62,7 +72,19 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
 
         var actualDto = jdbcLinkDao.findByUrl(expectedDto.url());
 
-        assertThat(actualDto).isEqualTo(expectedDto);
+        assertThat(actualDto)
+            .isPresent()
+            .contains(expectedDto);
+    }
+
+    @Test
+    @DisplayName("Проверим что мы не ломаемся если url не существует")
+    @Rollback
+    void findByUrl_notExist() {
+        var actualDto = jdbcLinkDao.findByUrl(URI.create("http://example.com"));
+
+        assertThat(actualDto)
+            .isNotPresent();
     }
 
     @Test
@@ -86,18 +108,19 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
 
         var actualDto = jdbcLinkDao.add(expectedDto);
 
-        assertThat(actualDto.lastUpdate().isEqual(expectedDto.lastUpdate())).isTrue();
+        assertThat(actualDto).isEqualTo(expectedDto);
     }
 
     @Test
     @DisplayName("Проверим что запись работает если id не задан")
     @Rollback
     void add_no_id() {
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var timestamp = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
+        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), timestamp);
 
-        var actualDto = jdbcLinkDao.add(new LinkDto(null, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)));
+        var actualDto = jdbcLinkDao.add(new LinkDto(null, URI.create("http://example.com"), timestamp));
 
-        assertThat(actualDto.lastUpdate().isEqual(expectedDto.lastUpdate())).isTrue();
+        assertThat(actualDto).isEqualTo(expectedDto);
     }
 
     @Test
