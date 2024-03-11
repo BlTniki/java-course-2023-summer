@@ -3,17 +3,18 @@ package edu.java.domain.dao.subscription;
 import edu.java.domain.dto.SubscriptionDto;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 public interface SubscriptionDao {
     @NotNull List<SubscriptionDto> findAll();
 
-    @NotNull SubscriptionDto findById(long id);
+    @NotNull Optional<SubscriptionDto> findById(long id);
 
     @NotNull List<SubscriptionDto> findByChatId(long chatId);
 
     @NotNull List<SubscriptionDto> findByLinkId(long linkId);
 
-    @NotNull SubscriptionDto findByAlias(@NotNull String alias);
+    @NotNull Optional<SubscriptionDto> findByAlias(@NotNull String alias);
 
     /**
      * Сохраняет сущность в БД.

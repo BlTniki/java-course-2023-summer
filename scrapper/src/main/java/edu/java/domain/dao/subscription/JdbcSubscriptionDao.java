@@ -3,6 +3,7 @@ package edu.java.domain.dao.subscription;
 import edu.java.domain.dao.rowMapper.SubscriptionDtoRowMapper;
 import edu.java.domain.dto.SubscriptionDto;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,12 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
     }
 
     @Override
-    public SubscriptionDto findById(long id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, new SubscriptionDtoRowMapper(), id);
+    public Optional<SubscriptionDto> findById(long id) {
+        var result = jdbcTemplate.query(FIND_BY_ID_QUERY, new SubscriptionDtoRowMapper(), id);
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.getFirst());
     }
 
     @Override
@@ -49,8 +54,12 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
     }
 
     @Override
-    public SubscriptionDto findByAlias(String alias) {
-        return jdbcTemplate.queryForObject(FIND_BY_ALIAS_QUERY, new SubscriptionDtoRowMapper(), alias);
+    public Optional<SubscriptionDto> findByAlias(String alias) {
+        var result = jdbcTemplate.query(FIND_BY_ALIAS_QUERY, new SubscriptionDtoRowMapper(), alias);
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.getFirst());
     }
 
     @Override
