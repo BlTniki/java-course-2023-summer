@@ -54,35 +54,175 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим, что мы можем найти ссылку по id")
     @Rollback
     void findById() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        var expected = jdbcSubscriptionDao.add(new SubscriptionDto(1L, 1L, 1L, "1"));
+
+        var actual = jdbcSubscriptionDao.findById(expected.id());
+
+        assertThat(actual)
+            .isPresent()
+            .contains(expected);
     }
 
     @Test
-    @DisplayName("Проверим, что мы можем найти ссылку по id")
+    @DisplayName("Проверим что мы не ломаемся если id не существует")
+    @Rollback
+    void findById_notExist() {
+        var actual = jdbcSubscriptionDao.findById(1L);
+
+        assertThat(actual)
+            .isNotPresent();
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы можем найти ссылку по ChatId")
     @Rollback
     void findByChatId() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcChatDao.add(new ChatDto(2L));
+        jdbcChatDao.add(new ChatDto(3L));
+
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        var expected = List.of(
+            new SubscriptionDto(1L, 1L, 1L, "1"),
+            new SubscriptionDto(2L, 2L, 1L, "1"),
+            new SubscriptionDto(3L, 3L, 1L, "1")
+        );
+        for (var subscription: expected) {
+            jdbcSubscriptionDao.add(subscription);
+        }
+
+        var actual = jdbcSubscriptionDao.findByChatId(1L);
+
+        assertThat(actual)
+            .containsExactlyInAnyOrderElementsOf(List.of(expected.getFirst()));
     }
 
     @Test
-    @DisplayName("Проверим, что мы можем найти ссылку по id")
+    @DisplayName("Проверим что мы не ломаемся если ChatId не существует")
+    @Rollback
+    void findByChatId_notExist() {
+        var actual = jdbcSubscriptionDao.findByChatId(1L);
+
+        assertThat(actual)
+            .isEmpty();
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы можем найти ссылку по LinkId")
     @Rollback
     void findByLinkId() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcChatDao.add(new ChatDto(2L));
+        jdbcChatDao.add(new ChatDto(3L));
+
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        var expected = List.of(
+            new SubscriptionDto(1L, 1L, 1L, "1"),
+            new SubscriptionDto(2L, 2L, 1L, "1"),
+            new SubscriptionDto(3L, 3L, 1L, "1")
+        );
+        for (var subscription: expected) {
+            jdbcSubscriptionDao.add(subscription);
+        }
+
+        var actual = jdbcSubscriptionDao.findByLinkId(1L);
+
+        assertThat(actual)
+            .containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
-    @DisplayName("Проверим, что мы можем найти ссылку по id")
+    @DisplayName("Проверим что мы не ломаемся если LinkId не существует")
     @Rollback
-    void findByAlias() {
+    void findByLinkId_notExist() {
+        var actual = jdbcSubscriptionDao.findByLinkId(1L);
+
+        assertThat(actual)
+            .isEmpty();
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы можем найти ссылку по Alias")
+    @Rollback
+    void findByChatIdAndAlias() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcChatDao.add(new ChatDto(2L));
+        jdbcChatDao.add(new ChatDto(3L));
+
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        var expected = List.of(
+            new SubscriptionDto(1L, 1L, 1L, "1"),
+            new SubscriptionDto(2L, 2L, 1L, "1"),
+            new SubscriptionDto(3L, 3L, 1L, "1")
+        );
+        for (var subscription: expected) {
+            jdbcSubscriptionDao.add(subscription);
+        }
+
+        var actual = jdbcSubscriptionDao.findByChatIdAndAlias(1L, "1");
+
+        assertThat(actual)
+            .isPresent()
+            .contains(expected.getFirst());
+    }
+
+    @Test
+    @DisplayName("Проверим что мы не ломаемся если Alias не существует")
+    @Rollback
+    void findByChatIdAndAlias_notExist() {
+        var actual = jdbcSubscriptionDao.findByChatIdAndAlias(1L, "1");
+
+        assertThat(actual)
+            .isEmpty();
+    }
+
+    @Test
+    @DisplayName("Проверим что запись работает если id задан")
+    @Rollback
+    void add() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        var expected = new SubscriptionDto(1L, 1L, 1L, "1");
+
+        var actual = jdbcSubscriptionDao.add(expected);
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("Проверим что запись работает если id не задан")
     @Rollback
-    void add() {
+    void add_no_id() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        var expected = new SubscriptionDto(1L, 1L, 1L, "1");
+
+        var actual = jdbcSubscriptionDao.add(new SubscriptionDto(null, 1L, 1L, "1"));
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("Проверим что запись удаляется")
     @Rollback
     void remove() {
+        jdbcChatDao.add(new ChatDto(1L));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+
+        jdbcSubscriptionDao.add(new SubscriptionDto(1L, 1L, 1L, "1"));
+
+        jdbcSubscriptionDao.remove(1L);
+
+        var actual = jdbcSubscriptionDao.findAll();
+
+        assertThat(actual).isEmpty();
     }
 }
