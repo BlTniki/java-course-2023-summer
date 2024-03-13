@@ -16,7 +16,7 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM subscription WHERE id = ?";
     private static final String FIND_BY_CHAT_ID_QUERY = "SELECT * FROM subscription WHERE chat_id = ?";
     private static final String FIND_BY_LINK_ID_QUERY = "SELECT * FROM subscription WHERE link_id = ?";
-    private static final String FIND_BY_ALIAS_QUERY = "SELECT * FROM subscription WHERE alias = ?";
+    private static final String FIND_BY_ALIAS_QUERY = "SELECT * FROM subscription WHERE chat_id = ? AND alias = ?";
     private static final String ADD_WITH_ID_QUERY =
         "INSERT INTO subscription (id, chat_id, link_id, alias) VALUES (?, ?, ?, ?) RETURNING *";
     private static final String ADD_WITHOUT_ID_QUERY =
@@ -54,8 +54,8 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
     }
 
     @Override
-    public Optional<SubscriptionDto> findByAlias(String alias) {
-        var result = jdbcTemplate.query(FIND_BY_ALIAS_QUERY, new SubscriptionDtoRowMapper(), alias);
+    public Optional<SubscriptionDto> findByChatIdAndAlias(long chatId, String alias) {
+        var result = jdbcTemplate.query(FIND_BY_ALIAS_QUERY, new SubscriptionDtoRowMapper(), chatId, alias);
         if (result.isEmpty()) {
             return Optional.empty();
         }

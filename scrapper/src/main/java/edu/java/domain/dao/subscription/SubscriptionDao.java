@@ -14,7 +14,7 @@ public interface SubscriptionDao {
 
     @NotNull List<SubscriptionDto> findByLinkId(long linkId);
 
-    @NotNull Optional<SubscriptionDto> findByAlias(@NotNull String alias);
+    @NotNull Optional<SubscriptionDto> findByChatIdAndAlias(long chatId, @NotNull String alias);
 
     /**
      * Сохраняет сущность в БД.
