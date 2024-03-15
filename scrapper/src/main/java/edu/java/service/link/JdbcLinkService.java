@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class LinkServiceImpl implements LinkService {
+public class JdbcLinkService implements LinkService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LINK_NOT_EXIST_UNEXPECTED =
         "Failed to find a link with id %d, but there is a subscription with id %d that relates to it";
@@ -30,7 +30,7 @@ public class LinkServiceImpl implements LinkService {
     private final JdbcLinkDao linkDao;
     private final JdbcSubscriptionDao subscriptionDao;
 
-    public LinkServiceImpl(JdbcChatDao chatDao, JdbcLinkDao linkDao, JdbcSubscriptionDao subscriptionDao) {
+    public JdbcLinkService(JdbcChatDao chatDao, JdbcLinkDao linkDao, JdbcSubscriptionDao subscriptionDao) {
         this.chatDao = chatDao;
         this.linkDao = linkDao;
         this.subscriptionDao = subscriptionDao;
