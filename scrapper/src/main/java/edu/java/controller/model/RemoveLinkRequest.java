@@ -1,6 +1,7 @@
 package edu.java.controller.model;
 
+import jakarta.validation.constraints.NotNull;
 
 public record RemoveLinkRequest(
-    String alias
+    @NotNull String alias
 ) {}
