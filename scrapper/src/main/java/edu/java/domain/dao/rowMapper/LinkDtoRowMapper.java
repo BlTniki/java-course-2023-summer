@@ -12,7 +12,9 @@ public class LinkDtoRowMapper implements RowMapper<LinkDto> {
     public LinkDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         var id = rs.getLong("id");
         URI url = URI.create(rs.getString("url"));
-        OffsetDateTime lastUpdate = rs.getObject("last_update", OffsetDateTime.class);
-        return new LinkDto(id, url, lastUpdate);
+        String serviceType = rs.getString("service_type");
+        String trackedData = rs.getString("tracked_data");
+        OffsetDateTime lastCheck = rs.getObject("last_check", OffsetDateTime.class);
+        return new LinkDto(id, url, serviceType, trackedData, lastCheck);
     }
 }

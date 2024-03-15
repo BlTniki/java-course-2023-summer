@@ -6,5 +6,7 @@ import java.time.OffsetDateTime;
 public record LinkDto(
     Long id,
     URI url,
-    OffsetDateTime lastUpdate
+    String serviceType,
+    String trackedData,
+    OffsetDateTime lastCheck
 ) {}

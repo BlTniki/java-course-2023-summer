@@ -25,9 +25,9 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @Rollback
     void findAll() {
         var expected = List.of(
-            new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)),
-            new LinkDto(2L, URI.create("http://example.com/2"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)),
-            new LinkDto(3L, URI.create("http://example.com/3"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS))
+            new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)),
+            new LinkDto(2L, URI.create("http://example.com/2"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)),
+            new LinkDto(3L, URI.create("http://example.com/3"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS))
         );
         for (var link: expected) {
             jdbcLinkDao.add(link);
@@ -43,7 +43,7 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим, что мы можем найти ссылку по id")
     @Rollback
     void findById() {
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
         jdbcLinkDao.add(expectedDto);
 
         var actualDto = jdbcLinkDao.findById(expectedDto.id());
@@ -67,7 +67,7 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим, что мы можем найти ссылку по url")
     @Rollback
     void findByUrl() {
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
         jdbcLinkDao.add(expectedDto);
 
         var actualDto = jdbcLinkDao.findByUrl(expectedDto.url());
@@ -92,7 +92,7 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @Rollback
     void findFromLastUpdate() {
         var lastUpdate = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS).minusDays(1);
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
         jdbcLinkDao.add(expectedDto);
 
         var actualList = jdbcLinkDao.findFromLastUpdate(lastUpdate);
@@ -104,7 +104,7 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим что запись работает если задан id")
     @Rollback
     void add() {
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
 
         var actualDto = jdbcLinkDao.add(expectedDto);
 
@@ -116,9 +116,9 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @Rollback
     void add_no_id() {
         var timestamp = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), timestamp);
+        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", timestamp);
 
-        var actualDto = jdbcLinkDao.add(new LinkDto(null, URI.create("http://example.com"), timestamp));
+        var actualDto = jdbcLinkDao.add(new LinkDto(null, URI.create("http://example.com"), "lol", "{}", timestamp));
 
         assertThat(actualDto).isEqualTo(expectedDto);
     }
@@ -127,7 +127,7 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим что запись удаляется")
     @Rollback
     void remove() {
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com"), OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS)));
 
         jdbcLinkDao.remove(1L);
 

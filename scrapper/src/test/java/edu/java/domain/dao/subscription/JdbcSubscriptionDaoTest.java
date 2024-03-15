@@ -33,7 +33,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
         jdbcChatDao.add(new ChatDto(2L));
         jdbcChatDao.add(new ChatDto(3L));
 
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = List.of(
             new SubscriptionDto(1L, 1L, 1L, "1"),
@@ -55,7 +55,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
     @Rollback
     void findById() {
         jdbcChatDao.add(new ChatDto(1L));
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = jdbcSubscriptionDao.add(new SubscriptionDto(1L, 1L, 1L, "1"));
 
@@ -84,7 +84,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
         jdbcChatDao.add(new ChatDto(2L));
         jdbcChatDao.add(new ChatDto(3L));
 
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = List.of(
             new SubscriptionDto(1L, 1L, 1L, "1"),
@@ -119,7 +119,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
         jdbcChatDao.add(new ChatDto(2L));
         jdbcChatDao.add(new ChatDto(3L));
 
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = List.of(
             new SubscriptionDto(1L, 1L, 1L, "1"),
@@ -154,7 +154,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
         jdbcChatDao.add(new ChatDto(2L));
         jdbcChatDao.add(new ChatDto(3L));
 
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = List.of(
             new SubscriptionDto(1L, 1L, 1L, "1"),
@@ -187,7 +187,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
     @Rollback
     void add() {
         jdbcChatDao.add(new ChatDto(1L));
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = new SubscriptionDto(1L, 1L, 1L, "1");
 
@@ -201,7 +201,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
     @Rollback
     void add_no_id() {
         jdbcChatDao.add(new ChatDto(1L));
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         var expected = new SubscriptionDto(1L, 1L, 1L, "1");
 
@@ -215,7 +215,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
     @Rollback
     void remove() {
         jdbcChatDao.add(new ChatDto(1L));
-        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(1L, URI.create("http://example.com/1"), "lol", "{}", OffsetDateTime.now()));
 
         jdbcSubscriptionDao.add(new SubscriptionDto(1L, 1L, 1L, "1"));
 
