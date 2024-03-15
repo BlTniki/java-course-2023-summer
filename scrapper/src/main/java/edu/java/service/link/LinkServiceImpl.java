@@ -13,8 +13,10 @@ import edu.java.service.exception.EntityNotFoundException;
 import edu.java.service.exception.EntityValidationFailedException;
 import edu.java.service.link.model.Link;
 import java.util.List;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,20 +36,37 @@ public class LinkServiceImpl implements LinkService {
         this.subscriptionDao = subscriptionDao;
     }
 
+    private void validateChatId(long chatId) throws EntityNotFoundException {
+        chatDao.findById(chatId).orElseThrow(() -> new EntityNotFoundException(
+            "Chat with id %d not exist".formatted(chatId), ErrorCode.TG_CHAT_NOT_FOUND
+        ));
+    }
+
+    private Link convertToLink(SubscriptionDto subscription) {
+        return linkDao.findById(subscription.linkId())
+            .map(linkDto -> new Link(subscription.id(), linkDto.url(), subscription.alias()))
+            .orElseThrow(handleUnexpectedEmptyResult(subscription));
+    }
+
+    @NotNull private static Supplier<RuntimeException> handleUnexpectedEmptyResult(SubscriptionDto subscriptionDto) {
+        return () -> {
+            String errorMessage = String.format(
+                LINK_NOT_EXIST_UNEXPECTED,
+                subscriptionDto.linkId(), subscriptionDto.id()
+            );
+            LOGGER.error(errorMessage);
+            return new RuntimeException(errorMessage);
+        };
+    }
+
     @Override
     public List<Link> getByChatId(long chatId) throws EntityNotFoundException {
+        validateChatId(chatId);
         return subscriptionDao.findByChatId(chatId).stream()
-            .map(subscription -> linkDao.findById(subscription.linkId())
-                .map(linkDto -> new Link(subscription.id(), linkDto.url(), subscription.alias()))
-                .orElseThrow(() -> {
-                    LOGGER.error(
-                        "Failed to find a link with id %d, but there is a subscription with id %d that relates to it"
-                            .formatted(subscription.linkId(), subscription.id())
-                    );
-                    return new RuntimeException("Link not found for id: " + subscription.linkId());
-                })
-            ).toList();
+            .map(this::convertToLink)
+            .toList();
     }
+
 
     @Override
     public Link trackLink(long chatId, AddLinkRequest addLinkRequest)
