@@ -1,9 +1,13 @@
 package edu.java.service.link;
 
 import edu.java.controller.model.AddLinkRequest;
+import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.RemoveLinkRequest;
-import edu.java.domain.dao.link.LinkDao;
-import edu.java.domain.dao.subscription.SubscriptionDao;
+import edu.java.domain.dao.chat.JdbcChatDao;
+import edu.java.domain.dao.link.JdbcLinkDao;
+import edu.java.domain.dao.subscription.JdbcSubscriptionDao;
+import edu.java.domain.dto.LinkDto;
+import edu.java.domain.dto.SubscriptionDto;
 import edu.java.service.exception.EntityAlreadyExistException;
 import edu.java.service.exception.EntityNotFoundException;
 import edu.java.service.exception.EntityValidationFailedException;
@@ -18,10 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LinkServiceImpl implements LinkService {
     private static final Logger LOGGER = LogManager.getLogger();
-    private final LinkDao linkDao;
-    private final SubscriptionDao subscriptionDao;
+    private static final String LINK_NOT_EXIST_UNEXPECTED =
+        "Failed to find a link with id %d, but there is a subscription with id %d that relates to it";
+    private final JdbcChatDao chatDao;
+    private final JdbcLinkDao linkDao;
+    private final JdbcSubscriptionDao subscriptionDao;
 
-    public LinkServiceImpl(LinkDao linkDao, SubscriptionDao subscriptionDao) {
+    public LinkServiceImpl(JdbcChatDao chatDao, JdbcLinkDao linkDao, JdbcSubscriptionDao subscriptionDao) {
+        this.chatDao = chatDao;
         this.linkDao = linkDao;
         this.subscriptionDao = subscriptionDao;
     }
