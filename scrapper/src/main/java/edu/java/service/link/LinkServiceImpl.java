@@ -71,12 +71,32 @@ public class LinkServiceImpl implements LinkService {
     @Override
     public Link trackLink(long chatId, AddLinkRequest addLinkRequest)
         throws EntityNotFoundException, EntityAlreadyExistException, EntityValidationFailedException {
-        ch
+        validateChatId(chatId);
+
+        return null;
     }
 
     @Override
     public Link untrackLink(long chatId, RemoveLinkRequest removeLinkRequest)
         throws EntityNotFoundException, EntityValidationFailedException {
-        return null;
+        validateChatId(chatId);
+
+        SubscriptionDto subscriptionDto = subscriptionDao.findByChatIdAndAlias(chatId, removeLinkRequest.alias())
+            .orElseThrow(() -> new EntityNotFoundException(
+                "Link not found for alias: " + removeLinkRequest.alias(), ErrorCode.ALIAS_NOT_FOUND
+            ));
+        LinkDto linkDto = linkDao.findById(subscriptionDto.linkId()).orElseThrow(
+            handleUnexpectedEmptyResult(subscriptionDto)
+        );
+
+        // removing subscription
+        subscriptionDao.remove(subscriptionDto.id());
+
+        // deleting a link if there are no subscriptions to it
+        if (subscriptionDao.findByLinkId(linkDto.id()).isEmpty()) {
+            linkDao.remove(linkDto.id());
+        }
+
+        return new Link(subscriptionDto.id(), linkDto.url(), subscriptionDto.alias());
     }
 }
