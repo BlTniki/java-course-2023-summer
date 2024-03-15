@@ -1,5 +1,7 @@
 package edu.java.service.link;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.RemoveLinkRequest;
@@ -12,8 +14,13 @@ import edu.java.service.exception.EntityAlreadyExistException;
 import edu.java.service.exception.EntityNotFoundException;
 import edu.java.service.exception.EntityValidationFailedException;
 import edu.java.service.link.model.Link;
+import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
+import edu.java.service.link.model.LinkDescriptor;
+import edu.java.service.link.model.ServiceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -29,11 +36,21 @@ public class JdbcLinkService implements LinkService {
     private final JdbcChatDao chatDao;
     private final JdbcLinkDao linkDao;
     private final JdbcSubscriptionDao subscriptionDao;
+    private final LinkParser linkParser;
+    private final Map<ServiceType, LinkChecker> linkCheckerDict;
 
-    public JdbcLinkService(JdbcChatDao chatDao, JdbcLinkDao linkDao, JdbcSubscriptionDao subscriptionDao) {
+    public JdbcLinkService(
+        JdbcChatDao chatDao,
+        JdbcLinkDao linkDao,
+        JdbcSubscriptionDao subscriptionDao,
+        LinkParser linkParser,
+        Map<ServiceType, LinkChecker> linkCheckerDict
+    ) {
         this.chatDao = chatDao;
         this.linkDao = linkDao;
         this.subscriptionDao = subscriptionDao;
+        this.linkParser = linkParser;
+        this.linkCheckerDict = linkCheckerDict;
     }
 
     private void validateChatId(long chatId) throws EntityNotFoundException {
@@ -48,6 +65,17 @@ public class JdbcLinkService implements LinkService {
             .orElseThrow(handleUnexpectedEmptyResult(subscription));
     }
 
+    private String generateAlias(long chatId) {
+        int count = subscriptionDao.findByChatId(chatId).size() + 1;
+        // loop until find available alias
+        // Bruteforce. Sorry.
+        // Will fuck me up on edge cases. But who cares?
+        while (subscriptionDao.findByChatIdAndAlias(chatId, String.valueOf(count)).isPresent()) {
+            count++;
+        }
+        return String.valueOf(count);
+    }
+
     @NotNull private static Supplier<RuntimeException> handleUnexpectedEmptyResult(SubscriptionDto subscriptionDto) {
         return () -> {
             String errorMessage = String.format(
@@ -57,6 +85,39 @@ public class JdbcLinkService implements LinkService {
             LOGGER.error(errorMessage);
             return new RuntimeException(errorMessage);
         };
+    }
+
+    private @NotNull LinkDto createAndSaveLinkDto(URI url) {
+        LinkDescriptor linkDescriptor = linkParser.parse(url);
+
+        Map<String, String> newData = linkCheckerDict.get(linkDescriptor.serviceType())
+            .check(linkDescriptor.trackedData());
+
+        mergeData(newData, linkDescriptor);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LinkDto linkDto;
+        try {
+            linkDto = new LinkDto(
+                null,
+                url,
+                linkDescriptor.serviceType().name(),
+                objectMapper.writeValueAsString(linkDescriptor.trackedData()),
+                OffsetDateTime.now()
+            );
+        } catch (JsonProcessingException e) {
+            LOGGER.error(e);
+            throw new RuntimeException(e);
+        }
+        linkDto = linkDao.add(linkDto);
+
+        return linkDto;
+    }
+
+    private static void mergeData(Map<String, String> newData, LinkDescriptor linkDescriptor) {
+        for (Map.Entry<String, String> entry : newData.entrySet()) {
+            linkDescriptor.trackedData().put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
@@ -73,7 +134,30 @@ public class JdbcLinkService implements LinkService {
         throws EntityNotFoundException, EntityAlreadyExistException, EntityValidationFailedException {
         validateChatId(chatId);
 
-        return null;
+        URI url = addLinkRequest.link();
+        String alias = addLinkRequest.alias();
+
+        // validate request
+        if (alias != null && subscriptionDao.findByChatIdAndAlias(chatId, addLinkRequest.alias()).isPresent()) {
+            throw new EntityAlreadyExistException(
+                "Alias is already in use by you: " + addLinkRequest.alias(), ErrorCode.ALIAS_ALREADY_EXIST
+            );
+        }
+        if (alias == null) {
+            alias = generateAlias(chatId);
+        }
+
+        LinkDto linkDto = linkDao.findByUrl(url).orElse(createAndSaveLinkDto(url));
+
+        SubscriptionDto subscriptionDto = new SubscriptionDto(
+            null,
+            chatId,
+            linkDto.id(),
+            alias
+        );
+        subscriptionDto = subscriptionDao.add(subscriptionDto);
+
+        return new Link(subscriptionDto.id(), linkDto.url(), alias);
     }
 
     @Override
