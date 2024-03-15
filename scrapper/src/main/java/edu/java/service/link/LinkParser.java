@@ -1,8 +1,8 @@
 package edu.java.service.link;
 
 import edu.java.controller.model.ErrorCode;
-import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.exception.ParseFailedException;
+import edu.java.service.link.model.LinkDescriptor;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 

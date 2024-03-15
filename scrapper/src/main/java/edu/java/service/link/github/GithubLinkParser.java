@@ -1,17 +1,17 @@
 package edu.java.service.link.github;
 
 import edu.java.controller.model.ErrorCode;
+import edu.java.service.exception.ParseFailedException;
+import edu.java.service.link.LinkParser;
 import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
-import edu.java.service.link.LinkParser;
-import edu.java.service.exception.ParseFailedException;
-import org.jetbrains.annotations.NotNull;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
 public class GithubLinkParser extends LinkParser {
     private static final String GITHUB_AUTHORITY = "github.com";
