@@ -1,7 +1,9 @@
 package edu.java.service.link;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.RemoveLinkRequest;
@@ -18,6 +20,8 @@ import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -30,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class JdbcLinkService implements LinkService {
+    public static final TypeReference<HashMap<String, String>> JSON_MAP_TYPE_REF =
+        new TypeReference<HashMap<String, String>>() {};
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LINK_NOT_EXIST_UNEXPECTED =
         "Failed to find a link with id %d, but there is a subscription with id %d that relates to it";
@@ -181,5 +187,63 @@ public class JdbcLinkService implements LinkService {
         }
 
         return new Link(subscriptionDto.id(), linkDto.url(), subscriptionDto.alias());
+    }
+
+    @Override
+    public List<LinkUpdate> updateLinksFrom(OffsetDateTime from) {
+        var linkToCheck = linkDao.findFromLastUpdate(from);
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<LinkUpdate> result = new ArrayList<>();
+
+        for (var linkDto : linkToCheck) {
+            // check for update
+            LinkDescriptor linkDescriptor;
+            try {
+                linkDescriptor = new LinkDescriptor(
+                    ServiceType.valueOf(linkDto.serviceType()),
+                    objectMapper.readValue(linkDto.trackedData(), JSON_MAP_TYPE_REF)
+                );
+            } catch (JsonProcessingException e) {
+                LOGGER.error(e);
+                continue;
+            }
+
+            LinkChecker linkChecker = linkCheckerDict.get(linkDescriptor.serviceType());
+            Map<String, String> newData = linkChecker.check(linkDescriptor.trackedData());
+
+            if (newData.isEmpty()) {
+                continue;
+            }
+
+            mergeData(newData, linkDescriptor);
+
+            // save
+            try {
+                linkDao.update(new LinkDto(
+                    linkDto.id(),
+                    linkDto.url(),
+                    linkDescriptor.serviceType().name(),
+                    objectMapper.writeValueAsString(linkDescriptor.trackedData()),
+                    OffsetDateTime.now()
+                ));
+            } catch (JsonProcessingException e) {
+                LOGGER.error(e);
+                throw new RuntimeException(e);
+            }
+
+            // load all link subscribers
+            var subscribers = subscriptionDao.findByLinkId(linkDto.id()).stream()
+                .map(SubscriptionDto::chatId)
+                .toList();
+
+            result.add(new LinkUpdate(
+                linkDto.id(),
+                linkDto.url(),
+                linkChecker.toUpdateMessage(newData),
+                subscribers
+            ));
+        }
+
+        return result;
     }
 }

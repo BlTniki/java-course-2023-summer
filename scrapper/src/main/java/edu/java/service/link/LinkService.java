@@ -1,5 +1,6 @@
 package edu.java.service.link;
 
+import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.RemoveLinkRequest;
 import edu.java.service.exception.EntityAlreadyExistException;
@@ -7,6 +8,7 @@ import edu.java.service.exception.EntityNotFoundException;
 import edu.java.service.exception.EntityValidationFailedException;
 import edu.java.service.link.model.Link;
 import jakarta.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface LinkService {
@@ -40,4 +42,11 @@ public interface LinkService {
      */
     @NotNull Link untrackLink(long chatId, @NotNull RemoveLinkRequest removeLinkRequest)
         throws EntityNotFoundException, EntityValidationFailedException;
+
+    /**
+     * Получает обновление ресурсов ссылок, сохраняет и возвращает в виде обновлений для бота.
+     * @param from С какого периода проверять обновления
+     * @return Обновления для бота
+     */
+    @NotNull List<LinkUpdate> updateLinksFrom(@NotNull OffsetDateTime from);
 }
