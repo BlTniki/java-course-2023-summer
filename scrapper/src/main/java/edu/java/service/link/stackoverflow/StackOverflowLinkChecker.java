@@ -96,6 +96,6 @@ public class StackOverflowLinkChecker implements LinkChecker {
 
     @Override
     public String toUpdateMessage(Map<String, String> newData) {
-        return null;
+        return "Обновление в вопросе";
     }
 }
