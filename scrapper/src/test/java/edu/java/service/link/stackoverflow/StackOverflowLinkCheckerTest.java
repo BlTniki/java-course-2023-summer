@@ -35,7 +35,7 @@ class StackOverflowLinkCheckerTest extends ScrapperApplicationTests {
         trackedData.put("id", String.valueOf(questionId));
         trackedData.put("last_activity", "1970-01-01T00:00Z");
 
-        QuestionResponse questionResponse = new QuestionResponse(questionId, OffsetDateTime.now());
+        QuestionResponse questionResponse = new QuestionResponse(questionId, 1337, OffsetDateTime.now());
 
         when(stackOverflowClient.fetchQuestions(ArgumentMatchers.anyList()))
             .thenReturn(new QuestionsResponse(List.of(questionResponse)));

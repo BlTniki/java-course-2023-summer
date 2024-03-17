@@ -41,10 +41,12 @@ class StackOverflowClientWebClientTest extends ScrapperApplicationTests {
         QuestionsResponse expected = new QuestionsResponse(List.of(
             new QuestionResponse(
                 1642028L,
+                26,
                 OffsetDateTime.ofInstant(Instant.ofEpochSecond(1705410153), ZoneOffset.UTC)
             ),
             new QuestionResponse(
                 59535522,
+                3,
                 OffsetDateTime.ofInstant(Instant.ofEpochSecond(1652526628), ZoneOffset.UTC)
             )
         ));
