@@ -96,6 +96,6 @@ public class GitHubLinkChecker implements LinkChecker {
 
     @Override
     public String toUpdateMessage(Map<String, String> newData) {
-        return null;
+        return "В репозитории произошло обновление";
     }
 }
