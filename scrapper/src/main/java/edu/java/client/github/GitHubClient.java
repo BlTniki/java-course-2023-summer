@@ -1,6 +1,7 @@
 package edu.java.client.github;
 
 import edu.java.client.exception.ClientException;
+import edu.java.client.github.model.CommitResponse;
 import edu.java.client.github.model.RepositoryActivityResponse;
 import edu.java.client.github.model.RepositoryIssueResponse;
 import edu.java.client.github.model.RepositoryResponse;
@@ -35,5 +36,16 @@ public interface GitHubClient {
      * @throws ClientException если код ответа не 2xx
      */
     @NotNull List<RepositoryActivityResponse> fetchRepositoryActivity(@NotNull String owner, @NotNull String repo)
+        throws ClientException;
+
+    /**
+     * Возвращает коммит по данному хешу.
+     * @param owner названия организации
+     * @param repo название репозитория
+     * @param sha хеш коммита
+     * @return коммит
+     * @throws ClientException если код ответа не 2xx
+     */
+    @NotNull CommitResponse fetchCommit(@NotNull String owner, @NotNull String repo, @NotNull String sha)
         throws ClientException;
 }
