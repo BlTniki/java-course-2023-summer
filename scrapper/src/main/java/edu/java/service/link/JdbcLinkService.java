@@ -35,7 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class JdbcLinkService implements LinkService {
     public static final TypeReference<HashMap<String, String>> JSON_MAP_TYPE_REF =
-        new TypeReference<HashMap<String, String>>() {};
+            new TypeReference<>() {
+            };
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LINK_NOT_EXIST_UNEXPECTED =
         "Failed to find a link with id %d, but there is a subscription with id %d that relates to it";

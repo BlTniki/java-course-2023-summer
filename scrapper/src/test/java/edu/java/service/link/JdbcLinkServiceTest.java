@@ -1,6 +1,7 @@
 package edu.java.service.link;
 
 import edu.java.ScrapperApplicationTests;
+import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.RemoveLinkRequest;
 import edu.java.domain.dao.chat.JdbcChatDao;
@@ -15,6 +16,7 @@ import edu.java.service.link.model.Link;
 import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -165,5 +167,37 @@ class JdbcLinkServiceTest extends ScrapperApplicationTests {
         assertThatThrownBy(() -> jdbcLinkService.untrackLink(chatId, removeLinkRequest))
             .isInstanceOf(EntityNotFoundException.class)
             .hasMessageContaining("Chat with id %d not exist".formatted(chatId));
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы правильно обновляем ссылки")
+    public void testUpdateLinksFrom_whenLinksExistAndHaveUpdates_shouldReturnLinkUpdates() {
+        OffsetDateTime from = OffsetDateTime.now().minusDays(1);
+        LinkDto linkDto = new LinkDto(1L, URI.create("http://example.com"), "GitHub", "{}", null);
+        when(linkDao.findFromLastUpdate(from)).thenReturn(List.of(linkDto));
+        when(linkCheckerDict.get(ServiceType.GitHub).check(any())).thenReturn(Map.of("key", "value"));
+        when(linkCheckerDict.get(ServiceType.GitHub).toUpdateMessage(any())).thenReturn("В репозитории произошло обновление");
+        when(subscriptionDao.findByLinkId(linkDto.id())).thenReturn(List.of(new SubscriptionDto(1L, 1L, 1L, "alias")));
+
+        List<LinkUpdate> result = jdbcLinkService.updateLinksFrom(from);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.getFirst().id()).isEqualTo(linkDto.id());
+        assertThat(result.getFirst().link()).isEqualTo(linkDto.url());
+        assertThat(result.getFirst().description()).contains("В репозитории произошло обновление");
+        assertThat(result.getFirst().tgChatIds()).contains(1L);
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы не возвращаем обновления для ссылок без изменений")
+    public void testUpdateLinksFrom_whenLinksExistButNoUpdates_shouldReturnEmptyList() {
+        OffsetDateTime from = OffsetDateTime.now().minusDays(1);
+        LinkDto linkDto = new LinkDto(1L, URI.create("http://example.com"), "GitHub", "{}", null);
+        when(linkDao.findFromLastUpdate(from)).thenReturn(List.of(linkDto));
+        when(linkCheckerDict.get(ServiceType.GitHub).check(any())).thenReturn(Map.of());
+
+        List<LinkUpdate> result = jdbcLinkService.updateLinksFrom(from);
+
+        assertThat(result).isEmpty();
     }
 }
