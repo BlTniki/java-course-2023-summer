@@ -1,7 +1,8 @@
 package edu.java.configuration;
 
-import edu.java.domain.dao.chat.ChatDao;
-import edu.java.domain.dao.link.LinkDao;
+import edu.java.domain.dao.chat.JdbcChatDao;
+import edu.java.domain.dao.link.JdbcLinkDao;
+import edu.java.domain.dao.subscription.JdbcSubscriptionDao;
 import edu.java.service.link.LinkChecker;
 import edu.java.service.link.LinkParser;
 import edu.java.service.link.github.GitHubLinkChecker;
@@ -25,13 +26,18 @@ public record ApplicationConfig(
     Scheduler scheduler
 ) {
     @Bean
-    public ChatDao chatDao() {
-        return mock(ChatDao.class);
+    public JdbcChatDao chatDao() {
+        return mock(JdbcChatDao.class);
     }
 
     @Bean
-    public LinkDao linkDao() {
-        return mock(LinkDao.class);
+    public JdbcLinkDao linkDao() {
+        return mock(JdbcLinkDao.class);
+    }
+
+    @Bean
+    public JdbcSubscriptionDao subscriptionDao() {
+        return mock(JdbcSubscriptionDao.class);
     }
 
     @Bean
