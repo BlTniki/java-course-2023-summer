@@ -86,10 +86,16 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
         List<RepositoryActivityResponse> expected = List.of(
             new RepositoryActivityResponse(
                 17220033061L,
+                "3e78dc89827691e9a2bfcc9d6d4ce5d93403d3ad",
+                "refs/heads/hw2",
+                "push",
                 OffsetDateTime.parse("2024-02-22T19:52:19Z")
             ),
             new RepositoryActivityResponse(
                 17210754997L,
+                "9b9dfe07a621c4d8a3557b9b2c604c6cc27c3a49",
+                "refs/heads/hw2",
+                "push",
                 OffsetDateTime.parse("2024-02-22T10:22:55Z")
             )
         );
