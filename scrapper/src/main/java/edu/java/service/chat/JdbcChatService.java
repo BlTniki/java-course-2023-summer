@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ChatServiceImpl implements ChatService {
+public class JdbcChatService implements ChatService {
     private final ChatDao chatDao;
 
-    public ChatServiceImpl(ChatDao chatDao) {
+    public JdbcChatService(ChatDao chatDao) {
         this.chatDao = chatDao;
     }
 
