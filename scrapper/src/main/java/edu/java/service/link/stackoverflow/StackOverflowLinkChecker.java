@@ -74,7 +74,7 @@ public class StackOverflowLinkChecker implements LinkChecker {
         }
 
         if (!newData.isEmpty()) {
-            int oldAnswerCount = Integer.parseInt(trackedData.getOrDefault(ANSWER_COUNT_KEY, null));
+            int oldAnswerCount = Integer.parseInt(trackedData.getOrDefault(ANSWER_COUNT_KEY, String.valueOf(0)));
             if (questionResponse.answerCount() > oldAnswerCount) {
                 newData.put(ANSWER_COUNT_KEY, questionResponse.answerCount().toString());
             }
