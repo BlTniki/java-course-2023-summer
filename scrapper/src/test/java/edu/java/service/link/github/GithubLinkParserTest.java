@@ -6,6 +6,7 @@ import edu.java.service.exception.ParseFailedException;
 import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
 import java.net.URI;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,6 +15,7 @@ class GithubLinkParserTest extends ScrapperApplicationTests {
     private final GithubLinkParser githubLinkParser = new GithubLinkParser();
 
     @Test
+    @DisplayName("Проверим, что мы корректно создаём дескриптор")
     public void parse_ValidGithubRepoUrl_ShouldReturnCorrectLinkDescriptor() {
         String validUrl = "https://github.com/owner/repo";
         URI uri = URI.create(validUrl);
@@ -28,6 +30,7 @@ class GithubLinkParserTest extends ScrapperApplicationTests {
     }
 
     @Test
+    @DisplayName("Проверим, что мы отлавливаем невалидную ссылку")
     public void parse_InvalidGithubUrl_ShouldThrowParseFailedException() {
         String invalidUrl = "https://github.com/invalid_url";
         URI uri = URI.create(invalidUrl);
@@ -39,6 +42,7 @@ class GithubLinkParserTest extends ScrapperApplicationTests {
     }
 
     @Test
+    @DisplayName("Проверим, что мы вызываем следующий парсер")
     public void parse_NonGithubUrl_ShouldCallNextParser() {
         String nonGithubUrl = "https://non-github.com/owner/repo";
         URI uri = URI.create(nonGithubUrl);
@@ -49,6 +53,7 @@ class GithubLinkParserTest extends ScrapperApplicationTests {
     }
 
     @Test
+    @DisplayName("Проверим, что мы валидируем ресурс")
     public void parse_GithubUrlWithAdditionalResource_ShouldThrowParseFailedException() {
         String urlWithAdditionalResource = "https://github.com/owner/repo/additional";
         URI uri = URI.create(urlWithAdditionalResource);
