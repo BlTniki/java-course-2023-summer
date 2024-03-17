@@ -1,9 +1,11 @@
 package edu.java.configuration;
 
+import edu.java.client.bot.BotClient;
 import edu.java.client.github.GitHubClient;
 import edu.java.client.stackoverflow.StackOverflowClient;
 import edu.java.service.link.LinkChecker;
 import edu.java.service.link.LinkParser;
+import edu.java.service.link.LinkService;
 import edu.java.service.link.LinkUpdaterScheduler;
 import edu.java.service.link.github.GitHubLinkChecker;
 import edu.java.service.link.github.GithubLinkParser;
@@ -25,8 +27,8 @@ public record ApplicationConfig(
     Scheduler scheduler
 ) {
     @Bean
-    public LinkUpdaterScheduler linkUpdateScheduler() {
-        return new LinkUpdaterScheduler();
+    public LinkUpdaterScheduler linkUpdateScheduler(LinkService linkService, BotClient botClient) {
+        return new LinkUpdaterScheduler(linkService, botClient);
     }
 
     @Bean
