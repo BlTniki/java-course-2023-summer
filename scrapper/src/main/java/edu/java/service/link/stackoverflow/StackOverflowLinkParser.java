@@ -40,7 +40,7 @@ public class StackOverflowLinkParser extends LinkParser {
 
     @Override
     public LinkDescriptor parse(URI url) throws ParseFailedException {
-        if (url.getAuthority() == null || url.getAuthority().endsWith(STACKOVERFLOW_AUTHORITY)) {
+        if (url.getAuthority() == null || !url.getAuthority().endsWith(STACKOVERFLOW_AUTHORITY)) {
             return parseNext(url);
         }
 
