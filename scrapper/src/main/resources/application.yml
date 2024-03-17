@@ -14,6 +14,11 @@ spring:
     name: scrapper
   jackson:
     property-naming-strategy: SNAKE_CASE
+  datasource:
+    driver: org.postgresql.Driver
+    url: jdbc:postgresql://postgresql:5432/scrapper
+    username: postgres
+    password: postgres
 
 springdoc:
   swagger-ui:
