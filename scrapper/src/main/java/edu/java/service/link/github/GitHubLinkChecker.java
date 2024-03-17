@@ -54,7 +54,7 @@ public class GitHubLinkChecker implements LinkChecker {
             repositoryActivityResponse = gitHubClient.fetchRepositoryActivity(owner, repo).getFirst();
         } catch (ForbiddenClientException | ResourceNotFoundClientException e) {
             throw new EntityValidationFailedException(
-                "Given repository is not exist or i have no permissions",
+                "Given repository is not exist or i have no permissions: " + owner + "/" + repo,
                 ErrorCode.BAD_REQUEST
             );
         } catch (ClientException e) {
