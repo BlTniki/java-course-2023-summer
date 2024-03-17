@@ -5,7 +5,6 @@ import edu.java.client.exception.ForbiddenClientException;
 import edu.java.client.exception.ResourceNotFoundClientException;
 import edu.java.client.stackoverflow.StackOverflowClient;
 import edu.java.client.stackoverflow.model.QuestionResponse;
-import edu.java.client.stackoverflow.model.QuestionsResponse;
 import edu.java.controller.model.ErrorCode;
 import edu.java.service.exception.CorruptedDataException;
 import edu.java.service.exception.EntityValidationFailedException;
