@@ -29,6 +29,15 @@ public interface LinkDao {
     @NotNull LinkDto add(@NotNull LinkDto link);
 
     /**
+     * Обновляет сущность в БД.
+     * Если сущности с таким id не существует, то метод вернёт пустой Optional.
+     *
+     * @param linkDto обновлённая сущность, должен быть указан id
+     * @return обновлённая сущность если обновление завершилось успешно
+     */
+    Optional<LinkDto> update(@NotNull LinkDto linkDto);
+
+    /**
      * Удаляет сущность из БД.
      * @param id значение id этой сущности
      * @return удалённую сущность в БД

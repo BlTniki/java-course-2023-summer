@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 class JdbcLinkDaoTest extends ScrapperApplicationTests {
@@ -132,5 +133,41 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
         jdbcLinkDao.remove(1L);
 
         assertThat(jdbcLinkDao.findAll()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Проверим, что мы можем обновить существующую запись")
+    @Rollback
+    void update_existing() {
+        var originalDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        jdbcLinkDao.add(originalDto);
+
+        var updatedDto = new LinkDto(1L, URI.create("http://example2.com"), "lmao", "{\"key\": \"value\"}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var actualDto = jdbcLinkDao.update(updatedDto);
+
+        assertThat(actualDto)
+            .isPresent()
+            .contains(updatedDto);
+        assertThat(jdbcLinkDao.findById(1L)).contains(updatedDto);
+    }
+
+    @Test
+    @DisplayName("Проверим, что обновление несуществующей записи вызывает исключение")
+    @Rollback
+    void update_nonExisting() {
+        var nonExistingDto = new LinkDto(999L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+
+        assertThat(jdbcLinkDao.update(nonExistingDto))
+            .isEmpty();
+    }
+
+    @Test
+    @DisplayName("Проверим, что обновление записи без id вызывает исключение")
+    @Rollback
+    void update_nullId() {
+        var nullIdDto = new LinkDto(null, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+
+        assertThatThrownBy(() -> jdbcLinkDao.update(nullIdDto))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

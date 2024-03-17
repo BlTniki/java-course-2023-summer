@@ -6,6 +6,7 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +22,21 @@ public class JdbcLinkDao implements LinkDao {
         "INSERT INTO link (id, url, service_type, tracked_data, last_check) VALUES (?, ?, ?, ?::jsonb, ?) RETURNING *";
     private static final String ADD_WITHOUT_ID_QUERY =
         "INSERT INTO link (url, service_type, tracked_data, last_check) VALUES (?, ?, ?::jsonb, ?) RETURNING *";
+    private static final String UPDATE_QUERY =
+        "UPDATE link SET url = ?, service_type = ?, tracked_data = ?::jsonb, last_check = ? WHERE id = ? RETURNING *";
     private static final String REMOVE_QUERY = "DELETE FROM link WHERE id = ? RETURNING *";
 
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcLinkDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @NotNull private static Optional<LinkDto> boxIntoOptional(List<LinkDto> result) {
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(result.getFirst());
     }
 
     @Override
@@ -37,19 +47,13 @@ public class JdbcLinkDao implements LinkDao {
     @Override
     public Optional<LinkDto> findById(long id) {
         var result = jdbcTemplate.query(FIND_BY_ID_QUERY, new LinkDtoRowMapper(), id);
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(result.getFirst());
+        return boxIntoOptional(result);
     }
 
     @Override
     public Optional<LinkDto> findByUrl(URI uri) {
         var result = jdbcTemplate.query(FIND_BY_URL_QUERY, new LinkDtoRowMapper(), uri.toString());
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(result.getFirst());
+        return boxIntoOptional(result);
     }
 
     @Override
@@ -59,7 +63,6 @@ public class JdbcLinkDao implements LinkDao {
 
     @Override
     public LinkDto add(LinkDto link) {
-
         if (link.id() == null) {
             return jdbcTemplate.queryForObject(ADD_WITHOUT_ID_QUERY,
                 new LinkDtoRowMapper(),
@@ -77,6 +80,22 @@ public class JdbcLinkDao implements LinkDao {
             link.trackedData(),
             link.lastCheck()
         );
+    }
+
+    @Override
+    public Optional<LinkDto> update(LinkDto link) {
+        if (link.id() == null) {
+            throw new IllegalArgumentException("Link id must not be null for update operation");
+        }
+        var result = jdbcTemplate.query(UPDATE_QUERY,
+            new LinkDtoRowMapper(),
+            link.url().toString(),
+            link.serviceType(),
+            link.trackedData(),
+            link.lastCheck(),
+            link.id()
+        );
+        return boxIntoOptional(result);
     }
 
     @Override
