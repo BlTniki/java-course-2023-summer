@@ -28,10 +28,12 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Profile("prod")
 @Transactional
 public class JdbcLinkService implements LinkService {
     public static final TypeReference<HashMap<String, String>> JSON_MAP_TYPE_REF =

@@ -12,23 +12,78 @@ import edu.java.domain.dto.LinkDto;
 import edu.java.domain.dto.SubscriptionDto;
 import edu.java.service.exception.EntityAlreadyExistException;
 import edu.java.service.exception.EntityNotFoundException;
+import edu.java.service.link.github.GitHubLinkChecker;
 import edu.java.service.link.model.Link;
 import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import edu.java.service.link.stackoverflow.StackOverflowLinkChecker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class JdbcLinkServiceTest extends ScrapperApplicationTests {
+    @TestConfiguration
+    static class Config {
+        @Bean
+        public JdbcChatDao chatDao() {
+            return mock(JdbcChatDao.class);
+        }
+
+        @Bean
+        public JdbcLinkDao linkDao() {
+            return mock(JdbcLinkDao.class);
+        }
+
+        @Bean
+        public JdbcSubscriptionDao subscriptionDao() {
+            return mock(JdbcSubscriptionDao.class);
+        }
+
+        @Bean
+        public LinkParser linkParser() {
+            return mock(LinkParser.class);
+        }
+
+        @Bean
+        public Map<ServiceType, LinkChecker> linkCheckerDict() {
+            var linkCheckerDict = new HashMap<ServiceType, LinkChecker>();
+
+            linkCheckerDict.put(ServiceType.GitHub, mock(GitHubLinkChecker.class));
+            linkCheckerDict.put(ServiceType.StackOverflow, mock(StackOverflowLinkChecker.class));
+
+            return linkCheckerDict;
+        }
+
+        @Bean
+        public JdbcLinkService jdbcLinkService(
+            JdbcChatDao chatDao,
+            JdbcLinkDao linkDao,
+            JdbcSubscriptionDao subscriptionDao,
+            LinkParser linkParser,
+            Map<ServiceType, LinkChecker> linkCheckerDict
+        ) {
+            return new JdbcLinkService(
+                chatDao,
+                linkDao,
+                subscriptionDao,
+                linkParser,
+                linkCheckerDict
+            );
+        }
+    }
     @Autowired
     private JdbcChatDao chatDao;
     @Autowired

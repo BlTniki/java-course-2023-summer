@@ -56,6 +56,7 @@ class JdbcChatDaoTest extends ScrapperApplicationTests {
         var actual = chatDao.findAll();
 
         assertThat(actual)
+
             .containsExactlyInAnyOrderElementsOf(expected);
     }
 

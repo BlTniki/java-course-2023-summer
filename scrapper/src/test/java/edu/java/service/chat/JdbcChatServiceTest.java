@@ -8,13 +8,14 @@ import edu.java.service.exception.EntityNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class JdbcChatServiceTest extends ScrapperApplicationTests {
-    @Autowired
+    @MockBean
     private ChatDao chatDao;
     @Autowired
     private JdbcChatService jdbcChatService;
