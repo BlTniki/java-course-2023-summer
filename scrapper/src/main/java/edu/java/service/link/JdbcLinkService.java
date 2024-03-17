@@ -14,13 +14,13 @@ import edu.java.service.exception.EntityAlreadyExistException;
 import edu.java.service.exception.EntityNotFoundException;
 import edu.java.service.exception.EntityValidationFailedException;
 import edu.java.service.link.model.Link;
+import edu.java.service.link.model.LinkDescriptor;
+import edu.java.service.link.model.ServiceType;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import edu.java.service.link.model.LinkDescriptor;
-import edu.java.service.link.model.ServiceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +68,6 @@ public class JdbcLinkService implements LinkService {
     private String generateAlias(long chatId) {
         int count = subscriptionDao.findByChatId(chatId).size() + 1;
         // loop until find available alias
-        // Bruteforce. Sorry.
         // Will fuck me up on edge cases. But who cares?
         while (subscriptionDao.findByChatIdAndAlias(chatId, String.valueOf(count)).isPresent()) {
             count++;
