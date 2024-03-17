@@ -86,12 +86,21 @@ public class GitHubLinkChecker implements LinkChecker {
 
     @Override
     public Map<String, String> check(Map<String, String> trackedData) throws CorruptedDataException {
-        String resource = trackedData.getOrDefault(RESOURCE_KEY, null);
+        ResourceType resourceType;
+        try {
+            resourceType = ResourceType.valueOf(trackedData.getOrDefault(RESOURCE_KEY, null));
+        } catch (IllegalArgumentException e) {
+            throw new CorruptedDataException(
+                "Bad resource type: " + trackedData.getOrDefault(RESOURCE_KEY, null),
+                ErrorCode.INTERNAL_SERVER_ERROR
+            );
+        }
 
-        if (ResourceType.valueOf(resource) == ResourceType.REPO_ONLY) {
+        if (resourceType.equals(ResourceType.REPO_ONLY)) {
             return checkRepo(trackedData);
         }
-        throw new UnsupportedOperationException("Unsupported resource: " + resource);
+
+        throw new UnsupportedOperationException("Unsupported resource: " + resourceType);
     }
 
     @Override
