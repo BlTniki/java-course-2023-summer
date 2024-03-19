@@ -20,14 +20,15 @@ import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
 import java.net.URI;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -194,59 +195,62 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public List<LinkUpdate> updateLinksFrom(OffsetDateTime from) {
-        var linkToCheck = linkDao.findFromLastUpdate(from);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<LinkUpdate> result = new ArrayList<>();
+        final ObjectMapper objectMapper = new ObjectMapper();
 
-        for (var linkDto : linkToCheck) {
-            // check for update
-            LinkDescriptor linkDescriptor;
-            try {
-                linkDescriptor = new LinkDescriptor(
-                    ServiceType.valueOf(linkDto.serviceType()),
-                    objectMapper.readValue(linkDto.trackedData(), JSON_MAP_TYPE_REF)
-                );
-            } catch (JsonProcessingException e) {
-                LOGGER.error(e);
-                continue;
-            }
+        return linkDao.findFromLastUpdate(from).stream()
+            .map(linkDto -> updateLink(linkDto, objectMapper))
+            .filter(Objects::nonNull)
+            .toList();
+    }
 
-            LinkChecker linkChecker = linkCheckerDict.get(linkDescriptor.serviceType());
-            Map<String, String> newData = linkChecker.check(linkDescriptor.trackedData());
-
-            if (newData.isEmpty()) {
-                continue;
-            }
-
-            mergeData(newData, linkDescriptor);
-
-            // save
-            try {
-                linkDao.update(new LinkDto(
-                    linkDto.id(),
-                    linkDto.url(),
-                    linkDescriptor.serviceType().name(),
-                    objectMapper.writeValueAsString(linkDescriptor.trackedData()),
-                    OffsetDateTime.now()
-                ));
-            } catch (JsonProcessingException e) {
-                LOGGER.error(e);
-                throw new RuntimeException(e);
-            }
-
-            // load all link subscribers
-            var subscribers = subscriptionDao.findByLinkId(linkDto.id()).stream()
-                .map(SubscriptionDto::chatId)
-                .toList();
-
-            result.add(new LinkUpdate(
-                linkDto.id(),
-                linkDto.url(),
-                linkChecker.toUpdateMessage(newData),
-                subscribers
-            ));
+    @Nullable private LinkUpdate updateLink(LinkDto linkDto, ObjectMapper objectMapper) {
+        // check for update
+        LinkDescriptor linkDescriptor;
+        try {
+            linkDescriptor = new LinkDescriptor(
+                ServiceType.valueOf(linkDto.serviceType()),
+                objectMapper.readValue(linkDto.trackedData(), JSON_MAP_TYPE_REF)
+            );
+        } catch (JsonProcessingException e) {
+            LOGGER.error(e);
+            return null;
         }
 
-        return result;
+        LinkChecker linkChecker = linkCheckerDict.get(linkDescriptor.serviceType());
+        Map<String, String> newData = linkChecker.check(linkDescriptor.trackedData());
+
+        if (newData.isEmpty()) {
+            return null;
+        }
+
+        mergeData(newData, linkDescriptor);
+
+        // save
+        LinkDto newLinkDto;
+        try {
+            newLinkDto = new LinkDto(
+                linkDto.id(),
+                linkDto.url(),
+                linkDescriptor.serviceType().name(),
+                objectMapper.writeValueAsString(linkDescriptor.trackedData()),
+                OffsetDateTime.now()
+            );
+        } catch (JsonProcessingException e) {
+            LOGGER.error(e);
+            throw new RuntimeException(e);
+        }
+        linkDao.update(newLinkDto);
+
+        // load all link subscribers
+        var subscribers = subscriptionDao.findByLinkId(linkDto.id()).stream()
+            .map(SubscriptionDto::chatId)
+            .toList();
+
+        return new LinkUpdate(
+            linkDto.id(),
+            linkDto.url(),
+            linkChecker.toUpdateMessage(newData),
+            subscribers
+        );
     }
 }
