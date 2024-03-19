@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Repository
-@Transactional
 public class JdbcSubscriptionDao implements SubscriptionDao {
     private static final String FIND_ALL_QUERY = "SELECT * FROM subscription";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM subscription WHERE id = ?";

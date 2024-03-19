@@ -9,10 +9,8 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional
 public class JdbcLinkDao implements LinkDao {
     private static final String FIND_ALL_QUERY = "SELECT * FROM link";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM link WHERE id = ?";
