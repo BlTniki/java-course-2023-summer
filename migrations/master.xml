@@ -8,4 +8,5 @@
        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <include file="v0000_init_tables.sql"/>
+    <include file="v0001_add_indexes.sql"/>
 </databaseChangeLog>
