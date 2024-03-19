@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -76,10 +77,11 @@ public class JdbcLinkService implements LinkService {
     }
 
     private String generateAlias(long chatId) {
-        int count = subscriptionDao.findByChatId(chatId).size() + 1;
-        // loop until find available alias
-        // Will fuck me up on edge cases. But who cares?
-        while (subscriptionDao.findByChatIdAndAlias(chatId, String.valueOf(count)).isPresent()) {
+        var existingAlias = subscriptionDao.findByChatId(chatId).stream()
+            .map(SubscriptionDto::alias)
+            .collect(Collectors.toSet());
+        int count = existingAlias.size() + 1;
+        while (existingAlias.contains(String.valueOf(count))) {
             count++;
         }
         return String.valueOf(count);
