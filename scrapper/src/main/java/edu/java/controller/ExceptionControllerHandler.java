@@ -2,10 +2,8 @@ package edu.java.controller;
 
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.ErrorResponse;
-import edu.java.exception.BadRequestException;
-import edu.java.exception.EntityAlreadyExistException;
-import edu.java.exception.EntityNotFoundException;
-import edu.java.exception.EntityValidationFailedException;
+import edu.java.service.exception.EntityNotFoundException;
+import edu.java.service.exception.ServiceException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,42 +33,14 @@ public class ExceptionControllerHandler {
         ));
     }
 
-    @ExceptionHandler(EntityAlreadyExistException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> entityAlreadyExist(EntityAlreadyExistException e) {
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ErrorResponse> badRequest(ServiceException e) {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(
                 ERROR_DES,
                 e.getErrorCode(),
-                EntityAlreadyExistException.class.getName(),
-                e.getMessage(),
-                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
-            ));
-    }
-
-    @ExceptionHandler(EntityValidationFailedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> entityValidationFailed(EntityValidationFailedException e) {
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorResponse(
-                ERROR_DES,
-                e.getErrorCode(),
-                EntityValidationFailedException.class.getName(),
-                e.getMessage(),
-                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
-            ));
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> badRequest(BadRequestException e) {
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorResponse(
-                ERROR_DES,
-                e.getErrorCode(),
-                BadRequestException.class.getName(),
+                e.getClass().getName(),
                 e.getMessage(),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));

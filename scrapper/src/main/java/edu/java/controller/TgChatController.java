@@ -1,18 +1,26 @@
 package edu.java.controller;
 
-import org.springframework.http.HttpStatus;
+import edu.java.service.chat.ChatService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TgChatController implements TgChatApi {
+    private final ChatService chatService;
+
+    public TgChatController(ChatService chatService) {
+        this.chatService = chatService;
+    }
+
     @Override
     public ResponseEntity<Void> tgChatIdDelete(Long id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        chatService.addChat(id);
+        return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<Void> tgChatIdPost(Long id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        chatService.removeChat(id);
+        return ResponseEntity.ok().build();
     }
 }

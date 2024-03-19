@@ -7,5 +7,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="init_tables.sql"/>
+    <include file="v0000_init_tables.sql"/>
+    <include file="v0001_add_indexes.sql"/>
+    <include file="v0002_add_insert_functions.sql"/>
 </databaseChangeLog>
