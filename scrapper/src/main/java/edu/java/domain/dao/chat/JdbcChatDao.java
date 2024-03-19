@@ -23,10 +23,7 @@ public class JdbcChatDao implements ChatDao {
     @Override
     public Optional<ChatDto> findById(long id) {
         var result = jdbcTemplate.query(FIND_BY_ID_QUERY, new ChatDtoRowMapper(), id);
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(result.getFirst());
+        return result.stream().findFirst();
     }
 
     @Override
