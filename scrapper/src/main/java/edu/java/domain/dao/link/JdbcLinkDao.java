@@ -31,10 +31,7 @@ public class JdbcLinkDao implements LinkDao {
     }
 
     @NotNull private static Optional<LinkDto> boxIntoOptional(List<LinkDto> result) {
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(result.getFirst());
+        return result.stream().findFirst();
     }
 
     @Override
