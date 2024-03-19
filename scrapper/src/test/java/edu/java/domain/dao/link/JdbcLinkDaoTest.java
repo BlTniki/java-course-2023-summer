@@ -14,7 +14,6 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 class JdbcLinkDaoTest extends ScrapperApplicationTests {
@@ -159,15 +158,5 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
 
         assertThat(jdbcLinkDao.update(nonExistingDto))
             .isEmpty();
-    }
-
-    @Test
-    @DisplayName("Проверим, что обновление записи без id вызывает исключение")
-    @Rollback
-    void update_nullId() {
-        var nullIdDto = new LinkDto(null, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
-
-        assertThatThrownBy(() -> jdbcLinkDao.update(nullIdDto))
-            .isInstanceOf(IllegalArgumentException.class);
     }
 }

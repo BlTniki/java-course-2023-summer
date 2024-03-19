@@ -16,10 +16,7 @@ public class JdbcLinkDao implements LinkDao {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM link WHERE id = ?";
     private static final String FIND_BY_URL_QUERY = "SELECT * FROM link WHERE url = ?";
     private static final String FIND_BY_LAST_CHECK_QUERY = "SELECT * FROM link WHERE last_check >= ?";
-    private static final String ADD_WITH_ID_QUERY =
-        "INSERT INTO link (id, url, service_type, tracked_data, last_check) VALUES (?, ?, ?, ?::jsonb, ?) RETURNING *";
-    private static final String ADD_WITHOUT_ID_QUERY =
-        "INSERT INTO link (url, service_type, tracked_data, last_check) VALUES (?, ?, ?::jsonb, ?) RETURNING *";
+    private static final String ADD_QUERY = "SELECT * FROM insert_link(?, ?, ?, ?::jsonb, ?)";
     private static final String UPDATE_QUERY =
         "UPDATE link SET url = ?, service_type = ?, tracked_data = ?::jsonb, last_check = ? WHERE id = ? RETURNING *";
     private static final String REMOVE_QUERY = "DELETE FROM link WHERE id = ? RETURNING *";
@@ -58,16 +55,7 @@ public class JdbcLinkDao implements LinkDao {
 
     @Override
     public LinkDto add(LinkDto link) {
-        if (link.id() == null) {
-            return jdbcTemplate.queryForObject(ADD_WITHOUT_ID_QUERY,
-                new LinkDtoRowMapper(),
-                link.url().toString(),
-                link.serviceType(),
-                link.trackedData(),
-                link.lastCheck()
-            );
-        }
-        return jdbcTemplate.queryForObject(ADD_WITH_ID_QUERY,
+        return jdbcTemplate.queryForObject(ADD_QUERY,
             new LinkDtoRowMapper(),
             link.id(),
             link.url().toString(),
