@@ -35,10 +35,7 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
     @Override
     public Optional<SubscriptionDto> findById(long id) {
         var result = jdbcTemplate.query(FIND_BY_ID_QUERY, new SubscriptionDtoRowMapper(), id);
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(result.getFirst());
+        return result.stream().findFirst();
     }
 
     @Override
@@ -54,10 +51,7 @@ public class JdbcSubscriptionDao implements SubscriptionDao {
     @Override
     public Optional<SubscriptionDto> findByChatIdAndAlias(long chatId, String alias) {
         var result = jdbcTemplate.query(FIND_BY_ALIAS_QUERY, new SubscriptionDtoRowMapper(), chatId, alias);
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(result.getFirst());
+        return result.stream().findFirst();
     }
 
     @Override
