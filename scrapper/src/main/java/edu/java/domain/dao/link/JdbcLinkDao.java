@@ -79,9 +79,6 @@ public class JdbcLinkDao implements LinkDao {
 
     @Override
     public Optional<LinkDto> update(LinkDto link) {
-        if (link.id() == null) {
-            throw new IllegalArgumentException("Link id must not be null for update operation");
-        }
         var result = jdbcTemplate.query(UPDATE_QUERY,
             new LinkDtoRowMapper(),
             link.url().toString(),
