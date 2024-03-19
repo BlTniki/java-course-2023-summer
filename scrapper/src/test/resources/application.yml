@@ -6,8 +6,10 @@ app:
 
 client:
   github:
-    token: ${GITHUB_TOKEN}
+    token: "IHATEINTELIDEA"
+    base-url: "http://localhost:8085"
   stackoverflow:
+    base-url: "http://localhost:8085"
 
 spring:
   application:

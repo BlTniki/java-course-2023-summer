@@ -1,0 +1,60 @@
+[
+    {
+        "id": 17220033061,
+        "node_id": "PSH_kwLOLN2pPM8AAAAEAmTaJQ",
+        "before": "9b9dfe07a621c4d8a3557b9b2c604c6cc27c3a49",
+        "after": "3e78dc89827691e9a2bfcc9d6d4ce5d93403d3ad",
+        "ref": "refs/heads/hw2",
+        "timestamp": "2024-02-22T19:52:19Z",
+        "activity_type": "push",
+        "actor": {
+            "login": "BlTniki",
+            "id": 99419239,
+            "node_id": "U_kgDOBe0EZw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/99419239?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/BlTniki",
+            "html_url": "https://github.com/BlTniki",
+            "followers_url": "https://api.github.com/users/BlTniki/followers",
+            "following_url": "https://api.github.com/users/BlTniki/following{/other_user}",
+            "gists_url": "https://api.github.com/users/BlTniki/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/BlTniki/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/BlTniki/subscriptions",
+            "organizations_url": "https://api.github.com/users/BlTniki/orgs",
+            "repos_url": "https://api.github.com/users/BlTniki/repos",
+            "events_url": "https://api.github.com/users/BlTniki/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/BlTniki/received_events",
+            "type": "User",
+            "site_admin": false
+        }
+    },
+    {
+        "id": 17210754997,
+        "node_id": "PSH_kwLOLN2pPM8AAAAEAddHtQ",
+        "before": "50d6257a2072fa2cfe5c2a6b4d01a48f86f87763",
+        "after": "9b9dfe07a621c4d8a3557b9b2c604c6cc27c3a49",
+        "ref": "refs/heads/hw2",
+        "timestamp": "2024-02-22T10:22:55Z",
+        "activity_type": "push",
+        "actor": {
+            "login": "BlTniki",
+            "id": 99419239,
+            "node_id": "U_kgDOBe0EZw",
+            "avatar_url": "https://avatars.githubusercontent.com/u/99419239?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/BlTniki",
+            "html_url": "https://github.com/BlTniki",
+            "followers_url": "https://api.github.com/users/BlTniki/followers",
+            "following_url": "https://api.github.com/users/BlTniki/following{/other_user}",
+            "gists_url": "https://api.github.com/users/BlTniki/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/BlTniki/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/BlTniki/subscriptions",
+            "organizations_url": "https://api.github.com/users/BlTniki/orgs",
+            "repos_url": "https://api.github.com/users/BlTniki/repos",
+            "events_url": "https://api.github.com/users/BlTniki/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/BlTniki/received_events",
+            "type": "User",
+            "site_admin": false
+        }
+    }
+]
