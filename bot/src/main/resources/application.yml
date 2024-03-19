@@ -1,12 +1,20 @@
 app:
-  telegram-token: "1337"
+  telegram-token: ${BOT_TOKEN}
   threads-Per-Executor: 6
+
+client:
+  scrapper:
+    baseUrl: "none"
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui"
 
 server:
   port: 8090

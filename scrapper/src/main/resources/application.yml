@@ -15,6 +15,10 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui"
+
 server:
   port: 8080
 

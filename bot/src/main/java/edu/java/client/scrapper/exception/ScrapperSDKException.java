@@ -1,4 +1,4 @@
-package edu.java.scrapperSdk.exception;
+package edu.java.client.scrapper.exception;
 
 public class ScrapperSDKException extends Exception {
     public ScrapperSDKException(String message) {

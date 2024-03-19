@@ -5,9 +5,9 @@ import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.service.dict.MessageDict;
 import edu.java.bot.utils.SendRequestUtils;
-import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.exception.LinkNotExistException;
-import edu.java.scrapperSdk.exception.UserNotExistException;
+import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
+import edu.java.client.scrapper.exception.link.LinkNotExistException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
@@ -20,10 +20,10 @@ public class UntrackCommand implements Command {
     private static final String DESCRIPTION = "Начать отслеживать новый url";
     private static final Pattern UNTRACK_ARGUMENTS = Pattern.compile("^/untrack\\s(\\S+)$");
 
-    private final ScrapperSdk scrapperSdk;
+    private final ScrapperClient scrapperClient;
 
-    public UntrackCommand(ScrapperSdk scrapperSdk) {
-        this.scrapperSdk = scrapperSdk;
+    public UntrackCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -42,10 +42,10 @@ public class UntrackCommand implements Command {
 
         SendMessage sendMessage;
         try {
-            scrapperSdk.untrackUrl(message.from().id(), alias);
+            scrapperClient.untrackLink(message.chat().id(), alias);
             sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.SUCCESSFUL_UNTRACK.msg);
 
-        } catch (UserNotExistException e) {
+        } catch (ChatNotExistException e) {
             LOGGER.warn(e);
             return SendRequestUtils.buildMessageMarkdown(message, MessageDict.USER_NOT_EXIST.msg);
         } catch (LinkNotExistException e) {

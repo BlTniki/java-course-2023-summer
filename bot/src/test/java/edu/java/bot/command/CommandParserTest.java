@@ -2,6 +2,8 @@ package edu.java.bot.command;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.BotApplicationTests;
+import edu.java.bot.service.dict.MessageDict;
+import edu.java.client.scrapper.ScrapperClient;
 import edu.java.bot.service.command.Command;
 import edu.java.bot.service.command.CommandParser;
 import edu.java.bot.service.command.HelpCommand;
@@ -9,8 +11,6 @@ import edu.java.bot.service.command.ListCommand;
 import edu.java.bot.service.command.StartCommand;
 import edu.java.bot.service.command.TrackCommand;
 import edu.java.bot.service.command.UntrackCommand;
-import edu.java.bot.service.dict.MessageDict;
-import edu.java.scrapperSdk.ScrapperSdk;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 class CommandParserTest extends BotApplicationTests {
     @SuppressWarnings("unused")
     @MockBean
-    private ScrapperSdk scrapperSdk;
+    private ScrapperClient scrapperSdk;
     @Autowired
     private CommandParser commandParser;
 

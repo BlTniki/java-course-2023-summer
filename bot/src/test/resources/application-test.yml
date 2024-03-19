@@ -4,5 +4,9 @@ spring:
   jackson:
     time-zone: UTC
 
+client:
+  scrapper:
+    baseUrl: "none"
+
 logging:
   config: classpath:log4j2-plain.xml

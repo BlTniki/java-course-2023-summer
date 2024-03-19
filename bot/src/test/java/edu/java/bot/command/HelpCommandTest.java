@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.BotApplicationTests;
 import edu.java.bot.service.command.Command;
-import edu.java.scrapperSdk.ScrapperSdk;
 import java.util.Map;
+import edu.java.client.scrapper.ScrapperClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ class HelpCommandTest extends BotApplicationTests {
     private Chat chat;
     @SuppressWarnings("unused")
     @MockBean
-    private ScrapperSdk scrapperSdk;
+    private ScrapperClient scrapperClient;
 
     @Autowired
     private Map<String, Command> commandDict;

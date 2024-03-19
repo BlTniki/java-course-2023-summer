@@ -7,7 +7,7 @@ import edu.java.bot.service.command.ListCommand;
 import edu.java.bot.service.command.StartCommand;
 import edu.java.bot.service.command.TrackCommand;
 import edu.java.bot.service.command.UntrackCommand;
-import edu.java.scrapperSdk.ScrapperSdk;
+import edu.java.client.scrapper.ScrapperClient;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
-import static org.mockito.Mockito.mock;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
@@ -29,20 +28,14 @@ public record ApplicationConfig(
     int threadsPerExecutor
 ) {
     @Bean
-    public ScrapperSdk scrapperSdk() {
-        return mock(ScrapperSdk.class);
-    }
-
-
-    @Bean
-    public List<Command> commands(ScrapperSdk scrapperSdk) {
+    public List<Command> commands(ScrapperClient scrapperClient) {
         var commandList = new ArrayList<Command>();
 
-        commandList.add(new StartCommand(scrapperSdk));
+        commandList.add(new StartCommand(scrapperClient));
         commandList.add(new HelpCommand(commandList));
-        commandList.add(new TrackCommand(scrapperSdk));
-        commandList.add(new UntrackCommand(scrapperSdk));
-        commandList.add(new ListCommand(scrapperSdk));
+        commandList.add(new TrackCommand(scrapperClient));
+        commandList.add(new UntrackCommand(scrapperClient));
+        commandList.add(new ListCommand(scrapperClient));
 
         return Collections.unmodifiableList(commandList);
     }

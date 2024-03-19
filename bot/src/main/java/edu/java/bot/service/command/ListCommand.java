@@ -4,10 +4,9 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import edu.java.bot.service.dict.MessageDict;
 import edu.java.bot.utils.SendRequestUtils;
-import edu.java.scrapperSdk.ScrapperSdk;
-import edu.java.scrapperSdk.exception.UserNotExistException;
-import edu.java.scrapperSdk.model.Link;
-import java.util.List;
+import edu.java.client.scrapper.ScrapperClient;
+import edu.java.client.scrapper.exception.chat.ChatNotExistException;
+import edu.java.client.scrapper.model.ListLinksResponse;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,28 +17,28 @@ public class ListCommand implements Command {
     private static final String USAGE = "";
     private static final String DESCRIPTION = "Выводит список всех отслеживаемых url";
 
-    private final ScrapperSdk scrapperSdk;
+    private final ScrapperClient scrapperClient;
 
-    public ListCommand(ScrapperSdk scrapperSdk) {
-        this.scrapperSdk = scrapperSdk;
+    public ListCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
     public AbstractSendRequest<?> doCommand(Message message) {
-        List<Link> links;
+        ListLinksResponse links;
         try {
-            links = scrapperSdk.getAllUserTracks(message.from().id());
-        } catch (UserNotExistException e) {
+            links = scrapperClient.getAllUserTracks(message.chat().id());
+        } catch (ChatNotExistException e) {
             LOGGER.warn(e);
             return SendRequestUtils.buildMessageMarkdown(message, MessageDict.USER_NOT_EXIST.msg);
         }
 
-        if (links.isEmpty()) {
+        if (links.links().isEmpty()) {
             return SendRequestUtils.buildMessageMarkdown(message, MessageDict.LINK_LIST_EMPTY.msg);
         }
 
-        String linksMessage = links.stream()
-            .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.url()))
+        String linksMessage = links.links().stream()
+            .map(link -> MessageDict.LINK_LIST_FORMAT.msg.formatted(link.alias(), link.link()))
             .collect(Collectors.joining("\n"));
 
         return SendRequestUtils.buildMessageMarkdown(
