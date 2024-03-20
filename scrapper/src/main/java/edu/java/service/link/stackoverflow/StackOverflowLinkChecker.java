@@ -22,6 +22,7 @@ public class StackOverflowLinkChecker implements LinkChecker {
     private static final String RESOURCE_KEY = "resource";
     private static final String ID_KEY = "id";
     private static final String LAST_ACTIVITY_KEY = "last_activity";
+    private static final String ANSWER_COUNT_KEY = "ac";
 
     private final StackOverflowClient stackOverflowClient;
 
@@ -72,6 +73,13 @@ public class StackOverflowLinkChecker implements LinkChecker {
             newData.put(LAST_ACTIVITY_KEY, questionResponse.lastActivityDate().toString());
         }
 
+        if (!newData.isEmpty()) {
+            int oldAnswerCount = Integer.parseInt(trackedData.getOrDefault(ANSWER_COUNT_KEY, String.valueOf(0)));
+            if (questionResponse.answerCount() > oldAnswerCount) {
+                newData.put(ANSWER_COUNT_KEY, questionResponse.answerCount().toString());
+            }
+        }
+
         return newData;
     }
 
@@ -96,6 +104,12 @@ public class StackOverflowLinkChecker implements LinkChecker {
 
     @Override
     public String toUpdateMessage(Map<String, String> newData) {
-        return "Обновление в вопросе";
+        String answerCount = newData.getOrDefault(ANSWER_COUNT_KEY, null);
+
+        if (answerCount != null) {
+            return "Новый ответ на вопрос!";
+        } else {
+            return "Обновление в вопросе";
+        }
     }
 }

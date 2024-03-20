@@ -5,6 +5,8 @@ import edu.java.client.exception.ClientException;
 import edu.java.client.exception.ForbiddenClientException;
 import edu.java.client.exception.ResourceNotFoundClientException;
 import edu.java.client.github.GitHubClient;
+import edu.java.client.github.model.Commit;
+import edu.java.client.github.model.CommitResponse;
 import edu.java.client.github.model.RepositoryActivityResponse;
 import edu.java.client.github.model.RepositoryIssueResponse;
 import edu.java.client.github.model.RepositoryResponse;
@@ -40,11 +42,13 @@ class GitHubLinkCheckerTest extends ScrapperApplicationTests {
 
         RepositoryResponse repositoryResponse = new RepositoryResponse(0, null, OffsetDateTime.now(), OffsetDateTime.now());
         RepositoryIssueResponse repositoryIssueResponse = new RepositoryIssueResponse(0, null, OffsetDateTime.now(), null);
-        RepositoryActivityResponse repositoryActivityResponse = new RepositoryActivityResponse(0, OffsetDateTime.now());
+        RepositoryActivityResponse repositoryActivityResponse = new RepositoryActivityResponse(0, "sha", "main", "push", OffsetDateTime.now());
+        CommitResponse commitResponse = new CommitResponse("sha", new Commit("foo"));
 
         when(gitHubClient.fetchRepository(owner, repo)).thenReturn(repositoryResponse);
         when(gitHubClient.fetchRepositoryIssues(owner, repo)).thenReturn(List.of(repositoryIssueResponse));
         when(gitHubClient.fetchRepositoryActivity(owner, repo)).thenReturn(List.of(repositoryActivityResponse));
+        when(gitHubClient.fetchCommit(owner, repo, "sha")).thenReturn(commitResponse);
 
         Map<String, String> result = gitHubLinkChecker.check(trackedData);
 

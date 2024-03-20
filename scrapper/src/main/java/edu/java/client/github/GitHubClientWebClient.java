@@ -1,6 +1,7 @@
 package edu.java.client.github;
 
 import edu.java.client.exception.ClientException;
+import edu.java.client.github.model.CommitResponse;
 import edu.java.client.github.model.RepositoryActivityResponse;
 import edu.java.client.github.model.RepositoryIssueResponse;
 import edu.java.client.github.model.RepositoryResponse;
@@ -84,6 +85,28 @@ public class GitHubClientWebClient implements GitHubClient {
                 )
                 .bodyToFlux(RepositoryActivityResponse.class)
                 .collectList()
+                .block();
+        } catch (HttpClientErrorException e) {
+            LOGGER.error(ERROR_HEADER + e);
+            throw ClientException.wrapException(e);
+        }
+    }
+
+    @Override
+    public CommitResponse fetchCommit(String owner, String repo, String sha) throws ClientException {
+        try {
+            return webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path("/repos/{owner}/{repo}/commits/{sha}")
+                    .build(owner, repo, sha)
+                )
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, response -> response.createException()
+                    .flatMap(error -> {
+                        throw new HttpClientErrorException(response.statusCode(), error.getResponseBodyAsString());
+                    })
+                )
+                .bodyToMono(CommitResponse.class)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error(ERROR_HEADER + e);

@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 
 public record QuestionResponse(
     long questionId,
+    Integer answerCount,
     OffsetDateTime lastActivityDate
 ) {
 }
