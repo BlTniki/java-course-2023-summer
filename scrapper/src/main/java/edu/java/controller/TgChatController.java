@@ -14,13 +14,13 @@ public class TgChatController implements TgChatApi {
 
     @Override
     public ResponseEntity<Void> tgChatIdDelete(Long id) {
-        chatService.addChat(id);
+        chatService.removeChat(id);
         return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<Void> tgChatIdPost(Long id) {
-        chatService.removeChat(id);
+        chatService.addChat(id);
         return ResponseEntity.ok().build();
     }
 }
