@@ -1,7 +1,7 @@
-package edu.java.controller;
+package edu.java.bot.controller;
 
-import edu.java.controller.model.ErrorResponse;
-import edu.java.controller.model.LinkUpdate;
+import edu.java.bot.controller.model.ErrorResponse;
+import edu.java.bot.controller.model.LinkUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

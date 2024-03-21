@@ -1,6 +1,6 @@
-package edu.java.controller;
+package edu.java.bot.controller;
 
-import edu.java.controller.model.LinkUpdate;
+import edu.java.bot.controller.model.LinkUpdate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

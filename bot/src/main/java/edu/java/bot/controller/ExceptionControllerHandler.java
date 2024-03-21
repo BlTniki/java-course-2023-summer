@@ -1,7 +1,7 @@
-package edu.java.controller;
+package edu.java.bot.controller;
 
-import edu.java.controller.exception.BadRequestException;
-import edu.java.controller.model.ErrorResponse;
+import edu.java.bot.controller.exception.BadRequestException;
+import edu.java.bot.controller.model.ErrorResponse;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
