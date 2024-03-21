@@ -4,7 +4,7 @@ app:
 
 client:
   scrapper:
-    baseUrl: "none"
+    baseUrl: http://localhost:8080
 
 spring:
   application:

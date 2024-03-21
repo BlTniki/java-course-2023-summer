@@ -1,6 +1,7 @@
 package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
+import edu.java.bot.controller.model.LinkUpdate;
 import edu.java.bot.controller.sender.BotSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,4 +16,10 @@ public interface UpdatesService {
      * @param update от Telegram API.
      */
     void processUpdate(@NotNull Update update);
+
+    /**
+     * Обрабатывает обновление ссылки от Scrapper.
+     * @param linkUpdate обновление ссылки.
+     */
+    void processLinkUpdate(@NotNull LinkUpdate linkUpdate);
 }

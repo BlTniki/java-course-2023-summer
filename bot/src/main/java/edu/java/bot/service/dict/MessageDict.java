@@ -18,7 +18,8 @@ public enum MessageDict {
     BAD_INPUT_WRONG_COMMAND_ARGUMENTS(
         "_Неверные аргументы команды. Использование:_\n```command\n/%s %s```"
     ),
-    INTERNAL_SERVER_ERROR("*О нет, похоже что я сломался(*");
+    INTERNAL_SERVER_ERROR("*О нет, похоже что я сломался(*"),
+    LINK_UPDATE_MESSAGE("*Обновление в* %s\n\n%s");
 
     public final String msg;
 
