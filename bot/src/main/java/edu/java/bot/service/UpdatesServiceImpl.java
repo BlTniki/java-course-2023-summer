@@ -2,6 +2,7 @@ package edu.java.bot.service;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
+import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.controller.model.LinkUpdate;
 import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.service.command.CommandParser;
@@ -50,7 +51,7 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     public void processLinkUpdate(@NotNull LinkUpdate linkUpdate) {
-        linkUpdate.tgChatIds().stream().map(tgChatId -> SendRequestUtils.buildMessageMarkdown(
+        linkUpdate.tgChatIds().stream().map(tgChatId -> new SendMessage(
                 tgChatId,
                 MessageDict.LINK_UPDATE_MESSAGE.msg.formatted(
                     linkUpdate.link().toString(),

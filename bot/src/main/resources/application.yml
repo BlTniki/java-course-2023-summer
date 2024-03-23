@@ -11,6 +11,7 @@ spring:
     name: bot
   jackson:
     time-zone: UTC
+    property-naming-strategy: SNAKE_CASE
 
 springdoc:
   swagger-ui:
