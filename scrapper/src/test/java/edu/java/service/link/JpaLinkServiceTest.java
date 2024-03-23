@@ -112,6 +112,30 @@ class JpaLinkServiceTest extends ScrapperApplicationTests {
 
     @Test
     @Rollback
+    void testTrackLink_whenChatExistsAndLinkNotExist_shouldCreateAndAddLink() {
+        // Arrange
+        testChat = new JpaChatDto(chatId);
+        testChat = chatDao.save(testChat);
+
+//        testLink = new JpaLinkEntity(null, testUri, ServiceType.GitHub, Map.of(), OffsetDateTime.now());
+//        testLink = linkDao.save(testLink);
+        when(linkParser.parse(any(URI.class))).thenReturn(new LinkDescriptor(ServiceType.GitHub, Map.of()));
+        when(linkCheckerDict.get(ServiceType.GitHub)).thenReturn(linkChecker);
+        when(linkChecker.check(any())).thenReturn(Map.of());
+
+        AddLinkRequest request = new AddLinkRequest(testUri, null);
+
+        // Act
+        Link trackedLink = linkService.trackLink(chatId, request);
+
+        // Assert
+        assertThat(trackedLink.alias()).isNotNull();
+        assertThat(trackedLink.link()).isEqualTo(testUri);
+        assertThat(subscriptionDao.count()).isEqualTo(1);
+    }
+
+    @Test
+    @Rollback
     void testTrackLink_whenChatExistsAndLinkNotTracked_shouldAddLink() {
         // Arrange
         testChat = new JpaChatDto(chatId);
