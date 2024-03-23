@@ -16,12 +16,13 @@ import edu.java.service.link.github.GitHubLinkChecker;
 import edu.java.service.link.model.Link;
 import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
+import edu.java.service.link.stackoverflow.StackOverflowLinkChecker;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import edu.java.service.link.stackoverflow.StackOverflowLinkChecker;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +95,18 @@ class JdbcLinkServiceTest extends ScrapperApplicationTests {
     private LinkParser linkParser;
     @Autowired
     private Map<ServiceType, LinkChecker> linkCheckerDict;
-    @Autowired
     private JdbcLinkService jdbcLinkService;
+
+    @BeforeEach
+    public void beforeEach() {
+        jdbcLinkService = new JdbcLinkService(
+            chatDao,
+            linkDao,
+            subscriptionDao,
+            linkParser,
+            linkCheckerDict
+        );
+    }
 
     @Test
     @DisplayName("Проверим, что мы возвращаем ссылки")
