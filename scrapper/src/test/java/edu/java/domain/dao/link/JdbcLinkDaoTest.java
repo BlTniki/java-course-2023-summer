@@ -122,7 +122,6 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @Rollback
     void add_no_id() {
         var timestamp = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", timestamp);
 
         var actualDto = jdbcLinkDao.add(new LinkDto(null, URI.create("http://example.com"), "lol", "{}", timestamp));
 
