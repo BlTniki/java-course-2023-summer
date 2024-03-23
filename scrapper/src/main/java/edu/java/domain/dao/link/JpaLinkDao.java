@@ -19,6 +19,6 @@ public interface JpaLinkDao extends JpaRepository<JpaLinkEntity, Long> {
      * @param lastCheck значение lastCheck
      * @return все {@link JpaLinkEntity} у которых lastUpdate равен или до данного
      */
-    @Query("SELECT * FROM link WHERE last_check <= ?")
+    @Query("SELECT l FROM link l WHERE l.lastCheck <= lastCheck")
     @NotNull List<JpaLinkEntity> findFromLastCheck(OffsetDateTime lastCheck);
 }

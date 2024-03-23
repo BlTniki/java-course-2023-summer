@@ -26,14 +26,14 @@ import org.hibernate.annotations.Type;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "link")
-@Entity
+@Entity(name = "link")
 public class JpaLinkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "url", unique = true, nullable = false)
+    @Column(columnDefinition = "text", name = "url", unique = true, nullable = false)
     private URI url;
 
     @Enumerated(EnumType.STRING)
