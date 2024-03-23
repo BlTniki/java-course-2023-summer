@@ -78,7 +78,7 @@ public class JpaLinkService implements LinkService {
     }
 
     private static LinkDescriptor mergeData(Map<String, String> newData, LinkDescriptor linkDescriptor) {
-        var newTrackedData = new HashMap<String, String>(linkDescriptor.trackedData());
+        var newTrackedData = new HashMap<>(linkDescriptor.trackedData());
         newTrackedData.putAll(newData);
         return new LinkDescriptor(linkDescriptor.serviceType(), newTrackedData);
     }
@@ -130,7 +130,7 @@ public class JpaLinkService implements LinkService {
             alias = generateAlias(chatId);
         }
 
-        JpaLinkEntity linkEntity = linkDao.findByUrl(url).orElse(createAndSaveLinkEntity(url));
+        JpaLinkEntity linkEntity = linkDao.findByUrl(url).orElseGet(() -> createAndSaveLinkEntity(url));
 
         JpaSubscriptionEntity subscriptionEntity = new JpaSubscriptionEntity(
             null,
