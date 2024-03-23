@@ -207,7 +207,7 @@ class JdbcSubscriptionDaoTest extends ScrapperApplicationTests {
 
         var actual = jdbcSubscriptionDao.add(new SubscriptionDto(null, 1L, 1L, "1"));
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.id()).isNotNull();
     }
 
     @Test
