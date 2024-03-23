@@ -18,6 +18,7 @@ import edu.java.service.link.model.LinkDescriptor;
 import edu.java.service.link.model.ServiceType;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -76,10 +77,10 @@ public class JpaLinkService implements LinkService {
         return String.valueOf(count);
     }
 
-    private static void mergeData(Map<String, String> newData, LinkDescriptor linkDescriptor) {
-        for (Map.Entry<String, String> entry : newData.entrySet()) {
-            linkDescriptor.trackedData().put(entry.getKey(), entry.getValue());
-        }
+    private static LinkDescriptor mergeData(Map<String, String> newData, LinkDescriptor linkDescriptor) {
+        var newTrackedData = new HashMap<String, String>(linkDescriptor.trackedData());
+        newTrackedData.putAll(newData);
+        return new LinkDescriptor(linkDescriptor.serviceType(), newTrackedData);
     }
 
     private @NotNull JpaLinkEntity createAndSaveLinkEntity(URI url) {
@@ -88,7 +89,7 @@ public class JpaLinkService implements LinkService {
         Map<String, String> newData = linkCheckerDict.get(linkDescriptor.serviceType())
             .check(linkDescriptor.trackedData());
 
-        mergeData(newData, linkDescriptor);
+        linkDescriptor = mergeData(newData, linkDescriptor);
 
         JpaLinkEntity linkEntity = new JpaLinkEntity(
             null,
@@ -181,7 +182,7 @@ public class JpaLinkService implements LinkService {
         LinkChecker linkChecker = linkCheckerDict.get(linkDescriptor.serviceType());
         Map<String, String> newData = linkChecker.check(linkDescriptor.trackedData());
 
-        mergeData(newData, linkDescriptor);
+        linkDescriptor = mergeData(newData, linkDescriptor);
 
         // save
         linkEntity.setTrackedData(linkDescriptor.trackedData());
