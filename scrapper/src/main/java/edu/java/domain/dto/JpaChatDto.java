@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "chat")
+@Table(name = "chat")
 @Entity
 public class JpaChatDto {
     @Id
