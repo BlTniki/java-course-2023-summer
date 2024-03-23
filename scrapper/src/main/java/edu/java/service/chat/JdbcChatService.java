@@ -5,10 +5,8 @@ import edu.java.domain.dao.chat.ChatDao;
 import edu.java.domain.dto.ChatDto;
 import edu.java.service.exception.EntityAlreadyExistException;
 import edu.java.service.exception.EntityNotFoundException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Transactional
 public class JdbcChatService implements ChatService {
     private final ChatDao chatDao;

@@ -1,8 +1,9 @@
 app:
   scheduler:
-    enable: true
+    enable: false
     interval: 10s
     force-check-delay: 10s
+  database-access-type: jdbc
 
 client:
   github:

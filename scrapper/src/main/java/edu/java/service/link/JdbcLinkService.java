@@ -30,10 +30,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+
 @Transactional
 public class JdbcLinkService implements LinkService {
     public static final TypeReference<HashMap<String, String>> JSON_MAP_TYPE_REF =
