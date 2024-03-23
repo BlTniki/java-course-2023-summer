@@ -9,13 +9,11 @@ import edu.java.service.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import java.util.Optional;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class JpaChatServiceTest extends ScrapperApplicationTests {
     @TestConfiguration
@@ -25,30 +23,34 @@ class JpaChatServiceTest extends ScrapperApplicationTests {
             return new JpaChatService(chatDao);
         }
     }
-    @MockBean
-    public JpaChatDao chatDao;
+
+    @Autowired
+    private JpaChatDao chatDao;
     @Autowired
     private JpaChatService jpaChatService;
 
     @Test
+    @Transactional
+    @Rollback
     void addChat_whenChatDoesNotExist_thenChatShouldBeAdded() {
         // given
         var expected = new JpaChatDto(1L);
-        when(chatDao.findById(expected.getId())).thenReturn(Optional.empty());
-        when(chatDao.save(any())).thenReturn(expected);
 
         // when
         jpaChatService.addChat(expected.getId());
 
         // then
-        verify(chatDao).save(any());
+        assertThat(chatDao.findById(expected.getId()))
+            .isPresent();
     }
 
     @Test
+    @Transactional
+    @Rollback
     void addChat_whenChatAlreadyExist_thenThrowEntityAlreadyExistException() {
         // given
         long id = 1L;
-        when(chatDao.findById(id)).thenReturn(Optional.of(new JpaChatDto(id)));
+        jpaChatService.addChat(id);
 
         // then
         assertThatThrownBy(() -> jpaChatService.addChat(id))
@@ -58,23 +60,27 @@ class JpaChatServiceTest extends ScrapperApplicationTests {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void removeChat_whenChatExist_thenChatShouldBeRemoved() {
         // given
         long id = 1L;
-        when(chatDao.findById(id)).thenReturn(Optional.of(new JpaChatDto(id)));
+        jpaChatService.addChat(id);
 
         // when
         jpaChatService.removeChat(id);
 
         // then
-        verify(chatDao).deleteById(id);
+        assertThat(chatDao.findById(id))
+            .isEmpty();
     }
 
     @Test
+    @Transactional
+    @Rollback
     void removeChat_whenChatDoesNotExist_thenThrowEntityNotFoundException() {
         // given
         long id = 1L;
-        when(chatDao.findById(id)).thenReturn(Optional.empty());
 
         // then
         assertThatThrownBy(() -> jpaChatService.removeChat(id))
