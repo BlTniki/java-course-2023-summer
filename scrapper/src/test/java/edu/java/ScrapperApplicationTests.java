@@ -5,7 +5,8 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.configuration.ApplicationConfig;
 import edu.java.configuration.ClientConfig;
 import edu.java.configuration.IntegrationTest;
-import edu.java.service.link.JdbcLinkService;
+import edu.java.controller.LinksController;
+import edu.java.controller.TgChatController;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,9 @@ public class ScrapperApplicationTests extends IntegrationTest {
     public static WireMockServer wireMockServer;
 
     @MockBean
-    public JdbcLinkService linkService;
+    public LinksController linksController;
+    @MockBean
+    public TgChatController tgChatController;
 
     @BeforeAll
     public static void setUp() {
