@@ -15,7 +15,7 @@ public class JdbcLinkDao implements LinkDao {
     private static final String FIND_ALL_QUERY = "SELECT * FROM link";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM link WHERE id = ?";
     private static final String FIND_BY_URL_QUERY = "SELECT * FROM link WHERE url = ?";
-    private static final String FIND_BY_LAST_CHECK_QUERY = "SELECT * FROM link WHERE last_check >= ?";
+    private static final String FIND_BY_LAST_CHECK_QUERY = "SELECT * FROM link WHERE last_check <= ?";
     private static final String ADD_QUERY = "SELECT * FROM insert_link(?, ?, ?, ?::jsonb, ?)";
     private static final String UPDATE_QUERY =
         "UPDATE link SET url = ?, service_type = ?, tracked_data = ?::jsonb, last_check = ? WHERE id = ? RETURNING *";
