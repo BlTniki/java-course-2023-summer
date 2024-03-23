@@ -198,6 +198,7 @@ public class JdbcLinkService implements LinkService {
         final ObjectMapper objectMapper = new ObjectMapper();
 
         return linkDao.findFromLastUpdate(from).stream()
+            .peek(linkDto -> LOGGER.info("Checking: " + linkDto.url()))
             .map(linkDto -> updateLink(linkDto, objectMapper))
             .filter(Objects::nonNull)
             .toList();

@@ -28,6 +28,7 @@ public class LinkUpdaterScheduler {
 
         updates.forEach(linkUpdate -> {
             try {
+                LOGGER.info("New update: " + linkUpdate.link());
                 botClient.sendLinkUpdate(linkUpdate);
             } catch (ClientException e) {
                 LOGGER.error(e);
