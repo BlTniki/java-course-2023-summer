@@ -220,10 +220,6 @@ public class JdbcLinkService implements LinkService {
         LinkChecker linkChecker = linkCheckerDict.get(linkDescriptor.serviceType());
         Map<String, String> newData = linkChecker.check(linkDescriptor.trackedData());
 
-        if (newData.isEmpty()) {
-            return null;
-        }
-
         mergeData(newData, linkDescriptor);
 
         // save
@@ -241,6 +237,11 @@ public class JdbcLinkService implements LinkService {
             throw new RuntimeException(e);
         }
         linkDao.update(newLinkDto);
+
+        // if there are no new data don't return update
+        if (newData.isEmpty()) {
+            return null;
+        }
 
         // load all link subscribers
         var subscribers = subscriptionDao.findByLinkId(linkDto.id()).stream()

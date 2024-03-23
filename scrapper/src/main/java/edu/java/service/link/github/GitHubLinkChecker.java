@@ -102,8 +102,6 @@ public class GitHubLinkChecker implements LinkChecker {
             throw new CorruptedDataException("The repo is not specified", ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
-        Map<String, String> newData = new HashMap<>(checkRepoActivities(owner, repo, trackedData));
-
         RepositoryResponse repositoryResponse;
         List<RepositoryIssueResponse> repositoryIssueResponses;
         try {
@@ -142,10 +140,11 @@ public class GitHubLinkChecker implements LinkChecker {
         ));
 
         if (newestLastUpdateInRepo.isAfter(oldLastUpdate)) {
+            Map<String, String> newData = new HashMap<>(checkRepoActivities(owner, repo, trackedData));
             newData.put(LAST_UPDATE_KEY, newestLastUpdateInRepo.toString());
+            return newData;
         }
-
-        return newData;
+        return new HashMap<>();
     }
 
 
