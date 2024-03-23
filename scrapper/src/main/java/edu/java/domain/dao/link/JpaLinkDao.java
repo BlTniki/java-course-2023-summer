@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JpaLinkDao extends JpaRepository<JpaLinkEntity, Long> {
-    @NotNull Optional<JpaLinkEntity> findByUrl(@NotNull URI uri);
+    @Query(value = "SELECT * FROM link WHERE url = CAST(:url AS text)", nativeQuery = true)
+    @NotNull Optional<JpaLinkEntity> findByUrl(@Param("url") URI url);
 
     /**
      * Возвращает все {@link JpaLinkEntity} у которых lastUpdate равен или до данного.
