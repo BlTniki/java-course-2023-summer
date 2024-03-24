@@ -1,6 +1,6 @@
 package edu.java.controller;
 
-import edu.java.service.chat.ChatService;
+import edu.java.domain.chat.service.ChatService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

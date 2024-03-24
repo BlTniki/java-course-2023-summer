@@ -4,7 +4,7 @@ import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.LinkResponse;
 import edu.java.controller.model.ListLinksResponse;
 import edu.java.controller.model.RemoveLinkRequest;
-import edu.java.service.link.LinkService;
+import edu.java.domain.link.service.LinkService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
