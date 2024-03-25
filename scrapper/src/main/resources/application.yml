@@ -11,6 +11,9 @@ client:
   stackoverflow:
   bot:
     baseUrl: http://localhost:8090
+  retry:
+    enable: true
+    type: exponential
 
 spring:
   application:
