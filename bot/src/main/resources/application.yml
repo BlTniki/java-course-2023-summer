@@ -5,6 +5,9 @@ app:
 client:
   scrapper:
     baseUrl: http://localhost:8080
+  retry:
+    enable: true
+    type: exponential
 
 spring:
   application:
