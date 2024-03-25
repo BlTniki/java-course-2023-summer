@@ -39,6 +39,11 @@ public final class WebClientRetryUtils {
         return integerSet;
     }
 
+    /**
+     * Создаёт фильтр по кодам ошибок.
+     * @param retryOnCodes Коды ошибок, при которых следует повторить запрос
+     * @return фильтр по кодам ошибок
+     */
     public static @NotNull Predicate<Throwable> buildFilter(@Nullable Set<Integer> retryOnCodes) {
         final Set<Integer> efficientRetryOnCodes = retryOnCodes != null ? retryOnCodes : buildDefaultRetryOnCodes();
 
