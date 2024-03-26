@@ -1,5 +1,6 @@
 package edu.java.controller;
 
+import edu.java.controller.filter.RateFilter;
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.ErrorResponse;
 import edu.java.domain.exception.EntityNotFoundException;
@@ -81,6 +82,19 @@ public class ExceptionControllerHandler {
                 ErrorCode.BAD_REQUEST,
                 e.getClass().getName(),
                 e.getMessage(),
+                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
+            ));
+    }
+
+    @ExceptionHandler(RateFilter.TooManyRequestsException.class)
+    public ResponseEntity<ErrorResponse> tooManyRequestsException(RateFilter.TooManyRequestsException e) {
+        return ResponseEntity
+            .status(HttpStatus.TOO_MANY_REQUESTS)
+            .body(new ErrorResponse(
+                ERROR_DES,
+                ErrorCode.TOO_MANY_REQUESTS,
+                e.getClass().getName(),
+                "The request limit has been exceeded. Try again after %d seconds".formatted(e.waitForRefillInSeconds),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));
     }
