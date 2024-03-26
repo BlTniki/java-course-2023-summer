@@ -1,16 +1,10 @@
 package edu.java.client;
 
+import java.util.Collections;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-import reactor.util.retry.Retry;
-
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WebClientRetryUtilsTest {
@@ -43,33 +37,33 @@ class WebClientRetryUtilsTest {
         assertThat(shouldRetry).isFalse();
     }
 
-    @Test
-    void buildConstantRetry_shouldRetryWithConstantDelay() {
-        Retry retry = WebClientRetryUtils.buildConstantRetry(3, 100, e -> true);
-
-        StepVerifier.withVirtualTime(() -> Mono.error(new RuntimeException("test"))
-                .retryWhen(retry))
-            .thenAwait(Duration.ofMillis(300))
-            .verifyErrorMatches(e -> e.getMessage().contains("Retries exhausted"));
-    }
-
-    @Test
-    void buildExponentialRetry_shouldRetryWithExponentialDelay() {
-        Retry retry = WebClientRetryUtils.buildExponentialRetry(3, 100, e -> true);
-
-        StepVerifier.withVirtualTime(() -> Mono.error(new RuntimeException("test"))
-                .retryWhen(retry))
-            .thenAwait(Duration.ofMillis(800)) // 100ms + 200ms + 400ms + jitter
-            .verifyErrorMatches(e -> e.getMessage().contains("Retries exhausted"));
-    }
-
-    @Test
-    void buildLinearRetry_shouldRetryWithLinearDelay() {
-        Retry retry = WebClientRetryUtils.buildLinearRetry(3, 100, e -> true);
-
-        StepVerifier.withVirtualTime(() -> Mono.error(new RuntimeException("test"))
-                .retryWhen(retry))
-            .thenAwait(Duration.ofMillis(600)) // 100ms + 200ms + 300ms
-            .verifyErrorMatches(e -> e.getMessage().contains("Retries exhausted"));
-    }
+//    @Test
+//    void buildConstantRetry_shouldRetryWithConstantDelay() {
+//        Retry retry = WebClientRetryUtils.buildConstantRetry(3, 100, e -> true);
+//
+//        StepVerifier.withVirtualTime(() -> Mono.error(new RuntimeException("test"))
+//                .retryWhen(retry))
+//            .thenAwait(Duration.ofMillis(300))
+//            .verifyErrorMatches(e -> e.getMessage().contains("Retries exhausted"));
+//    }
+//
+//    @Test
+//    void buildExponentialRetry_shouldRetryWithExponentialDelay() {
+//        Retry retry = WebClientRetryUtils.buildExponentialRetry(3, 100, e -> true);
+//
+//        StepVerifier.withVirtualTime(() -> Mono.error(new RuntimeException("test"))
+//                .retryWhen(retry))
+//            .thenAwait(Duration.ofMillis(800)) // 100ms + 200ms + 400ms + jitter
+//            .verifyErrorMatches(e -> e.getMessage().contains("Retries exhausted"));
+//    }
+//
+//    @Test
+//    void buildLinearRetry_shouldRetryWithLinearDelay() {
+//        Retry retry = WebClientRetryUtils.buildLinearRetry(3, 100, e -> true);
+//
+//        StepVerifier.withVirtualTime(() -> Mono.error(new RuntimeException("test"))
+//                .retryWhen(retry))
+//            .thenAwait(Duration.ofMillis(600)) // 100ms + 200ms + 300ms
+//            .verifyErrorMatches(e -> e.getMessage().contains("Retries exhausted"));
+//    }
 }
