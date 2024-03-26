@@ -73,7 +73,7 @@ class StackOverflowLinkCheckerTest extends ScrapperApplicationTests {
         assertThatThrownBy(() -> stackOverflowLinkChecker.check(trackedData))
             .isInstanceOf(EntityValidationFailedException.class)
             .hasMessageContaining("Given question id is not exist: " + questionId)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.BAD_REQUEST);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.URL_VALIDATION_FAILED);
     }
 
     @Test
