@@ -1,15 +1,15 @@
 package edu.java.configuration;
 
-import edu.java.domain.dao.chat.JpaChatDao;
-import edu.java.domain.dao.link.JpaLinkDao;
-import edu.java.domain.dao.subscription.JpaSubscriptionDao;
-import edu.java.service.chat.ChatService;
-import edu.java.service.chat.JpaChatService;
-import edu.java.service.link.JpaLinkService;
-import edu.java.service.link.LinkChecker;
-import edu.java.service.link.LinkParser;
-import edu.java.service.link.LinkService;
-import edu.java.service.link.model.ServiceType;
+import edu.java.domain.chat.dao.JpaChatDao;
+import edu.java.domain.chat.service.ChatService;
+import edu.java.domain.chat.service.JpaChatService;
+import edu.java.domain.link.dao.JpaLinkDao;
+import edu.java.domain.link.dao.JpaSubscriptionDao;
+import edu.java.domain.link.dto.ServiceType;
+import edu.java.domain.link.service.JpaLinkService;
+import edu.java.domain.link.service.LinkChecker;
+import edu.java.domain.link.service.LinkParser;
+import edu.java.domain.link.service.LinkService;
 import java.util.Map;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

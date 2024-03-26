@@ -1,6 +1,6 @@
 package edu.java.controller.model;
 
-import edu.java.service.link.model.Link;
+import edu.java.domain.link.dto.Link;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 

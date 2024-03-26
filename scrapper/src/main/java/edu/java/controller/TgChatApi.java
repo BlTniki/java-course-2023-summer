@@ -40,6 +40,6 @@ public interface TgChatApi {
     @RequestMapping(value = "/{id}",
         produces = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> tgChatIdPost(@Parameter(in = ParameterIn.PATH, description = "", schema = @Schema()) @PathVariable("id") Long id);
+    ResponseEntity<Void> tgChatIdPost(@Parameter(in = ParameterIn.PATH, schema = @Schema()) @PathVariable("id") Long id);
 }
 

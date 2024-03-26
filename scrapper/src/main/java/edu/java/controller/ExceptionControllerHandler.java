@@ -2,8 +2,8 @@ package edu.java.controller;
 
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.ErrorResponse;
-import edu.java.service.exception.EntityNotFoundException;
-import edu.java.service.exception.ServiceException;
+import edu.java.domain.exception.EntityNotFoundException;
+import edu.java.domain.exception.ServiceException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
