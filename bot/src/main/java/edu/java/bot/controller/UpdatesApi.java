@@ -24,7 +24,10 @@ public interface UpdatesApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Обновление обработано"),
 
-        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
+        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+        @ApiResponse(responseCode = "429", description = "Исчерпан лимит запросов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @RequestMapping(produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)

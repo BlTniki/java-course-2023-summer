@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 public class ScrapperClientWebClient implements ScrapperClient {
     public static final String TG_ID_PATH = "/tg-chat/{id}";
@@ -21,9 +22,11 @@ public class ScrapperClientWebClient implements ScrapperClient {
     public static final String LINKS_PATH = "/links";
     private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
+    private final Retry retry;
 
-    public ScrapperClientWebClient(WebClient.Builder webClientBuilder) {
+    public ScrapperClientWebClient(WebClient.Builder webClientBuilder, Retry retry) {
         this.webClient = webClientBuilder.build();
+        this.retry = retry;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                         );
                     })
                 ).bodyToMono(String.class)
+                .retryWhen(retry)
                 .block();
         } catch (ErrorResponseException e) {
             LOGGER.error(e);
@@ -65,6 +69,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                         );
                     })
                 ).bodyToMono(String.class)
+                .retryWhen(retry)
                 .block();
         } catch (ErrorResponseException e) {
             LOGGER.error(e);
@@ -88,6 +93,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                         );
                     })
                 ).bodyToMono(LinkResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (ErrorResponseException e) {
             LOGGER.error(e);
@@ -111,6 +117,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                         );
                     })
                 ).bodyToMono(LinkResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (ErrorResponseException e) {
             LOGGER.error(e);
@@ -134,6 +141,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                         );
                     })
                 ).bodyToMono(LinkResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (ErrorResponseException e) {
             LOGGER.error(e);
@@ -156,6 +164,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
                         );
                     })
                 ).bodyToMono(ListLinksResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (ErrorResponseException e) {
             LOGGER.error(e);

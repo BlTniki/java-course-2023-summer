@@ -1,10 +1,21 @@
 app:
   telegram-token: ${BOT_TOKEN}
   threads-Per-Executor: 6
+  rate-limit:
+    enable: true
+    capacity: 10000
+    relief:
+      tokens: 10000
+      period: "PT1H"
 
 client:
   scrapper:
-    baseUrl: http://localhost:8080
+    baseUrl: ${SCRAPPER_BASE_URL}
+  retry:
+    enable: true
+    type: exponential
+    base-delay-ms: 100
+    retry-on-codes: [ 429, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526 ]
 
 spring:
   application:

@@ -9,13 +9,16 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 public class BotClientWebClient implements BotClient {
     private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
+    private final Retry retry;
 
-    public BotClientWebClient(WebClient.Builder webClientBuilder) {
+    public BotClientWebClient(WebClient.Builder webClientBuilder, Retry retry) {
         this.webClient = webClientBuilder.build();
+        this.retry = retry;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class BotClientWebClient implements BotClient {
                     })
                 )
                 .bodyToMono(String.class)
+                .retryWhen(retry)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error(e);

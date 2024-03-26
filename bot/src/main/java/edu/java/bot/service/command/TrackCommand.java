@@ -8,6 +8,8 @@ import edu.java.bot.utils.SendRequestUtils;
 import edu.java.client.scrapper.ScrapperClient;
 import edu.java.client.scrapper.exception.chat.ChatNotExistException;
 import edu.java.client.scrapper.exception.link.AliasAlreadyExistException;
+import edu.java.client.scrapper.exception.link.BadUrlException;
+import edu.java.client.scrapper.exception.link.BadUrlNotSupportedException;
 import edu.java.client.scrapper.exception.link.UrlAlreadyExistException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,6 +57,12 @@ public class TrackCommand implements Command {
         } catch (UrlAlreadyExistException e) {
             LOGGER.warn(e);
             sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.URL_ALREADY_EXIST.msg);
+        } catch (BadUrlException e) {
+            LOGGER.warn(e);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.BAD_LINK.msg);
+        } catch (BadUrlNotSupportedException e) {
+            LOGGER.warn(e);
+            sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.LINK_TYPE_NOT_SUPPORTED.msg);
         } catch (AliasAlreadyExistException e) {
             LOGGER.warn(e);
             sendMessage = SendRequestUtils.buildMessageMarkdown(message, MessageDict.ALIAS_ALREADY_EXIST.msg);

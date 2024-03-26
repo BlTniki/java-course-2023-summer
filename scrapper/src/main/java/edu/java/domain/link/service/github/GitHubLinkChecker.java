@@ -110,7 +110,7 @@ public class GitHubLinkChecker implements LinkChecker {
         } catch (ForbiddenClientException | ResourceNotFoundClientException e) {
             throw new EntityValidationFailedException(
                 "Given repository is not exist or i have no permissions: " + owner + "/" + repo,
-                ErrorCode.BAD_REQUEST
+                ErrorCode.URL_VALIDATION_FAILED
             );
         } catch (ClientException e) {
             throw handleException(e);
