@@ -10,7 +10,7 @@ app:
 
 client:
   scrapper:
-    baseUrl: http://localhost:8080
+    baseUrl: ${SCRAPPER_BASE_URL}
   retry:
     enable: true
     type: exponential
