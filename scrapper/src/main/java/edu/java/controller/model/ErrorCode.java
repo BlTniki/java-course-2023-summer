@@ -27,5 +27,7 @@ public enum ErrorCode {
     @Schema(description = "Alias already exists")
     ALIAS_ALREADY_EXIST,
     @Schema(description = "Alias validation failed")
-    ALIAS_VALIDATION_FAILED
+    ALIAS_VALIDATION_FAILED,
+    @Schema(description = "The request limit has been exceeded")
+    TOO_MANY_REQUESTS
 }
