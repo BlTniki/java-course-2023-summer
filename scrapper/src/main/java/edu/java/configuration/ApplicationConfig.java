@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
@@ -24,9 +25,12 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(
     @NotNull
-    Scheduler scheduler
+    Scheduler scheduler,
+    @NotNull
+    AccessType databaseAccessType
 ) {
     @Bean
+    @ConditionalOnProperty(prefix = "app", name = "scheduler.enable", havingValue = "true")
     public LinkUpdaterScheduler linkUpdateScheduler(LinkService linkService, BotClient botClient) {
         return new LinkUpdaterScheduler(linkService, botClient);
     }
@@ -53,5 +57,9 @@ public record ApplicationConfig(
     }
 
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    }
+
+    public enum AccessType {
+        JDBC, JPA
     }
 }

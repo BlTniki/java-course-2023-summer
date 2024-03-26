@@ -1,17 +1,17 @@
 package edu.java.service.chat;
 
 import edu.java.controller.model.ErrorCode;
-import edu.java.domain.dao.chat.ChatDao;
-import edu.java.domain.dto.ChatDto;
+import edu.java.domain.dao.chat.JpaChatDao;
+import edu.java.domain.dto.JpaChatDto;
 import edu.java.service.exception.EntityAlreadyExistException;
 import edu.java.service.exception.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public class JdbcChatService implements ChatService {
-    private final ChatDao chatDao;
+public class JpaChatService implements ChatService {
+    private final JpaChatDao chatDao;
 
-    public JdbcChatService(ChatDao chatDao) {
+    public JpaChatService(JpaChatDao chatDao) {
         this.chatDao = chatDao;
     }
 
@@ -23,7 +23,7 @@ public class JdbcChatService implements ChatService {
                 ErrorCode.TG_CHAT_ALREADY_EXIST
             );
         }
-        chatDao.add(new ChatDto(id));
+        chatDao.save(new JpaChatDto(id));
     }
 
     @Override
@@ -33,6 +33,6 @@ public class JdbcChatService implements ChatService {
                 "Chat with id %d not exist".formatted(id),
                 ErrorCode.TG_CHAT_NOT_FOUND
             ));
-        chatDao.remove(id);
+        chatDao.deleteById(id);
     }
 }

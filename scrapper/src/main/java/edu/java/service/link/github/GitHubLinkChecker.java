@@ -58,6 +58,7 @@ public class GitHubLinkChecker implements LinkChecker {
 
         var activitiesFiltered = activities.stream()
             .filter(activity -> activity.timestamp().isAfter(oldLastCommitTimestamp))
+            .filter(activity -> !activity.activityType().equals("branch_deletion")) // такие активности имеют пустой sha
             .sorted(Comparator.comparing(RepositoryActivityResponse::timestamp).reversed())
             .toList();
 
@@ -101,13 +102,11 @@ public class GitHubLinkChecker implements LinkChecker {
             throw new CorruptedDataException("The repo is not specified", ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
-        Map<String, String> newData = new HashMap<>(checkRepoActivities(owner, repo, trackedData));
-
         RepositoryResponse repositoryResponse;
-        RepositoryIssueResponse repositoryIssueResponse;
+        List<RepositoryIssueResponse> repositoryIssueResponses;
         try {
             repositoryResponse = gitHubClient.fetchRepository(owner, repo);
-            repositoryIssueResponse = gitHubClient.fetchRepositoryIssues(owner, repo).getFirst();
+            repositoryIssueResponses = gitHubClient.fetchRepositoryIssues(owner, repo);
         } catch (ForbiddenClientException | ResourceNotFoundClientException e) {
             throw new EntityValidationFailedException(
                 "Given repository is not exist or i have no permissions: " + owner + "/" + repo,
@@ -117,11 +116,22 @@ public class GitHubLinkChecker implements LinkChecker {
             throw handleException(e);
         }
 
-        OffsetDateTime newestLastUpdateInRepo = Stream.of(
-            repositoryResponse.updatedAt(),
-            repositoryResponse.pushedAt(),
-            repositoryIssueResponse.updatedAt()
-        ).max(Comparator.naturalOrder())
+        Stream<OffsetDateTime> lastUpdateStream;
+        if (repositoryIssueResponses.isEmpty()) {
+            lastUpdateStream = Stream.of(
+                repositoryResponse.updatedAt(),
+                repositoryResponse.pushedAt()
+            );
+        } else {
+            lastUpdateStream = Stream.of(
+                repositoryResponse.updatedAt(),
+                repositoryResponse.pushedAt(),
+                repositoryIssueResponses.getFirst().updatedAt()
+            );
+        }
+
+        OffsetDateTime newestLastUpdateInRepo = lastUpdateStream
+            .max(Comparator.naturalOrder())
             .orElseThrow(() -> new IllegalStateException("No dates available"));
 
         OffsetDateTime oldLastUpdate = OffsetDateTime.parse(trackedData.getOrDefault(
@@ -130,10 +140,11 @@ public class GitHubLinkChecker implements LinkChecker {
         ));
 
         if (newestLastUpdateInRepo.isAfter(oldLastUpdate)) {
+            Map<String, String> newData = new HashMap<>(checkRepoActivities(owner, repo, trackedData));
             newData.put(LAST_UPDATE_KEY, newestLastUpdateInRepo.toString());
+            return newData;
         }
-
-        return newData;
+        return new HashMap<>();
     }
 
 

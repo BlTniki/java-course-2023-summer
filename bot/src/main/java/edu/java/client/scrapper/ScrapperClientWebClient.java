@@ -30,7 +30,7 @@ public class ScrapperClientWebClient implements ScrapperClient {
     public void registerChat(long tgChatId) throws ClientException {
         try {
             webClient
-                .get()
+                .post()
                 .uri(uriBuilder -> uriBuilder.path(TG_ID_PATH)
                     .build(tgChatId)
                 )

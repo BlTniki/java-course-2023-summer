@@ -4,13 +4,14 @@ app:
 
 client:
   scrapper:
-    baseUrl: "none"
+    baseUrl: http://localhost:8080
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+    property-naming-strategy: SNAKE_CASE
 
 springdoc:
   swagger-ui:

@@ -30,12 +30,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Profile("prod")
+
 @Transactional
 public class JdbcLinkService implements LinkService {
     public static final TypeReference<HashMap<String, String>> JSON_MAP_TYPE_REF =
@@ -200,6 +197,7 @@ public class JdbcLinkService implements LinkService {
         final ObjectMapper objectMapper = new ObjectMapper();
 
         return linkDao.findFromLastUpdate(from).stream()
+            .peek(linkDto -> LOGGER.info("Checking: " + linkDto.url()))
             .map(linkDto -> updateLink(linkDto, objectMapper))
             .filter(Objects::nonNull)
             .toList();
@@ -221,10 +219,6 @@ public class JdbcLinkService implements LinkService {
         LinkChecker linkChecker = linkCheckerDict.get(linkDescriptor.serviceType());
         Map<String, String> newData = linkChecker.check(linkDescriptor.trackedData());
 
-        if (newData.isEmpty()) {
-            return null;
-        }
-
         mergeData(newData, linkDescriptor);
 
         // save
@@ -242,6 +236,11 @@ public class JdbcLinkService implements LinkService {
             throw new RuntimeException(e);
         }
         linkDao.update(newLinkDto);
+
+        // if there are no new data don't return update
+        if (newData.isEmpty()) {
+            return null;
+        }
 
         // load all link subscribers
         var subscribers = subscriptionDao.findByLinkId(linkDto.id()).stream()

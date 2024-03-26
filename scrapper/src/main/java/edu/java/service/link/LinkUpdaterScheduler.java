@@ -20,12 +20,15 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@'app-edu.java.configuration.ApplicationConfig'.scheduler.interval}")
     public void update() {
+        LOGGER.info("fetching updates...");
+
         OffsetDateTime from = OffsetDateTime.now().minusSeconds(FROM_SECONDS);
 
         var updates = linkService.updateLinksFrom(from);
 
         updates.forEach(linkUpdate -> {
             try {
+                LOGGER.info("New update: " + linkUpdate.link());
                 botClient.sendLinkUpdate(linkUpdate);
             } catch (ClientException e) {
                 LOGGER.error(e);

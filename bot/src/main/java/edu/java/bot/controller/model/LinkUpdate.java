@@ -1,4 +1,4 @@
-package edu.java.controller.model;
+package edu.java.bot.controller.model;
 
 import java.net.URI;
 import java.util.List;

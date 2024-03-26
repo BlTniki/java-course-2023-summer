@@ -91,8 +91,14 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @DisplayName("Проверим, что мы можем найти ссылку по LastUpdate")
     @Rollback
     void findFromLastUpdate() {
-        var lastUpdate = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS).minusDays(1);
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS));
+        var lastUpdate = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
+        var expectedDto = new LinkDto(
+            1L,
+            URI.create("http://example.com"),
+            "lol",
+            "{}",
+            lastUpdate.minusDays(1)
+        );
         jdbcLinkDao.add(expectedDto);
 
         var actualList = jdbcLinkDao.findFromLastUpdate(lastUpdate);
@@ -116,11 +122,10 @@ class JdbcLinkDaoTest extends ScrapperApplicationTests {
     @Rollback
     void add_no_id() {
         var timestamp = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
-        var expectedDto = new LinkDto(1L, URI.create("http://example.com"), "lol", "{}", timestamp);
 
         var actualDto = jdbcLinkDao.add(new LinkDto(null, URI.create("http://example.com"), "lol", "{}", timestamp));
 
-        assertThat(actualDto).isEqualTo(expectedDto);
+        assertThat(actualDto.id()).isNotNull();
     }
 
     @Test

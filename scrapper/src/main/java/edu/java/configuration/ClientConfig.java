@@ -1,5 +1,7 @@
 package edu.java.configuration;
 
+import edu.java.client.bot.BotClient;
+import edu.java.client.bot.BotClientWebClient;
 import edu.java.client.github.GitHubClient;
 import edu.java.client.github.GitHubClientWebClient;
 import edu.java.client.stackoverflow.StackOverflowClient;
@@ -16,7 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @ConfigurationProperties(prefix = "client", ignoreUnknownFields = false)
 public record ClientConfig(
     @NotNull GitHub gitHub,
-    @NotNull StackOverflow stackOverflow
+    @NotNull StackOverflow stackOverflow,
+    @NotNull Bot bot
 ) {
     @Bean
     public GitHubClient gitHubClient(WebClient.Builder builder) {
@@ -37,7 +40,16 @@ public record ClientConfig(
         return new StackOverflowClientWebClient(builder);
     }
 
+    @Bean
+    public BotClient botClient(WebClient.Builder builder) {
+        builder.baseUrl(bot().baseUrl());
+        builder.defaultHeader("Accept", "application/json");
+        return new BotClientWebClient(builder);
+    }
+
     public record GitHub(@NotEmpty String token, String baseUrl) {}
 
     public record StackOverflow(String baseUrl) {}
+
+    public record Bot(@NotEmpty String baseUrl) {}
 }
