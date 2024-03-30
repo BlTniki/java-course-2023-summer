@@ -1,6 +1,7 @@
 package edu.java.bot.controller;
 
 import edu.java.bot.controller.exception.BadRequestException;
+import edu.java.bot.controller.filter.RateFilter;
 import edu.java.bot.controller.model.ErrorResponse;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
@@ -64,6 +65,19 @@ public class ExceptionControllerHandler {
                 String.valueOf(HttpStatus.BAD_REQUEST.value()),
                 e.getClass().getName(),
                 e.getMessage(),
+                Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
+            ));
+    }
+
+    @ExceptionHandler(RateFilter.TooManyRequestsException.class)
+    public ResponseEntity<ErrorResponse> tooManyRequestsException(RateFilter.TooManyRequestsException e) {
+        return ResponseEntity
+            .status(HttpStatus.TOO_MANY_REQUESTS)
+            .body(new ErrorResponse(
+                ERROR_DES,
+                String.valueOf(HttpStatus.TOO_MANY_REQUESTS.value()),
+                e.getClass().getName(),
+                "The request limit has been exceeded. Try again after %d seconds".formatted(e.waitForRefillInSeconds),
                 Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
             ));
     }

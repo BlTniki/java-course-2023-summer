@@ -4,13 +4,25 @@ app:
     interval: 10s
     force-check-delay: 10s
   database-access-type: jpa
+  rate-limit:
+    enable: true
+    capacity: 10000
+    relief:
+      tokens: 10000
+      period: "PT1H"
+
 
 client:
   github:
     token: ${GITHUB_TOKEN}
   stackoverflow:
   bot:
-    baseUrl: http://localhost:8090
+    baseUrl: ${BOT_BASE_URL}
+  retry:
+    enable: true
+    type: exponential
+    base-delay-ms: 100
+    retry-on-codes: [429, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526]
 
 spring:
   application:
@@ -19,9 +31,9 @@ spring:
     property-naming-strategy: SNAKE_CASE
   datasource:
     driver: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/scrapper
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -34,7 +46,7 @@ springdoc:
     path: "/swagger-ui"
 
 server:
-  port: 8080
+  port: ${SERVER_PORT}
 
 logging:
   config: classpath:log4j2-plain.xml

@@ -1,5 +1,6 @@
 package edu.java.client.stackoverflow;
 
+import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import edu.java.ScrapperApplicationTests;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -7,6 +8,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 import edu.java.client.exception.ClientException;
+import edu.java.client.exception.ResourceNotFoundClientException;
 import edu.java.client.stackoverflow.model.QuestionResponse;
 import edu.java.client.stackoverflow.model.QuestionsResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -73,5 +75,33 @@ class StackOverflowClientWebClientTest extends ScrapperApplicationTests {
 
         assertThatThrownBy(() -> stackOverflowClient.fetchQuestions(questionIds))
             .isInstanceOf(ClientException.class);
+    }
+
+    @Test
+    @DisplayName("Проверим что отрабатывает механизм retry на получение коммита")
+    void fetchCommit_reply() {
+        // Arrange
+        List<Long> questionIds= List.of(1642028L, 59535522L);
+        String questionIdsJoined = questionIds.stream().map(Object::toString).collect(Collectors.joining("%3B"));
+        String scenarioName = "Repo Scenario";
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/questions/" + questionIdsJoined))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(aResponse().withStatus(420))
+                .willSetStateTo("Second Request")
+        );
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/questions/" + questionIdsJoined))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs("Second Request")
+                .willReturn(aResponse().withStatus(404))
+        );
+
+        // Assert
+        assertThatThrownBy(() -> stackOverflowClient.fetchQuestions(questionIds))
+            .isInstanceOf(ResourceNotFoundClientException.class);
     }
 }

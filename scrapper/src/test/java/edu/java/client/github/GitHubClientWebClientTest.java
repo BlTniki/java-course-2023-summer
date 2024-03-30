@@ -1,7 +1,11 @@
 package edu.java.client.github;
 
+import com.github.tomakehurst.wiremock.stubbing.Scenario;
 import edu.java.ScrapperApplicationTests;
 import edu.java.client.exception.ClientException;
+import edu.java.client.exception.ResourceNotFoundClientException;
+import edu.java.client.github.model.Commit;
+import edu.java.client.github.model.CommitResponse;
 import edu.java.client.github.model.PullRequestResponse;
 import edu.java.client.github.model.RepositoryActivityResponse;
 import edu.java.client.github.model.RepositoryIssueResponse;
@@ -11,6 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -18,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class GitHubClientWebClientTest extends ScrapperApplicationTests {
+    @Autowired
+    WebClient.Builder webClientBuilder;
     @Autowired
     GitHubClient gitHubClient;
 
@@ -66,6 +73,34 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
         // Assert
         assertThatThrownBy(() -> gitHubClient.fetchRepository(owner, repo))
             .isInstanceOf(ClientException.class);
+    }
+
+    @Test
+    @DisplayName("Проверим что отрабатывает механизм retry на получение существующего репозитория")
+    void fetchRepository_reply() {
+        // Arrange
+        String owner = "testOwner";
+        String repo = "testRepo";
+        String scenarioName = "Repo Scenario";
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(aResponse().withStatus(420))
+                .willSetStateTo("Second Request")
+        );
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs("Second Request")
+                .willReturn(aResponse().withStatus(404))
+        );
+
+        // Assert
+        assertThatThrownBy(() -> gitHubClient.fetchRepository(owner, repo))
+            .isInstanceOf(ResourceNotFoundClientException.class);
     }
 
     @Test
@@ -152,6 +187,34 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
     }
 
     @Test
+    @DisplayName("Проверим что отрабатывает механизм retry на получение активностей репозитория")
+    void fetchRepositoryActivity_reply() {
+        // Arrange
+        String owner = "testOwner";
+        String repo = "testRepo";
+        String scenarioName = "Repo Scenario";
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/activity"))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(aResponse().withStatus(420))
+                .willSetStateTo("Second Request")
+        );
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/activity"))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs("Second Request")
+                .willReturn(aResponse().withStatus(404))
+        );
+
+        // Assert
+        assertThatThrownBy(() -> gitHubClient.fetchRepositoryActivity(owner, repo))
+            .isInstanceOf(ResourceNotFoundClientException.class);
+    }
+
+    @Test
     @DisplayName("Проверим запрос на получение вопросов репозитория")
     void fetchRepositoryIssues_success() throws ClientException {
         // Arrange
@@ -191,7 +254,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
     }
 
     @Test
-    @DisplayName("Проверим что мы правильно обрабатываем пустые активности репозитория")
+    @DisplayName("Проверим что мы правильно обрабатываем пустые вопросов репозитория")
     void fetchRepositoryIssues_empty() throws ClientException {
         // Arrange
         String owner = "testOwner";
@@ -216,7 +279,7 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
     }
 
     @Test
-    @DisplayName("Проверим что метод получения активностей таки кидает исключение")
+    @DisplayName("Проверим что метод получения вопросов таки кидает исключение")
     void fetchRepositoryIssues_clientException() {
         // Arrange
         String owner = "testOwner";
@@ -231,5 +294,106 @@ class GitHubClientWebClientTest extends ScrapperApplicationTests {
         // Assert
         assertThatThrownBy(() -> gitHubClient.fetchRepositoryIssues(owner, repo))
             .isInstanceOf(ClientException.class);
+    }
+
+    @Test
+    @DisplayName("Проверим что отрабатывает механизм retry на получение вопросов репозитория")
+    void fetchRepositoryIssues_reply() {
+        // Arrange
+        String owner = "testOwner";
+        String repo = "testRepo";
+        String scenarioName = "Repo Scenario";
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/issues"))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(aResponse().withStatus(420))
+                .willSetStateTo("Second Request")
+        );
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/issues"))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs("Second Request")
+                .willReturn(aResponse().withStatus(404))
+        );
+
+        // Assert
+        assertThatThrownBy(() -> gitHubClient.fetchRepositoryIssues(owner, repo))
+            .isInstanceOf(ResourceNotFoundClientException.class);
+    }
+
+    @Test
+    @DisplayName("Проверим запрос на получение коммита")
+    void fetchCommit_success() throws ClientException {
+        // Arrange
+        String owner = "testOwner";
+        String repo = "testRepo";
+        String sha = "testSha";
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/commits/" + sha))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("client/github/get_commit_success.json")
+                )
+        );
+        CommitResponse expected = new CommitResponse(
+            "5a671c1acdfa36e53c592fb8f1a0863053b1ce3a",
+            new Commit("delete trash file")
+        );
+
+        // Act
+        CommitResponse actual = gitHubClient.fetchCommit(owner, repo, sha);
+
+        // Assert
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("Проверим что метод получения коммита таки кидает исключение")
+    void fetchCommit_clientException() {
+        // Arrange
+        String owner = "testOwner";
+        String repo = "testRepo";
+        String sha = "testSha";
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/commits/" + sha))
+                .willReturn(aResponse().withStatus(404))
+        );
+
+        // Assert
+        assertThatThrownBy(() -> gitHubClient.fetchCommit(owner, repo, sha))
+            .isInstanceOf(ResourceNotFoundClientException.class);
+    }
+
+    @Test
+    @DisplayName("Проверим что отрабатывает механизм retry на получение коммита")
+    void fetchCommit_reply() {
+        // Arrange
+        String owner = "testOwner";
+        String repo = "testRepo";
+        String scenarioName = "Repo Scenario";
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/issues"))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(aResponse().withStatus(420))
+                .willSetStateTo("Second Request")
+        );
+
+        wireMockServer.stubFor(
+            get(urlPathEqualTo("/repos/" + owner + "/" + repo + "/issues"))
+                .inScenario(scenarioName)
+                .whenScenarioStateIs("Second Request")
+                .willReturn(aResponse().withStatus(404))
+        );
+
+        // Assert
+        assertThatThrownBy(() -> gitHubClient.fetchRepositoryIssues(owner, repo))
+            .isInstanceOf(ResourceNotFoundClientException.class);
     }
 }

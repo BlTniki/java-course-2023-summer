@@ -1,0 +1,97 @@
+{
+    "sha": "5a671c1acdfa36e53c592fb8f1a0863053b1ce3a",
+    "node_id": "C_kwDOLN2pPNoAKDVhNjcxYzFhY2RmYTM2ZTUzYzU5MmZiOGYxYTA4NjMwNTNiMWNlM2E",
+    "commit": {
+        "author": {
+            "name": "BITniki",
+            "email": "shakarimovdima@ya.ru",
+            "date": "2024-03-17T16:30:06Z"
+        },
+        "committer": {
+            "name": "BITniki",
+            "email": "shakarimovdima@ya.ru",
+            "date": "2024-03-17T16:30:06Z"
+        },
+        "message": "delete trash file",
+        "tree": {
+            "sha": "667f4368fb8532890a35927887e631dc376f7826",
+            "url": "https://api.github.com/repos/BlTniki/java-course-2023-summer/git/trees/667f4368fb8532890a35927887e631dc376f7826"
+        },
+        "url": "https://api.github.com/repos/BlTniki/java-course-2023-summer/git/commits/5a671c1acdfa36e53c592fb8f1a0863053b1ce3a",
+        "comment_count": 0,
+        "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null
+        }
+    },
+    "url": "https://api.github.com/repos/BlTniki/java-course-2023-summer/commits/5a671c1acdfa36e53c592fb8f1a0863053b1ce3a",
+    "html_url": "https://github.com/BlTniki/java-course-2023-summer/commit/5a671c1acdfa36e53c592fb8f1a0863053b1ce3a",
+    "comments_url": "https://api.github.com/repos/BlTniki/java-course-2023-summer/commits/5a671c1acdfa36e53c592fb8f1a0863053b1ce3a/comments",
+    "author": {
+        "login": "BlTniki",
+        "id": 99419239,
+        "node_id": "U_kgDOBe0EZw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/99419239?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/BlTniki",
+        "html_url": "https://github.com/BlTniki",
+        "followers_url": "https://api.github.com/users/BlTniki/followers",
+        "following_url": "https://api.github.com/users/BlTniki/following{/other_user}",
+        "gists_url": "https://api.github.com/users/BlTniki/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/BlTniki/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/BlTniki/subscriptions",
+        "organizations_url": "https://api.github.com/users/BlTniki/orgs",
+        "repos_url": "https://api.github.com/users/BlTniki/repos",
+        "events_url": "https://api.github.com/users/BlTniki/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/BlTniki/received_events",
+        "type": "User",
+        "site_admin": false
+    },
+    "committer": {
+        "login": "BlTniki",
+        "id": 99419239,
+        "node_id": "U_kgDOBe0EZw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/99419239?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/BlTniki",
+        "html_url": "https://github.com/BlTniki",
+        "followers_url": "https://api.github.com/users/BlTniki/followers",
+        "following_url": "https://api.github.com/users/BlTniki/following{/other_user}",
+        "gists_url": "https://api.github.com/users/BlTniki/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/BlTniki/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/BlTniki/subscriptions",
+        "organizations_url": "https://api.github.com/users/BlTniki/orgs",
+        "repos_url": "https://api.github.com/users/BlTniki/repos",
+        "events_url": "https://api.github.com/users/BlTniki/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/BlTniki/received_events",
+        "type": "User",
+        "site_admin": false
+    },
+    "parents": [
+        {
+            "sha": "b9ab17511a34f48463ea3487425435133985a132",
+            "url": "https://api.github.com/repos/BlTniki/java-course-2023-summer/commits/b9ab17511a34f48463ea3487425435133985a132",
+            "html_url": "https://github.com/BlTniki/java-course-2023-summer/commit/b9ab17511a34f48463ea3487425435133985a132"
+        }
+    ],
+    "stats": {
+        "total": 0,
+        "additions": 0,
+        "deletions": 0
+    },
+    "files": [
+        {
+            "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+            "filename": "scrapper/src/main/java/edu/java/LinkUpdaterScheduler.java",
+            "status": "removed",
+            "additions": 0,
+            "deletions": 0,
+            "changes": 0,
+            "blob_url": "https://github.com/BlTniki/java-course-2023-summer/blob/b9ab17511a34f48463ea3487425435133985a132/scrapper%2Fsrc%2Fmain%2Fjava%2Fedu%2Fjava%2FLinkUpdaterScheduler.java",
+            "raw_url": "https://github.com/BlTniki/java-course-2023-summer/raw/b9ab17511a34f48463ea3487425435133985a132/scrapper%2Fsrc%2Fmain%2Fjava%2Fedu%2Fjava%2FLinkUpdaterScheduler.java",
+            "contents_url": "https://api.github.com/repos/BlTniki/java-course-2023-summer/contents/scrapper%2Fsrc%2Fmain%2Fjava%2Fedu%2Fjava%2FLinkUpdaterScheduler.java?ref=b9ab17511a34f48463ea3487425435133985a132"
+        }
+    ]
+}

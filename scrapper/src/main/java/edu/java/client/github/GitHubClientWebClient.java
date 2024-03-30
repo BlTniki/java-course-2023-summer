@@ -12,14 +12,17 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 
 public class GitHubClientWebClient implements GitHubClient {
     public static final String ERROR_HEADER = "Got an error from API: ";
     private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
+    private final Retry retry;
 
-    public GitHubClientWebClient(WebClient.Builder webClientBuilder) {
+    public GitHubClientWebClient(WebClient.Builder webClientBuilder, Retry retry) {
         this.webClient = webClientBuilder.build();
+        this.retry = retry;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class GitHubClientWebClient implements GitHubClient {
                     })
                 )
                 .bodyToMono(RepositoryResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error(ERROR_HEADER + e);
@@ -61,6 +65,7 @@ public class GitHubClientWebClient implements GitHubClient {
                 )
                 .bodyToFlux(RepositoryIssueResponse.class)
                 .collectList()
+                .retryWhen(retry)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error(ERROR_HEADER + e);
@@ -85,6 +90,7 @@ public class GitHubClientWebClient implements GitHubClient {
                 )
                 .bodyToFlux(RepositoryActivityResponse.class)
                 .collectList()
+                .retryWhen(retry)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error(ERROR_HEADER + e);
@@ -107,6 +113,7 @@ public class GitHubClientWebClient implements GitHubClient {
                     })
                 )
                 .bodyToMono(CommitResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error(ERROR_HEADER + e);

@@ -28,7 +28,10 @@ public interface LinksApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Ссылки успешно получены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ListLinksResponse.class))),
 
-        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
+        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+        @ApiResponse(responseCode = "429", description = "Исчерпан лимит запросов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @RequestMapping(produces = { "application/json" },
                     method = RequestMethod.GET)
    ResponseEntity<ListLinksResponse> getAll(
@@ -39,7 +42,10 @@ public interface LinksApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Ссылка успешно добавлена", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LinkResponse.class))),
 
-        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
+        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+        @ApiResponse(responseCode = "429", description = "Исчерпан лимит запросов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @RequestMapping(produces = { "application/json" },
                     consumes = { "application/json" },
                     method = RequestMethod.POST)
@@ -54,7 +60,10 @@ public interface LinksApi {
 
         @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 
-        @ApiResponse(responseCode = "404", description = "Ссылка не найдена", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
+        @ApiResponse(responseCode = "404", description = "Ссылка не найдена", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+        @ApiResponse(responseCode = "429", description = "Исчерпан лимит запросов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @RequestMapping(produces = { "application/json" },
                     consumes = { "application/json" },
                     method = RequestMethod.DELETE)

@@ -91,7 +91,7 @@ class GitHubLinkCheckerTest extends ScrapperApplicationTests {
         assertThatThrownBy(() -> gitHubLinkChecker.check(trackedData))
             .isInstanceOf(EntityValidationFailedException.class)
             .hasMessageContaining("Given repository is not exist or i have no permissions: " + owner + "/" + repo)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.BAD_REQUEST);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.URL_VALIDATION_FAILED);
     }
 
     @Test
@@ -127,7 +127,7 @@ class GitHubLinkCheckerTest extends ScrapperApplicationTests {
         assertThatThrownBy(() -> gitHubLinkChecker.check(trackedData))
             .isInstanceOf(EntityValidationFailedException.class)
             .hasMessageContaining("Given repository is not exist or i have no permissions: " + owner + "/" + repo)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.BAD_REQUEST);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.URL_VALIDATION_FAILED);
     }
 
     @Test

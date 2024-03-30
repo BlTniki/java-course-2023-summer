@@ -53,7 +53,7 @@ public class StackOverflowLinkChecker implements LinkChecker {
         } catch (ForbiddenClientException | ResourceNotFoundClientException e) {
             throw new EntityValidationFailedException(
                 "Given question id is not exist: " + id,
-                ErrorCode.BAD_REQUEST
+                ErrorCode.URL_VALIDATION_FAILED
             );
         } catch (ClientException e) {
             LOGGER.error("Unexpected error");

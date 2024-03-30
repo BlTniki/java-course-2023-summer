@@ -25,7 +25,10 @@ public interface TgChatApi {
 
         @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
 
-        @ApiResponse(responseCode = "404", description = "Чат не существует", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
+        @ApiResponse(responseCode = "404", description = "Чат не существует", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+        @ApiResponse(responseCode = "429", description = "Исчерпан лимит запросов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @RequestMapping(value = "{id}",
         produces = { "application/json" },
         method = RequestMethod.DELETE)
@@ -36,7 +39,10 @@ public interface TgChatApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Чат зарегистрирован"),
 
-        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))) })
+        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+        @ApiResponse(responseCode = "429", description = "Исчерпан лимит запросов", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @RequestMapping(value = "/{id}",
         produces = { "application/json" },
         method = RequestMethod.POST)

@@ -9,13 +9,16 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 
 public class StackOverflowClientWebClient implements StackOverflowClient {
     private static final Logger LOGGER = LogManager.getLogger();
     private final WebClient webClient;
+    private final Retry retry;
 
-    public StackOverflowClientWebClient(WebClient.Builder webClientBuilder) {
+    public StackOverflowClientWebClient(WebClient.Builder webClientBuilder,  Retry retry) {
         this.webClient = webClientBuilder.build();
+        this.retry = retry;
     }
 
     @Override
@@ -38,6 +41,7 @@ public class StackOverflowClientWebClient implements StackOverflowClient {
                     })
                 )
                 .bodyToMono(QuestionsResponse.class)
+                .retryWhen(retry)
                 .block();
         } catch (HttpClientErrorException e) {
             LOGGER.error("Got an error from API: " + e);
