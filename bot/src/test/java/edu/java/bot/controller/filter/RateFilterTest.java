@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import java.util.Vector;
 import static org.mockito.Mockito.*;
 
 public class RateFilterTest extends BotApplicationTests {
@@ -45,7 +46,23 @@ public class RateFilterTest extends BotApplicationTests {
     }
 
     @Test
-    public void testDoFilter() throws Exception {
+    public void testDoFilter_withProxy() throws Exception {
+        Vector<String> v = new Vector<>();
+        v.add("ahhh");
+        v.add("Why there no Enumeration.of()");
+        v.add("Or at least Vector.of");
+        when(request.getHeaders(RateFilter.X_FORWARDED_FOR)).thenReturn(v.elements());
+        when(rateLimiterService.resolveBucket(anyString())).thenReturn(bucket);
+        when(bucket.tryConsumeAndReturnRemaining(1)).thenReturn(probe);
+        when(probe.isConsumed()).thenReturn(true);
+
+        rateFilter.doFilter(request, response, filterChain);
+
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    public void testDoFilter_withoutProxy() throws Exception {
         when(request.getRemoteAddr()).thenReturn("127.0.0.1");
         when(rateLimiterService.resolveBucket(anyString())).thenReturn(bucket);
         when(bucket.tryConsumeAndReturnRemaining(1)).thenReturn(probe);
