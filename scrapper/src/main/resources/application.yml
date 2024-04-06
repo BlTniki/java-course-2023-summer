@@ -1,6 +1,6 @@
 app:
   scheduler:
-    enable: false
+    enable: true
     interval: 10s
     force-check-delay: 10s
   database-access-type: jpa
