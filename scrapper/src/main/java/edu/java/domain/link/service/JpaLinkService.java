@@ -165,7 +165,7 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public List<LinkUpdateDto> updateLinksFrom(OffsetDateTime from) {
-        return linkDao.findFromLastCheck(from).stream()
+        return linkDao.findFromLastCheck(from).parallelStream()
             .peek(linkEntity -> LOGGER.info("Checking: " + linkEntity.getUrl()))
             .map(this::updateLink)
             .filter(Objects::nonNull)

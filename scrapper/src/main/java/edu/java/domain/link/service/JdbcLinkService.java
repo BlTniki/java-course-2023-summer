@@ -196,7 +196,7 @@ public class JdbcLinkService implements LinkService {
     public List<LinkUpdateDto> updateLinksFrom(OffsetDateTime from) {
         final ObjectMapper objectMapper = new ObjectMapper();
 
-        return linkDao.findFromLastUpdate(from).stream()
+        return linkDao.findFromLastUpdate(from).parallelStream()
             .peek(linkDto -> LOGGER.info("Checking: " + linkDto.url()))
             .map(linkDto -> updateLink(linkDto, objectMapper))
             .filter(Objects::nonNull)
