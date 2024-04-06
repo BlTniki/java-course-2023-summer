@@ -39,7 +39,7 @@ public class HttpLinkUpdater implements LinkUpdater {
         updates.stream()
             .map(linkUpdate -> CompletableFuture.runAsync(() -> {
                 try {
-                    LOGGER.info("New update: " + linkUpdate.link());
+                    LOGGER.info("Notify about updates from: " + linkUpdate.link());
                     botClient.sendLinkUpdate(mapToClientUpdate(linkUpdate));
                 } catch (ClientException e) {
                     LOGGER.error(e);
