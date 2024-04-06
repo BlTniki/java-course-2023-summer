@@ -21,7 +21,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConditionalOnProperty(prefix = "app", name = "notification-type", havingValue = "kafka")
-@ConfigurationProperties(prefix = "kafka")
+@ConfigurationProperties()
 public record KafkaConfiguration(
     @NotNull Kafka kafka
 ) {
