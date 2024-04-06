@@ -1,5 +1,6 @@
 package edu.java.configuration;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
 import edu.java.domain.link.dto.LinkUpdateDto;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
@@ -52,6 +53,7 @@ public record KafkaConfiguration(
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, kafka.batchSize);
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, kafka.maxInFlightPerConnection);
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, kafka.enableIdempotence);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
     }
 
