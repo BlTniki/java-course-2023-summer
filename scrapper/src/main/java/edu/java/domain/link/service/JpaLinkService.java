@@ -1,6 +1,5 @@
 package edu.java.domain.link.service;
 
-import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.RemoveLinkRequest;
@@ -15,6 +14,7 @@ import edu.java.domain.link.dto.JpaLinkEntity;
 import edu.java.domain.link.dto.JpaSubscriptionEntity;
 import edu.java.domain.link.dto.Link;
 import edu.java.domain.link.dto.LinkDescriptor;
+import edu.java.domain.link.dto.LinkUpdateDto;
 import edu.java.domain.link.dto.ServiceType;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -164,7 +164,7 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    public List<LinkUpdate> updateLinksFrom(OffsetDateTime from) {
+    public List<LinkUpdateDto> updateLinksFrom(OffsetDateTime from) {
         return linkDao.findFromLastCheck(from).stream()
             .peek(linkEntity -> LOGGER.info("Checking: " + linkEntity.getUrl()))
             .map(this::updateLink)
@@ -172,7 +172,7 @@ public class JpaLinkService implements LinkService {
             .toList();
     }
 
-    @Nullable private LinkUpdate updateLink(JpaLinkEntity linkEntity) {
+    @Nullable private LinkUpdateDto updateLink(JpaLinkEntity linkEntity) {
         // check for update
         LinkDescriptor linkDescriptor = new LinkDescriptor(
             linkEntity.getServiceType(),
@@ -199,7 +199,7 @@ public class JpaLinkService implements LinkService {
             .map(subscriptionEntity -> subscriptionEntity.getChat().getId())
             .toList();
 
-        return new LinkUpdate(
+        return new LinkUpdateDto(
             linkEntity.getId(),
             linkEntity.getUrl(),
             linkChecker.toUpdateMessage(newData),

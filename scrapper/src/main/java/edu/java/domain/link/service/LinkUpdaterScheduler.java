@@ -1,7 +1,9 @@
 package edu.java.domain.link.service;
 
 import edu.java.client.bot.BotClient;
+import edu.java.client.bot.model.LinkUpdate;
 import edu.java.client.exception.ClientException;
+import edu.java.domain.link.dto.LinkUpdateDto;
 import java.time.OffsetDateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +20,15 @@ public class LinkUpdaterScheduler {
         this.botClient = botClient;
     }
 
+    private LinkUpdate mapToClientUpdate(LinkUpdateDto serviceUpdate) {
+        return new LinkUpdate(
+            serviceUpdate.id(),
+            serviceUpdate.link(),
+            serviceUpdate.description(),
+            serviceUpdate.tgChatIds()
+        );
+    }
+
     @Scheduled(fixedDelayString = "#{@'app-edu.java.configuration.ApplicationConfig'.scheduler.interval}")
     public void update() {
         LOGGER.info("fetching updates...");
@@ -29,7 +40,7 @@ public class LinkUpdaterScheduler {
         updates.forEach(linkUpdate -> {
             try {
                 LOGGER.info("New update: " + linkUpdate.link());
-                botClient.sendLinkUpdate(linkUpdate);
+                botClient.sendLinkUpdate(mapToClientUpdate(linkUpdate));
             } catch (ClientException e) {
                 LOGGER.error(e);
             }
