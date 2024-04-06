@@ -20,7 +20,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@ConditionalOnProperty(prefix = "kafka", name = "enable", havingValue = "true")
+@ConditionalOnProperty(prefix = "app", name = "notification-type", havingValue = "kafka")
 @ConfigurationProperties(prefix = "kafka")
 public record KafkaConfiguration(
     @NotNull Kafka kafka
