@@ -3,7 +3,6 @@ package edu.java.domain.link.service.updater;
 import edu.java.client.bot.BotClient;
 import edu.java.client.bot.model.LinkUpdate;
 import edu.java.client.exception.ClientException;
-import edu.java.domain.link.dto.LinkUpdateDto;
 import edu.java.domain.link.service.LinkService;
 import java.time.OffsetDateTime;
 import java.util.concurrent.CompletableFuture;
@@ -23,15 +22,6 @@ public class HttpLinkUpdater implements LinkUpdater {
         this.executor = executor;
     }
 
-    private LinkUpdate mapToClientUpdate(LinkUpdateDto serviceUpdate) {
-        return new LinkUpdate(
-            serviceUpdate.id(),
-            serviceUpdate.link(),
-            serviceUpdate.description(),
-            serviceUpdate.tgChatIds()
-        );
-    }
-
     @Override
     public void checkUpdatesAndNotify(OffsetDateTime from) {
         var updates = linkService.updateLinksFrom(from);
@@ -40,7 +30,7 @@ public class HttpLinkUpdater implements LinkUpdater {
             .map(linkUpdate -> CompletableFuture.runAsync(() -> {
                 try {
                     LOGGER.info("Notify about updates from: " + linkUpdate.link());
-                    botClient.sendLinkUpdate(mapToClientUpdate(linkUpdate));
+                    botClient.sendLinkUpdate(LinkUpdate.fromServiceModel(linkUpdate));
                 } catch (ClientException e) {
                     LOGGER.error(e);
                 }
