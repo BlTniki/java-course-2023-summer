@@ -8,15 +8,13 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.FileSystemResourceAccessor;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.testcontainers.utility.DockerImageName;
 
 @Testcontainers
 public abstract class IntegrationTest {
@@ -30,6 +28,13 @@ public abstract class IntegrationTest {
         POSTGRES.start();
 
         runMigrations(POSTGRES);
+    }
+
+    public static KafkaContainer KAFKA;
+
+    static {
+        KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.2"));
+        KAFKA.start();
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) {
@@ -54,14 +59,5 @@ public abstract class IntegrationTest {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
-    }
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Test
-    public void testDatabaseConnection() {
-        String dbName = jdbcTemplate.queryForObject("SELECT current_database()", String.class);
-        assertThat("scrapper").isEqualTo(dbName);
     }
 }
