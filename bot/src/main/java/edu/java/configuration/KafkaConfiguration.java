@@ -2,12 +2,15 @@ package edu.java.configuration;
 
 import edu.java.bot.controller.model.LinkUpdate;
 import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,10 +21,14 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 import org.springframework.validation.annotation.Validated;
@@ -31,12 +38,14 @@ import org.springframework.validation.annotation.Validated;
 @EnableKafka
 @ConfigurationProperties(prefix = "kafka")
 public record KafkaConfiguration(
-    @NotNull Consumer consumer
+    @NotNull String bootstrapServers,
+    @NotNull Consumer consumer,
+    @NotNull Producer dlqProducer
 ) {
     @Bean
     public KafkaAdmin admin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, consumer.bootstrapServers);
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return new KafkaAdmin(configs);
     }
 
@@ -51,9 +60,42 @@ public record KafkaConfiguration(
     }
 
     @Bean
+    public NewTopic dlqLinkUpdatesTopic() {
+        return TopicBuilder
+            .name(dlqProducer.topic.name)
+            .partitions(dlqProducer.topic.partitions)
+            .replicas(dlqProducer.topic.replicas)
+            .compact()
+            .build();
+    }
+
+    @Bean
+    public ProducerFactory<String, LinkUpdate> producerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, dlqProducer.clientId);
+        props.put(ProducerConfig.ACKS_CONFIG, dlqProducer.acksMode);
+        props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, (int) dlqProducer.deliveryTimeout.toMillis());
+        props.put(ProducerConfig.LINGER_MS_CONFIG, dlqProducer.lingerMs);
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, dlqProducer.batchSize);
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, dlqProducer.maxInFlightPerConnection);
+        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, dlqProducer.enableIdempotence);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaTemplate<String, LinkUpdate> dlqLinkUpdatesProducer(
+            ProducerFactory<String, LinkUpdate> producerFactory
+    ) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+    @Bean
     public ConsumerFactory<String, LinkUpdate> linkUpdateConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, consumer.bootstrapServers());
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumer.groupId());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, consumer.autoOffsetReset());
         props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, consumer.maxPollIntervalMs());
@@ -67,7 +109,7 @@ public record KafkaConfiguration(
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, LinkUpdate> listenerContainerFactory(
+    public ConcurrentKafkaListenerContainerFactory<String, LinkUpdate> linkUpdateContainerFactory(
             ConsumerFactory<String, LinkUpdate> consumerFactory
     ) {
         ConcurrentKafkaListenerContainerFactory<String, LinkUpdate> factory =
@@ -95,7 +137,6 @@ public record KafkaConfiguration(
     }
 
     public record Consumer(
-        String bootstrapServers,
         String groupId,
         String autoOffsetReset,
         Integer maxPollIntervalMs,
@@ -108,5 +149,17 @@ public record KafkaConfiguration(
         String name,
         Integer partitions,
         Integer replicas
+    ) {}
+
+    public record Producer(
+        String bootstrapServers,
+        String clientId,
+        String acksMode,
+        Duration deliveryTimeout,
+        Integer lingerMs,
+        Integer batchSize,
+        Integer maxInFlightPerConnection,
+        Boolean enableIdempotence,
+        Topic topic
     ) {}
 }
