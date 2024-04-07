@@ -48,7 +48,7 @@ public record KafkaConfiguration(
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.bootstrapServers);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, kafka.clientId);
-        props.put(ProducerConfig.ACKS_CONFIG, kafka.askMode);
+        props.put(ProducerConfig.ACKS_CONFIG, kafka.acksMode);
         props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, (int) kafka.deliveryTimeout.toMillis());
         props.put(ProducerConfig.LINGER_MS_CONFIG, kafka.lingerMs);
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, kafka.batchSize);
@@ -69,7 +69,7 @@ public record KafkaConfiguration(
     public record Kafka(
         String bootstrapServers,
         String clientId,
-        String askMode,
+        String acksMode,
         Duration deliveryTimeout,
         Integer lingerMs,
         Integer batchSize,

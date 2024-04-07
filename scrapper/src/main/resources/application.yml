@@ -49,7 +49,7 @@ springdoc:
 kafka:
   bootstrapServers: ${BOOTSTRAP_SERVERS}
   clientId: scrapper
-  askMode: all
+  acksMode: all
   deliveryTimeout: 60s
   lingerMs: 12_000
   batchSize: 100_000
