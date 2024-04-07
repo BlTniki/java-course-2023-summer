@@ -23,7 +23,9 @@ public class BotSender {
         LOGGER.info("execute " + sendRequest);
         SendResponse sendResponse = bot.execute(sendRequest);
         if (!sendResponse.isOk()) {
-            LOGGER.error("Error From Telegram API:" + sendResponse.description());
+            String errorMessage = "Error From Telegram API:" + sendResponse.description();
+            LOGGER.error(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

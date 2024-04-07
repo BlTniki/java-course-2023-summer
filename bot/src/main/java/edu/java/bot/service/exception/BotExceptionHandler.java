@@ -10,6 +10,6 @@ public class BotExceptionHandler implements ExceptionHandler {
 
     @Override
     public void onException(TelegramException e) {
-        LOGGER.error(e);
+        LOGGER.error("Unexpected error", e);
     }
 }
