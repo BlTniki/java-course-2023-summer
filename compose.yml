@@ -28,6 +28,23 @@ services:
     networks:
       - backend
 
+  prometheus:
+    image: prom/prometheus:v2.51.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana-oss:10.1.9
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana:/var/lib/grafana
+
   zoo1:
     image: confluentinc/cp-zookeeper:7.3.2
     hostname: zoo1
@@ -72,6 +89,8 @@ volumes:
   postgresql: { }
   zoo: { }
   kafka: { }
+  prometheus: { }
+  grafana: { }
 
 networks:
   backend: { }
