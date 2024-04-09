@@ -73,7 +73,7 @@ springdoc:
     path: "/swagger-ui"
 
 server:
-  port: 8090
+  port: ${SERVER_PORT}
 
 logging:
   config: classpath:log4j2-plain.xml
