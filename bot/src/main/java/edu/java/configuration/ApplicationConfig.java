@@ -6,6 +6,8 @@ import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.controller.filter.RateFilter;
 import edu.java.bot.controller.limiter.RateLimiterService;
 import edu.java.bot.controller.listener.BotUpdatesListener;
+import edu.java.bot.controller.listener.LinkUpdatesListener;
+import edu.java.bot.controller.model.LinkUpdate;
 import edu.java.bot.controller.sender.BotSender;
 import edu.java.bot.service.UpdatesService;
 import edu.java.bot.service.UpdatesServiceImpl;
@@ -31,6 +33,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
@@ -91,6 +94,16 @@ public record ApplicationConfig(
     @Bean
     public UpdatesService updatesService(BotSender botSender, CommandParser commandParser) {
         return new UpdatesServiceImpl(botSender, commandParser);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "kafka", name = "enable", havingValue = "true")
+    public LinkUpdatesListener linkUpdatesListener(
+            UpdatesService updatesService,
+            KafkaConfiguration kafkaConfig,
+            KafkaTemplate<String, LinkUpdate> dlqLinkUpdateProducer
+    ) {
+        return new LinkUpdatesListener(updatesService, dlqLinkUpdateProducer, kafkaConfig.dlqProducer().topic().name());
     }
 
     @Bean

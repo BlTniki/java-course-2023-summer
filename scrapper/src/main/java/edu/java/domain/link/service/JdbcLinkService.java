@@ -3,7 +3,6 @@ package edu.java.domain.link.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.ErrorCode;
 import edu.java.controller.model.RemoveLinkRequest;
@@ -16,6 +15,7 @@ import edu.java.domain.link.dao.JdbcSubscriptionDao;
 import edu.java.domain.link.dto.Link;
 import edu.java.domain.link.dto.LinkDescriptor;
 import edu.java.domain.link.dto.LinkDto;
+import edu.java.domain.link.dto.LinkUpdateDto;
 import edu.java.domain.link.dto.ServiceType;
 import edu.java.domain.link.dto.SubscriptionDto;
 import java.net.URI;
@@ -193,17 +193,17 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public List<LinkUpdate> updateLinksFrom(OffsetDateTime from) {
+    public List<LinkUpdateDto> updateLinksFrom(OffsetDateTime from) {
         final ObjectMapper objectMapper = new ObjectMapper();
 
-        return linkDao.findFromLastUpdate(from).stream()
+        return linkDao.findFromLastUpdate(from).parallelStream()
             .peek(linkDto -> LOGGER.info("Checking: " + linkDto.url()))
             .map(linkDto -> updateLink(linkDto, objectMapper))
             .filter(Objects::nonNull)
             .toList();
     }
 
-    @Nullable private LinkUpdate updateLink(LinkDto linkDto, ObjectMapper objectMapper) {
+    @Nullable private LinkUpdateDto updateLink(LinkDto linkDto, ObjectMapper objectMapper) {
         // check for update
         LinkDescriptor linkDescriptor;
         try {
@@ -247,7 +247,7 @@ public class JdbcLinkService implements LinkService {
             .map(SubscriptionDto::chatId)
             .toList();
 
-        return new LinkUpdate(
+        return new LinkUpdateDto(
             linkDto.id(),
             linkDto.url(),
             linkChecker.toUpdateMessage(newData),

@@ -6,6 +6,8 @@ import edu.java.controller.model.ErrorResponse;
 import edu.java.domain.exception.EntityNotFoundException;
 import edu.java.domain.exception.ServiceException;
 import java.util.Arrays;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -17,7 +19,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class ExceptionControllerHandler {
-
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final String ERROR_DES = "error";
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -101,6 +103,7 @@ public class ExceptionControllerHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> internalException(Exception e) {
+        LOGGER.error(e.getMessage(), e);
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponse(

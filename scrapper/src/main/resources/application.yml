@@ -1,6 +1,6 @@
 app:
   scheduler:
-    enable: false
+    enable: true
     interval: 10s
     force-check-delay: 10s
   database-access-type: jpa
@@ -10,6 +10,7 @@ app:
     relief:
       tokens: 10000
       period: "PT1H"
+  notification-type: kafka
 
 
 client:
@@ -44,6 +45,20 @@ spring:
 springdoc:
   swagger-ui:
     path: "/swagger-ui"
+
+kafka:
+  bootstrapServers: ${BOOTSTRAP_SERVERS}
+  clientId: scrapper
+  acksMode: all
+  deliveryTimeout: 60s
+  lingerMs: 12_000
+  batchSize: 100_000
+  maxInFlightPerConnection: 5
+  enableIdempotence: true
+  topic:
+    name: scrapper
+    partitions: 1
+    replicas: 1
 
 server:
   port: ${SERVER_PORT}

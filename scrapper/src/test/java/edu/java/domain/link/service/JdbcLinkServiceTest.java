@@ -1,7 +1,6 @@
 package edu.java.domain.link.service;
 
 import edu.java.ScrapperApplicationTests;
-import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.RemoveLinkRequest;
 import edu.java.domain.chat.dao.JdbcChatDao;
@@ -13,6 +12,7 @@ import edu.java.domain.link.dao.JdbcSubscriptionDao;
 import edu.java.domain.link.dto.Link;
 import edu.java.domain.link.dto.LinkDescriptor;
 import edu.java.domain.link.dto.LinkDto;
+import edu.java.domain.link.dto.LinkUpdateDto;
 import edu.java.domain.link.dto.ServiceType;
 import edu.java.domain.link.dto.SubscriptionDto;
 import edu.java.domain.link.service.github.GitHubLinkChecker;
@@ -245,7 +245,7 @@ class JdbcLinkServiceTest extends ScrapperApplicationTests {
         when(linkCheckerDict.get(ServiceType.GitHub).toUpdateMessage(any())).thenReturn("В репозитории произошло обновление");
         when(subscriptionDao.findByLinkId(linkDto.id())).thenReturn(List.of(new SubscriptionDto(1L, 1L, 1L, "alias")));
 
-        List<LinkUpdate> result = jdbcLinkService.updateLinksFrom(from);
+        List<LinkUpdateDto> result = jdbcLinkService.updateLinksFrom(from);
 
         assertThat(result).hasSize(1);
         assertThat(result.getFirst().id()).isEqualTo(linkDto.id());
@@ -262,7 +262,7 @@ class JdbcLinkServiceTest extends ScrapperApplicationTests {
         when(linkDao.findFromLastUpdate(from)).thenReturn(List.of(linkDto));
         when(linkCheckerDict.get(ServiceType.GitHub).check(any())).thenReturn(Map.of());
 
-        List<LinkUpdate> result = jdbcLinkService.updateLinksFrom(from);
+        List<LinkUpdateDto> result = jdbcLinkService.updateLinksFrom(from);
 
         assertThat(result).isEmpty();
     }

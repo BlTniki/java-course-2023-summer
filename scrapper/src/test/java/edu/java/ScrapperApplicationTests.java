@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.configuration.ApplicationConfig;
 import edu.java.configuration.ClientConfig;
 import edu.java.configuration.IntegrationTest;
+import edu.java.configuration.KafkaConfiguration;
 import edu.java.controller.LinksController;
 import edu.java.controller.TgChatController;
 import org.junit.jupiter.api.AfterAll;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @WireMockTest
-@EnableConfigurationProperties({ApplicationConfig.class, ClientConfig.class})
+@EnableConfigurationProperties({ApplicationConfig.class, ClientConfig.class, KafkaConfiguration.class})
 @ActiveProfiles("test")
 public class ScrapperApplicationTests extends IntegrationTest {
     public static WireMockServer wireMockServer;

@@ -51,12 +51,15 @@ public class UpdatesServiceImpl implements UpdatesService {
 
     @Override
     public void processLinkUpdate(@NotNull LinkUpdate linkUpdate) {
-        linkUpdate.tgChatIds().stream().map(tgChatId -> new SendMessage(
-                tgChatId,
-                MessageDict.LINK_UPDATE_MESSAGE.msg.formatted(
-                    linkUpdate.link().toString(),
-                    linkUpdate.description()
-                )
-            )).forEach(botSender::send);
+        linkUpdate.tgChatIds().stream().map(tgChatId -> {
+                LOGGER.info("Received update for: " + linkUpdate.link());
+                return new SendMessage(
+                    tgChatId,
+                    MessageDict.LINK_UPDATE_MESSAGE.msg.formatted(
+                        linkUpdate.link().toString(),
+                        linkUpdate.description()
+                    )
+                );
+            }).forEach(botSender::send);
     }
 }

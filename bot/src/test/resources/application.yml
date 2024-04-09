@@ -6,7 +6,11 @@ spring:
 
 app:
   telegram-token: "dawdawdaw"
-  threads-Per-Executor: 6
+
+kafka:
+  consumer:
+    topic:
+      name: scrapper
 
 client:
   scrapper:

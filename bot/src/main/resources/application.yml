@@ -17,6 +17,32 @@ client:
     base-delay-ms: 100
     retry-on-codes: [ 429, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526 ]
 
+kafka:
+  enable: true
+  bootstrapServers: ${BOOTSTRAP_SERVERS}
+  consumer:
+    groupId: linkUpdatesConsumer
+    autoOffsetReset: latest
+    maxPollIntervalMs: 300_000
+    enableAutoCommit: false
+    concurrency: 1
+    topic:
+      name: scrapper
+      partitions: 1
+      replicas: 1
+  dlq-producer:
+    clientId: bot
+    acksMode: 1
+    deliveryTimeout: 60s
+    lingerMs: 12_000
+    batchSize: 100_000
+    maxInFlightPerConnection: 5
+    enableIdempotence: false
+    topic:
+      name: scrapper_dql
+      partitions: 1
+      replicas: 1
+
 spring:
   application:
     name: bot

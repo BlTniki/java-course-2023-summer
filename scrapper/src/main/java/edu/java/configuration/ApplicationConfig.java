@@ -5,6 +5,7 @@ import edu.java.client.github.GitHubClient;
 import edu.java.client.stackoverflow.StackOverflowClient;
 import edu.java.controller.filter.RateFilter;
 import edu.java.controller.limiter.RateLimiterService;
+import edu.java.domain.link.dto.LinkUpdateDto;
 import edu.java.domain.link.dto.ServiceType;
 import edu.java.domain.link.service.LinkChecker;
 import edu.java.domain.link.service.LinkParser;
@@ -14,16 +15,22 @@ import edu.java.domain.link.service.github.GitHubLinkChecker;
 import edu.java.domain.link.service.github.GithubLinkParser;
 import edu.java.domain.link.service.stackoverflow.StackOverflowLinkChecker;
 import edu.java.domain.link.service.stackoverflow.StackOverflowLinkParser;
+import edu.java.domain.link.service.updater.HttpLinkUpdater;
+import edu.java.domain.link.service.updater.KafkaLinkUpdater;
+import edu.java.domain.link.service.updater.LinkUpdater;
 import io.github.bucket4j.Bandwidth;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
@@ -34,12 +41,42 @@ public record ApplicationConfig(
     Scheduler scheduler,
     @NotNull
     AccessType databaseAccessType,
-    RateLimiting rateLimit
+    RateLimiting rateLimit,
+    @NotNull NotificationType notificationType
 ) {
     @Bean
+    public Executor executor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "app", name = "notification-type", havingValue = "http")
+    public LinkUpdater httpLinkUpdater(
+        LinkService linkService,
+        BotClient botClient,
+        Executor executor
+    ) {
+        return new HttpLinkUpdater(linkService, botClient, executor);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "app", name = "notification-type", havingValue = "kafka")
+    public LinkUpdater kafkaLinkUpdater(
+        LinkService linkService,
+        KafkaConfiguration kafkaConfiguration,
+        KafkaTemplate<String, LinkUpdateDto> linkUpdateProducer
+    ) {
+        return new KafkaLinkUpdater(
+            linkService,
+            kafkaConfiguration.kafka().topic().name(),
+            linkUpdateProducer
+        );
+    }
+
+    @Bean
     @ConditionalOnProperty(prefix = "app", name = "scheduler.enable", havingValue = "true")
-    public LinkUpdaterScheduler linkUpdateScheduler(LinkService linkService, BotClient botClient) {
-        return new LinkUpdaterScheduler(linkService, botClient);
+    public LinkUpdaterScheduler linkUpdateScheduler(LinkUpdater linkUpdater) {
+        return new LinkUpdaterScheduler(linkUpdater);
     }
 
     @Bean
@@ -122,6 +159,11 @@ public record ApplicationConfig(
     @SuppressWarnings("unused")
     public enum AccessType {
         JDBC, JPA
+    }
+
+    @SuppressWarnings("unused")
+    public enum NotificationType {
+        http, kafka
     }
 
     public record RateLimiting(

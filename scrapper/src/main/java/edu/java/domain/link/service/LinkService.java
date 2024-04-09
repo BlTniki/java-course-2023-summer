@@ -1,12 +1,12 @@
 package edu.java.domain.link.service;
 
-import edu.java.client.bot.model.LinkUpdate;
 import edu.java.controller.model.AddLinkRequest;
 import edu.java.controller.model.RemoveLinkRequest;
 import edu.java.domain.exception.EntityAlreadyExistException;
 import edu.java.domain.exception.EntityNotFoundException;
 import edu.java.domain.exception.EntityValidationFailedException;
 import edu.java.domain.link.dto.Link;
+import edu.java.domain.link.dto.LinkUpdateDto;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -48,5 +48,5 @@ public interface LinkService {
      * @param from С какого периода проверять обновления
      * @return Обновления для бота
      */
-    @NotNull List<LinkUpdate> updateLinksFrom(@NotNull OffsetDateTime from);
+    @NotNull List<LinkUpdateDto> updateLinksFrom(@NotNull OffsetDateTime from);
 }
