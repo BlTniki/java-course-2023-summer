@@ -1,11 +1,14 @@
 package edu.java.domain.chat.service;
 
 import edu.java.ScrapperApplicationTests;
+import edu.java.controller.model.ErrorCode;
 import edu.java.domain.chat.dao.JdbcChatDao;
 import edu.java.domain.chat.dto.ChatDto;
 import edu.java.domain.exception.EntityAlreadyExistException;
 import edu.java.domain.exception.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import edu.java.domain.link.service.LinkService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -20,10 +23,12 @@ class JdbcChatServiceTest extends ScrapperApplicationTests {
     @TestConfiguration
     static class Config {
         @Bean
-        public JdbcChatService jdbcChatService(JdbcChatDao chatDao) {
-            return new JdbcChatService(chatDao);
+        public JdbcChatService jdbcChatService(JdbcChatDao chatDao, LinkService linkService) {
+            return new JdbcChatService(chatDao, linkService);
         }
     }
+    @MockBean
+    private LinkService linkService;
     @MockBean
     public JdbcChatDao chatDao;
     @Autowired
@@ -52,6 +57,7 @@ class JdbcChatServiceTest extends ScrapperApplicationTests {
     void removeChat_ShouldRemoveChat_WhenChatExists() {
         long chatId = 1L;
         when(chatDao.findById(anyLong())).thenReturn(Optional.of(new ChatDto(chatId)));
+        when(linkService.getByChatId(chatId)).thenReturn(List.of());
 
         jdbcChatService.removeChat(chatId);
 
@@ -61,7 +67,9 @@ class JdbcChatServiceTest extends ScrapperApplicationTests {
     @Test
     void removeChat_ShouldThrowEntityNotFoundException_WhenChatDoesNotExist() {
         long chatId = 1L;
-        when(chatDao.findById(anyLong())).thenReturn(Optional.empty());
+        when(linkService.getByChatId(chatId)).thenThrow(
+            new EntityNotFoundException("Chat with id 1 not exist", ErrorCode.TG_CHAT_NOT_FOUND)
+        );
 
         assertThatThrownBy(() -> jdbcChatService.removeChat(chatId))
             .isInstanceOf(EntityNotFoundException.class);

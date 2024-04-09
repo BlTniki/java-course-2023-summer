@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
 public class JdbcAccessConfiguration {
     @Bean
-    public ChatService chatService(JdbcChatDao jdbcChatDao) {
-        return new JdbcChatService(jdbcChatDao);
+    public ChatService chatService(JdbcChatDao jdbcChatDao, LinkService linkService) {
+        return new JdbcChatService(jdbcChatDao, linkService);
     }
 
     @Bean

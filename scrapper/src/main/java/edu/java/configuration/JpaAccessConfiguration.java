@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
 public class JpaAccessConfiguration {
     @Bean
-    public ChatService chatService(JpaChatDao jpaChatDao) {
-        return new JpaChatService(jpaChatDao);
+    public ChatService chatService(JpaChatDao jpaChatDao, LinkService linkService) {
+        return new JpaChatService(jpaChatDao, linkService);
     }
 
     @Bean

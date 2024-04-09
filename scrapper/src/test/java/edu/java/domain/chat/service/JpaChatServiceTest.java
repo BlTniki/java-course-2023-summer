@@ -6,24 +6,30 @@ import edu.java.domain.chat.dao.JpaChatDao;
 import edu.java.domain.chat.dto.JpaChatEntity;
 import edu.java.domain.exception.EntityAlreadyExistException;
 import edu.java.domain.exception.EntityNotFoundException;
+import edu.java.domain.link.service.LinkService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 class JpaChatServiceTest extends ScrapperApplicationTests {
     @TestConfiguration
     static class Config {
         @Bean
-        public JpaChatService jpaChatService(JpaChatDao chatDao) {
-            return new JpaChatService(chatDao);
+        public JpaChatService jpaChatService(JpaChatDao chatDao, LinkService linkService) {
+            return new JpaChatService(chatDao, linkService);
         }
     }
 
+    @MockBean
+    private LinkService linkService;
     @Autowired
     private JpaChatDao chatDao;
     @Autowired
@@ -66,6 +72,7 @@ class JpaChatServiceTest extends ScrapperApplicationTests {
         // given
         long id = 1L;
         jpaChatService.addChat(id);
+        when(linkService.getByChatId(id)).thenReturn(List.of());
 
         // when
         jpaChatService.removeChat(id);
@@ -81,6 +88,9 @@ class JpaChatServiceTest extends ScrapperApplicationTests {
     void removeChat_whenChatDoesNotExist_thenThrowEntityNotFoundException() {
         // given
         long id = 1L;
+        when(linkService.getByChatId(id)).thenThrow(
+            new EntityNotFoundException("Chat with id 1 not exist", ErrorCode.TG_CHAT_NOT_FOUND)
+        );
 
         // then
         assertThatThrownBy(() -> jpaChatService.removeChat(id))

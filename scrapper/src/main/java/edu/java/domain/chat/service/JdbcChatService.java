@@ -1,18 +1,22 @@
 package edu.java.domain.chat.service;
 
 import edu.java.controller.model.ErrorCode;
+import edu.java.controller.model.RemoveLinkRequest;
 import edu.java.domain.chat.dao.JdbcChatDao;
 import edu.java.domain.chat.dto.ChatDto;
 import edu.java.domain.exception.EntityAlreadyExistException;
 import edu.java.domain.exception.EntityNotFoundException;
+import edu.java.domain.link.service.LinkService;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class JdbcChatService implements ChatService {
     private final JdbcChatDao chatDao;
+    private final LinkService linkService;
 
-    public JdbcChatService(JdbcChatDao chatDao) {
+    public JdbcChatService(JdbcChatDao chatDao, LinkService linkService) {
         this.chatDao = chatDao;
+        this.linkService = linkService;
     }
 
     @Override
@@ -28,11 +32,12 @@ public class JdbcChatService implements ChatService {
 
     @Override
     public void removeChat(long id) throws EntityNotFoundException {
-        chatDao.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(
-                "Chat with id %d not exist".formatted(id),
-                ErrorCode.TG_CHAT_NOT_FOUND
-            ));
+        // remove any subscriptions
+        // chat existing will be checked in linkService
+        linkService.getByChatId(id).stream()
+            .map(link -> new RemoveLinkRequest(link.alias()))
+            .forEach(request -> linkService.untrackLink(id, request));
+
         chatDao.remove(id);
     }
 }
