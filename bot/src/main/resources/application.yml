@@ -17,6 +17,24 @@ client:
     base-delay-ms: 100
     retry-on-codes: [ 429, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526 ]
 
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: info, health, prometheus
+      path-mapping:
+        prometheus: "metrics"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  server:
+    port: ${MANAGEMENT_PORT}
+
 kafka:
   enable: true
   bootstrapServers: ${BOOTSTRAP_SERVERS}
@@ -55,7 +73,7 @@ springdoc:
     path: "/swagger-ui"
 
 server:
-  port: 8090
+  port: ${SERVER_PORT}
 
 logging:
   config: classpath:log4j2-plain.xml

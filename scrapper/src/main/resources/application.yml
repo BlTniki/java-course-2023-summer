@@ -1,6 +1,6 @@
 app:
   scheduler:
-    enable: true
+    enable: ${SCHEDULER_ENABLE:false}
     interval: 10s
     force-check-delay: 10s
   database-access-type: jpa
@@ -45,6 +45,24 @@ spring:
 springdoc:
   swagger-ui:
     path: "/swagger-ui"
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: info, health, prometheus
+      path-mapping:
+        prometheus: "metrics"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  server:
+    port: ${MANAGEMENT_PORT}
 
 kafka:
   bootstrapServers: ${BOOTSTRAP_SERVERS}

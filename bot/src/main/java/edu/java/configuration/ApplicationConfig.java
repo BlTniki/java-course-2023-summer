@@ -20,7 +20,10 @@ import edu.java.bot.service.command.TrackCommand;
 import edu.java.bot.service.command.UntrackCommand;
 import edu.java.bot.service.exception.BotExceptionHandler;
 import edu.java.client.scrapper.ScrapperClient;
+import edu.java.metric.UpdatesServiceMetricProxy;
 import io.github.bucket4j.Bandwidth;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
@@ -91,9 +94,35 @@ public record ApplicationConfig(
         return new CommandParser(commandDict);
     }
 
+    @SuppressWarnings("checkstyle:MultipleStringLiterals")
     @Bean
-    public UpdatesService updatesService(BotSender botSender, CommandParser commandParser) {
-        return new UpdatesServiceImpl(botSender, commandParser);
+    public UpdatesService updatesService(
+        BotSender botSender,
+        CommandParser commandParser,
+        MeterRegistry meterRegistry
+    ) {
+        var tgUpdatesProceededCounter = Counter.builder("updates.proceeded")
+            .tag("from", "telegram")
+            .description("The number of proceeded updates from the external API")
+            .register(meterRegistry);
+        var tgUpdatesErrorsCounter = Counter.builder("updates.errors")
+            .tag("from", "telegram")
+            .description("The number of updates from the external API failed to process")
+            .register(meterRegistry);
+        var scrapperUpdatesProceededCounter = Counter.builder("updates.proceeded")
+            .tag("from", "scrapper")
+            .register(meterRegistry);
+        var scrapperUpdatesErrorsCounter = Counter.builder("updates.errors")
+            .tag("from", "scrapper")
+            .register(meterRegistry);
+
+        return new UpdatesServiceMetricProxy(
+            new UpdatesServiceImpl(botSender, commandParser),
+            tgUpdatesProceededCounter,
+            tgUpdatesErrorsCounter,
+            scrapperUpdatesProceededCounter,
+            scrapperUpdatesErrorsCounter
+        );
     }
 
     @Bean
