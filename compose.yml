@@ -93,49 +93,49 @@ services:
     networks:
       - backend
 
-  scrapper:
-    image: bitniki/scrapper
-    environment:
-      - "GITHUB_TOKEN=wololo"
-      - "BOT_BASE_URL=http://bot:8090"
-      - "DB_HOST=postgresql"
-      - "DB_PORT=5432"
-      - "DB_NAME=scrapper"
-      - "DB_USERNAME=postgres"
-      - "DB_PASSWORD=postgres"
-      - "SERVER_PORT=8080"
-      - "MANAGEMENT_PORT=18080"
-      - "BOOTSTRAP_SERVERS=kafka1:29092"
-      - "SCHEDULER_ENABLE=true"
-    ports:
-      - "8080:8080"
-      - "18080:18080"
-    depends_on:
-      - postgresql
-      - kafka1
-      - zoo1
-      - liquibase-migrations
-    networks:
-      - backend
-
-  bot:
-    image: bitniki/bot
-    environment:
-      - "BOT_TOKEN=wololo"
-      - "SCRAPPER_BASE_URL=http://scrapper:8080"
-      - "BOOTSTRAP_SERVERS=kafka1:29092"
-      - "SERVER_PORT=8090"
-      - "MANAGEMENT_PORT=18090"
-    ports:
-      - "8090:8090"
-      - "18090:18090"
-    depends_on:
-      - postgresql
-      - kafka1
-      - zoo1
-      - liquibase-migrations
-    networks:
-      - backend
+#  scrapper:
+#    image: bitniki/scrapper
+#    environment:
+#      - "GITHUB_TOKEN=wololo"
+#      - "BOT_BASE_URL=http://bot:8090"
+#      - "DB_HOST=postgresql"
+#      - "DB_PORT=5432"
+#      - "DB_NAME=scrapper"
+#      - "DB_USERNAME=postgres"
+#      - "DB_PASSWORD=postgres"
+#      - "SERVER_PORT=8080"
+#      - "MANAGEMENT_PORT=18080"
+#      - "BOOTSTRAP_SERVERS=kafka1:29092"
+#      - "SCHEDULER_ENABLE=true"
+#    ports:
+#      - "8080:8080"
+#      - "18080:18080"
+#    depends_on:
+#      - postgresql
+#      - kafka1
+#      - zoo1
+#      - liquibase-migrations
+#    networks:
+#      - backend
+#
+#  bot:
+#    image: bitniki/bot
+#    environment:
+#      - "BOT_TOKEN=wololo"
+#      - "SCRAPPER_BASE_URL=http://scrapper:8080"
+#      - "BOOTSTRAP_SERVERS=kafka1:29092"
+#      - "SERVER_PORT=8090"
+#      - "MANAGEMENT_PORT=18090"
+#    ports:
+#      - "8090:8090"
+#      - "18090:18090"
+#    depends_on:
+#      - postgresql
+#      - kafka1
+#      - zoo1
+#      - liquibase-migrations
+#    networks:
+#      - backend
 
 volumes:
   postgresql: { }
