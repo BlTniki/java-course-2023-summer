@@ -37,7 +37,7 @@ jobs:
         run: mvn -pl bot -am package
 
       - name: docker image build
-        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f ${{ github.workspace }}/bot/bot.Dockerfile ${{ github.workspace }}/bot
+        run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }} -f ${{ github.workspace }}/bot/bot.Dockerfile ${{ github.workspace }}/bot
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: docker image push
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
