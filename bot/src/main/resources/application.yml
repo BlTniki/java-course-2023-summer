@@ -67,6 +67,9 @@ spring:
   jackson:
     time-zone: UTC
     property-naming-strategy: SNAKE_CASE
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP_SERVERS}
+
 
 springdoc:
   swagger-ui:
