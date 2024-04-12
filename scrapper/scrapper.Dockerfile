@@ -1,0 +1,17 @@
+FROM amazoncorretto:21.0.2-alpine
+
+ENV GITHUB_TOKEN=${GITHUB_TOKEN} \
+    BOT_BASE_URL=${BOT_BASE_URL} \
+    DB_HOST=${DB_HOST} \
+    DB_PORT=${DB_PORT} \
+    DB_NAME=${DB_NAME} \
+    DB_USERNAME=${DB_USERNAME} \
+    DB_PASSWORD=${DB_PASSWORD} \
+    SERVER_PORT=${SERVER_PORT} \
+    MANAGEMENT_PORT=${MANAGEMENT_PORT} \
+    BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS} \
+    SCHEDULER_ENABLE=${SCHEDULER_ENABLE}
+
+COPY ./target/scrapper.jar /scrapper.jar
+
+ENTRYPOINT ["java","-jar","/scrapper.jar"]
