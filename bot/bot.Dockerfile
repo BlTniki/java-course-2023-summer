@@ -1,0 +1,11 @@
+FROM amazoncorretto:21.0.2-alpine
+
+ENV BOT_TOKEN=${BOT_TOKEN} \
+    SCRAPPER_BASE_URL=${SCRAPPER_BASE_URL} \
+    BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS} \
+    SERVER_PORT=${SERVER_PORT} \
+    MANAGEMENT_PORT=${MANAGEMENT_PORT}
+
+COPY ./target/bot.jar /bot.jar
+
+ENTRYPOINT ["java","-jar","/bot.jar"]

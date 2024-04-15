@@ -6,6 +6,17 @@ on:
     paths:
       - .github/workflows/scrapper.yml
       - scrapper/**
+  push:
+    branches:
+      - main
+      - release
+    paths:
+      - .github/workflows/scrapper.yml
+      - scrapper/**
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: bltniki/java-course-2023-summer/scrapper
 
 jobs:
   build:
@@ -25,6 +36,21 @@ jobs:
 
       - name: maven build
         run: mvn -pl scrapper -am package
+
+      - name: docker image build
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} -f ${{ github.workspace }}/scrapper/scrapper.Dockerfile ${{ github.workspace }}/scrapper
+
+      - name: Log in to the Container registry
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.ref == 'refs/heads/release'
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: docker image push
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.ref == 'refs/heads/release'
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
